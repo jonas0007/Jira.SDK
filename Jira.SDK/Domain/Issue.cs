@@ -25,8 +25,19 @@ namespace Jira.SDK
 
         public TimeTracking TimeTracking
         {
-            get { return Fields.TimeTracking; }
+            get { return Fields.TimeTracking ?? JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking; }
         }
+
+        private List<Worklog> _worklogs; 
+        public List<Worklog> Worklogs
+        {
+            get
+            {
+                return _worklogs ?? (_worklogs =
+                       JiraEnvironment.Instance.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
+                           keys: new Dictionary<String, String>() {{"issueKey", this.Key}}).Worklogs);
+            }
+        } 
     }
 
     public class IssueFields
