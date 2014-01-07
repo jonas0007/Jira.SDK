@@ -18,7 +18,7 @@ namespace Jira.SDK
             {
                 return _assignableUsers ??
                        (_assignableUsers =
-                            Jira.Instance.Client.GetList<User>(JiraClient.JiraObjectEnum.AssignableUser,
+                            JiraEnvironment.Instance.Client.GetList<User>(JiraClient.JiraObjectEnum.AssignableUser,
                                parameters: new Dictionary<string, string>() { { "project", this.Key } }));
             }
         }
@@ -31,7 +31,7 @@ namespace Jira.SDK
                 if (_projectVersions == null)
                 {
                     _projectVersions =
-                           Jira.Instance.Client.GetList<ProjectVersion>(JiraClient.JiraObjectEnum.ProjectVersions,
+                           JiraEnvironment.Instance.Client.GetList<ProjectVersion>(JiraClient.JiraObjectEnum.ProjectVersions,
                                keys: new Dictionary<string, string>() { { "projectKey", this.Key } });
 
                     _projectVersions.ForEach(vers => vers.Project = this);
@@ -64,8 +64,7 @@ namespace Jira.SDK
         {
             get
             {
-                return ProjectVersions.Where(vers => vers.StartDate.CompareTo(DateTime.Now) > 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0).FirstOrDefault(
-                    vers => vers.StartDate.CompareTo(DateTime.Now) <= 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0);
+                return ProjectVersions.Where(vers => vers.StartDate.CompareTo(DateTime.Now) > 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0).OrderBy(vers => vers.StartDate).FirstOrDefault();
             }
         }
     }

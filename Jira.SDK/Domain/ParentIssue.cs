@@ -16,7 +16,7 @@ namespace Jira.SDK
             get
             {
                 return _issue ?? (_issue =
-                    Jira.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue,
+                    JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue,
                         keys: new Dictionary<string, string>() { { "issueKey", this.Key } }));
             }
         }

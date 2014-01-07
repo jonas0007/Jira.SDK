@@ -26,7 +26,7 @@ namespace Jira.SDK
         {
             get
             {
-                return _issues ?? (_issues = Jira.Instance.Client.SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"", Project.Key, this.Name)));
+                return _issues ?? (_issues = JiraEnvironment.Instance.Client.SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"", Project.Key, this.Name)));
             }
         }
     }

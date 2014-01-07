@@ -4,18 +4,18 @@ using System.Linq;
 
 namespace Jira.SDK
 {
-	public class Jira
+	public class JiraEnvironment
 	{
 	    private JiraClient _client;
-	    private static Jira _instance;
+	    private static JiraEnvironment _instance;
 
-	    public static Jira Instance
+	    public static JiraEnvironment Instance
 	    {
 	        get
 	        {
 	            if (_instance == null)
 	            {
-	                _instance = new Jira();
+	                _instance = new JiraEnvironment();
 	            }
 	            return _instance;
 	        }
@@ -23,7 +23,7 @@ namespace Jira.SDK
 
 	    internal JiraClient Client { get { return _client; }}
 
-	    private Jira()
+	    private JiraEnvironment()
 	    {
 	    }
 
