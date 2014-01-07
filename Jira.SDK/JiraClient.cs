@@ -22,8 +22,19 @@ namespace Jira.SDK
             ProjectVersions,
             Issue,
             Issues,
-
+            Worklog,
         }
+
+        private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
+        {
+            {JiraObjectEnum.Projects,"project"},
+            {JiraObjectEnum.Project,"project/{projectKey}"},
+            {JiraObjectEnum.ProjectVersions,"project/{projectKey}/versions"},
+            {JiraObjectEnum.AssignableUser,"user/assignable/search"},
+            {JiraObjectEnum.Issue,"issue/{issueKey}"},
+            {JiraObjectEnum.Issues,"search"},
+            {JiraObjectEnum.Worklog,"issue/{issueKey}/worklog"}
+        };
 
         public JiraClient(String url, String username, String password)
         {
@@ -68,11 +79,15 @@ namespace Jira.SDK
         private RestRequest GetRequest(JiraObjectEnum objectType, Dictionary<String, String> parameters,
             Dictionary<String, String> keys)
         {
-            RestRequest request = new RestRequest(GetMethodForObject(objectType), Method.GET)
-            {
-                RequestFormat = DataFormat.Json
-            };
+            if (!_methods.ContainsKey(objectType))
+                throw new NotImplementedException();
 
+            RestRequest request = new RestRequest(String.Format("/rest/api/latest/{0}/", _methods[objectType]), Method.GET)
+            {
+                RequestFormat = DataFormat.Json,
+                OnBeforeDeserialization = resp => resp.ContentType = "application/json"
+            };
+            
             foreach (KeyValuePair<String, String> key in keys)
             {
                 request.AddParameter(key.Key, key.Value, ParameterType.UrlSegment);
@@ -84,36 +99,6 @@ namespace Jira.SDK
             }
 
             return request;
-        }
-
-        private String GetMethodForObject(JiraObjectEnum objectType)
-        {
-            String method = "";
-            switch (objectType)
-            {
-                case JiraObjectEnum.Projects:
-                    method = "project";
-                    break;
-                case JiraObjectEnum.Project:
-                    method = "project/{projectKey}";
-                    break;
-                case JiraObjectEnum.ProjectVersions:
-                    method = "project/{projectKey}/versions";
-                    break;
-                case JiraObjectEnum.AssignableUser:
-                    method = "user/assignable/search";
-                    break;
-                case JiraObjectEnum.Issue:
-                    method = "issue/{issueKey}";
-                    break;
-                case JiraObjectEnum.Issues:
-                    method = "search";
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            return String.Format("/rest/api/latest/{0}/", method);
         }
     };
 }
