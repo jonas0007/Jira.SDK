@@ -46,7 +46,7 @@ namespace Jira.SDK
 
         public List<Issue> SearchIssues(String jql)
         {
-            return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql } }).Issues;
+            return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "200"} }).Issues;
         }
 
         public T GetItem<T>(JiraObjectEnum objectType, Dictionary<String, String> parameters = null,
