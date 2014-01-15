@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
 using RestSharp;
 
 namespace Jira.SDK
@@ -12,7 +13,13 @@ namespace Jira.SDK
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
 
-        private List<Issue> _subtasks; 
+        public String Summary
+        {
+            get { return Fields.Summary; }
+            set { Fields.Summary = value; }
+        }
+
+        private List<Issue> _subtasks;
         public List<Issue> Subtasks
         {
             get { return _subtasks ?? (_subtasks = Fields.Subtasks.Select(subtask => subtask.Issue).ToList()); }
@@ -28,16 +35,28 @@ namespace Jira.SDK
             get { return Fields.TimeTracking ?? JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking; }
         }
 
-        private List<Worklog> _worklogs; 
+        private List<Worklog> _worklogs;
         public List<Worklog> Worklogs
         {
             get
             {
                 return _worklogs ?? (_worklogs =
                        JiraEnvironment.Instance.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
-                           keys: new Dictionary<String, String>() {{"issueKey", this.Key}}).Worklogs);
+                           keys: new Dictionary<String, String>() { { "issueKey", this.Key } }).Worklogs);
             }
-        } 
+        }
+
+        public ParentIssue Parent
+        {
+            get { return Fields.Parent; }
+            set { Fields.Parent = value; }
+        }
+
+        public User Assignee
+        {
+            get { return Fields.Assignee; }
+            set { Fields.Assignee = value; }
+        }
     }
 
     public class IssueFields
