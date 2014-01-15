@@ -13,13 +13,14 @@ namespace Jira.SDK
 
         public StatusEnum ToEnum()
         {
-            return (StatusEnum)Enum.Parse(typeof (StatusEnum), Name);
+            return (StatusEnum)Enum.Parse(typeof (StatusEnum), Name.Replace(" ",""));
         }
     }
 
     public enum StatusEnum
     {
         Open,
+        InProgress,
         Reopened,
         Resolved,
         Closed
