@@ -30,20 +30,23 @@ namespace Jira.SDK
             get { return Fields.Status.ToEnum(); }
         }
 
+        private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
         {
-            get { return Fields.TimeTracking ?? JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking; }
+            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking)); }
         }
 
         private List<Worklog> _worklogs;
-        public List<Worklog> Worklogs
+        public List<Worklog> GetWorklogs()
         {
-            get
+            if (_worklogs == null)
             {
-                return _worklogs ?? (_worklogs =
-                       JiraEnvironment.Instance.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
-                           keys: new Dictionary<String, String>() { { "issueKey", this.Key } }).Worklogs);
+                _worklogs =
+                   JiraEnvironment.Instance.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
+                       keys: new Dictionary<String, String>() { { "issueKey", this.Key } }).Worklogs;
+                _worklogs.ForEach(wl => wl.Issue = this);
             }
+            return _worklogs;
         }
 
         public ParentIssue Parent

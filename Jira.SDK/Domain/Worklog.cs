@@ -17,6 +17,12 @@ namespace Jira.SDK
 
         public long TimeSpentSeconds { get; set; }
 
+        public Issue Issue { get; set; }
+
+        public TimeSpan TimeSpent
+        {
+            get { return TimeSpan.FromSeconds(TimeSpentSeconds); }
+        }
     }
 
     public class WorklogSearchResult
