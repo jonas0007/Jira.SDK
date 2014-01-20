@@ -10,6 +10,8 @@ namespace Jira.SDK
 {
     public class Issue
     {
+        public JiraEnvironment JiraEnvironment { get; set; }
+
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
 
@@ -22,7 +24,15 @@ namespace Jira.SDK
         private List<Issue> _subtasks;
         public List<Issue> Subtasks
         {
-            get { return _subtasks ?? (_subtasks = Fields.Subtasks.Select(subtask => subtask.Issue).ToList()); }
+            get
+            {
+                if (_subtasks == null)
+                {
+                    _subtasks = Fields.Subtasks.Select(subtask => JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", subtask.Key } })).ToList();
+                    _subtasks.ForEach(subtask => subtask.JiraEnvironment = JiraEnvironment);
+                }
+                return _subtasks;
+            }
         }
 
         public StatusEnum Status
@@ -33,7 +43,7 @@ namespace Jira.SDK
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
         {
-            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Instance.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking)); }
+            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking)); }
         }
 
         private List<Worklog> _worklogs;
@@ -42,17 +52,26 @@ namespace Jira.SDK
             if (_worklogs == null)
             {
                 _worklogs =
-                   JiraEnvironment.Instance.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
+                   JiraEnvironment.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
                        keys: new Dictionary<String, String>() { { "issueKey", this.Key } }).Worklogs;
                 _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
         }
 
-        public ParentIssue Parent
+        private Issue _parent;
+        public Issue Parent
         {
-            get { return Fields.Parent; }
-            set { Fields.Parent = value; }
+            get
+            {
+                if (_parent == null && Fields.Parent != null)
+                {
+                    _parent = JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue,
+                        keys: new Dictionary<String, String>() {{"issueKey", Fields.Parent.Key}});
+                    _parent.JiraEnvironment = JiraEnvironment;
+                }
+                return _parent;
+            }
         }
 
         public User Assignee
