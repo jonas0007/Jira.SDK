@@ -13,6 +13,8 @@ namespace Jira.SDK
         public String Key { get; set; }
         public String Name { get; set; }
 
+        public User Lead { get; set; }
+
         private List<User> _assignableUsers;
         public List<User> AssignableUsers
         {
