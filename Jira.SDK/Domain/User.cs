@@ -29,5 +29,19 @@ namespace Jira.SDK
         {
             return this.Username.GetHashCode();
         }
+
+        public static User UndefinedUser
+        {
+            get
+            {
+                return new User()
+                {
+                    DisplayName = "unassigned",
+                    EmailAddress = "",
+                    Name = "unassigned",
+                    Key = "unassigned"
+                };
+            }
+        }
     }
 }

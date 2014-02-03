@@ -76,15 +76,43 @@ namespace Jira.SDK
 
         public User Assignee
         {
-            get { return Fields.Assignee; }
+            get { return Fields.Assignee ?? User.UndefinedUser; }
             set { Fields.Assignee = value; }
         }
+        public DateTime Created
+        {
+            get { return Fields.Created; }
+            set { Fields.Created = value; }
+        }
+        public DateTime Updated
+        {
+            get { return Fields.Updated; }
+            set { Fields.Updated = value; }
+        }
+
+        #region equality
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Issue)
+                return Key.Equals(((Issue)obj).Key);
+            return false;
+        }
+
+        #endregion
     }
 
     public class IssueFields
     {
         public String Summary { get; set; }
         public String Description { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Updated { get; set; }
         public User Reporter { get; set; }
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
