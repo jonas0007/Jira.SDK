@@ -6,70 +6,77 @@ using System.Threading.Tasks;
 
 namespace Jira.SDK
 {
-    public class Project
-    {
-        public JiraEnvironment JiraEnvironment { get; set; }
+	public class Project
+	{
+		public JiraEnvironment JiraEnvironment { get; set; }
 
-        public String Key { get; set; }
-        public String Name { get; set; }
+		public String Key { get; set; }
+		public String Name { get; set; }
 
-        public User Lead { get; set; }
+		private User _lead;
 
-        private List<User> _assignableUsers;
-        public List<User> AssignableUsers
-        {
-            get
-            {
-                return _assignableUsers ??
-                       (_assignableUsers =
-                            JiraEnvironment.Client.GetList<User>(JiraClient.JiraObjectEnum.AssignableUser,
-                               parameters: new Dictionary<string, string>() { { "project", this.Key } }));
-            }
-        }
+		public User Lead { get; set; }
 
-        private List<ProjectVersion> _projectVersions;
-        public List<ProjectVersion> ProjectVersions
-        {
-            get
-            {
-                if (_projectVersions == null)
-                {
-                    _projectVersions =
-                           JiraEnvironment.Client.GetList<ProjectVersion>(JiraClient.JiraObjectEnum.ProjectVersions,
-                               keys: new Dictionary<string, string>() { { "projectKey", this.Key } });
+		public User ProjectLead
+		{
+			get { return _lead ?? (_lead = JiraEnvironment.Client.GetItem<User>(JiraClient.JiraObjectEnum.User, new Dictionary<string,string>(){{"username", Lead.Username}})); }
+		}
 
-                    _projectVersions.ForEach(vers => vers.Project = this);
-                }
-                return _projectVersions;
-            }
-        }
+		private List<User> _assignableUsers;
+		public List<User> AssignableUsers
+		{
+			get
+			{
+				return _assignableUsers ??
+					   (_assignableUsers =
+							JiraEnvironment.Client.GetList<User>(JiraClient.JiraObjectEnum.AssignableUser,
+							   parameters: new Dictionary<string, string>() { { "project", this.Key } }));
+			}
+		}
 
-        public ProjectVersion PreviousVersion
-        {
-            get
-            {
-                return
-                    ProjectVersions.Where(vers => vers.ReleaseDate.CompareTo(DateTime.Now) <= 0)
-                        .OrderByDescending(vers => vers.ReleaseDate)
-                        .FirstOrDefault();
-            }
-        }
+		private List<ProjectVersion> _projectVersions;
+		public List<ProjectVersion> ProjectVersions
+		{
+			get
+			{
+				if (_projectVersions == null)
+				{
+					_projectVersions =
+						   JiraEnvironment.Client.GetList<ProjectVersion>(JiraClient.JiraObjectEnum.ProjectVersions,
+							   keys: new Dictionary<string, string>() { { "projectKey", this.Key } });
 
-        public ProjectVersion CurrentVersion
-        {
-            get
-            {
-                return ProjectVersions.FirstOrDefault(
-                    vers => vers.StartDate.CompareTo(DateTime.Now) <= 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0);
-            }
-        }
+					_projectVersions.ForEach(vers => vers.Project = this);
+				}
+				return _projectVersions;
+			}
+		}
 
-        public ProjectVersion NextVersion
-        {
-            get
-            {
-                return ProjectVersions.Where(vers => vers.StartDate.CompareTo(DateTime.Now) > 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0).OrderBy(vers => vers.StartDate).FirstOrDefault();
-            }
-        }
-    }
+		public ProjectVersion PreviousVersion
+		{
+			get
+			{
+				return
+					ProjectVersions.Where(vers => vers.ReleaseDate.CompareTo(DateTime.Now) <= 0)
+						.OrderByDescending(vers => vers.ReleaseDate)
+						.FirstOrDefault();
+			}
+		}
+
+		public ProjectVersion CurrentVersion
+		{
+			get
+			{
+				return ProjectVersions.FirstOrDefault(
+					vers => vers.StartDate.CompareTo(DateTime.Now) <= 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0);
+			}
+		}
+
+		public ProjectVersion NextVersion
+		{
+			get
+			{
+				return ProjectVersions.Where(vers => vers.StartDate.CompareTo(DateTime.Now) > 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0).OrderBy(vers => vers.StartDate).FirstOrDefault();
+			}
+		}
+	}
 }

@@ -23,6 +23,7 @@ namespace Jira.SDK
             Issue,
             Issues,
             Worklog,
+			User
         }
 
         private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
@@ -33,7 +34,8 @@ namespace Jira.SDK
             {JiraObjectEnum.AssignableUser,"user/assignable/search"},
             {JiraObjectEnum.Issue,"issue/{issueKey}"},
             {JiraObjectEnum.Issues,"search"},
-            {JiraObjectEnum.Worklog,"issue/{issueKey}/worklog"}
+            {JiraObjectEnum.Worklog,"issue/{issueKey}/worklog"},
+			{JiraObjectEnum.User, "user"}
         };
 
         public JiraClient(String url, String username, String password)
