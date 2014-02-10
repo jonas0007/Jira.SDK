@@ -67,7 +67,7 @@ namespace Jira.SDK
 			get
 			{
 				return ProjectVersions.FirstOrDefault(
-					vers => vers.StartDate.CompareTo(DateTime.Now) <= 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0);
+					vers => vers.StartDate.CompareTo(DateTime.Now) <= 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0 && !vers.Archived);
 			}
 		}
 
