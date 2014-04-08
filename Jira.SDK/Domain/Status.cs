@@ -23,6 +23,7 @@ namespace Jira.SDK
         InProgress,
         Reopened,
         Resolved,
-        Closed
+        Closed,
+		Waitingforinformation
     }
 }

@@ -90,6 +90,14 @@ namespace Jira.SDK
             set { Fields.Updated = value; }
         }
 
+		public DateTime Resolved
+		{
+			get
+			{
+				return Fields.ResolutionDate;
+			}
+		}
+
         #region equality
 
         public override int GetHashCode()
@@ -113,6 +121,7 @@ namespace Jira.SDK
         public String Description { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
+		public DateTime ResolutionDate { get; set; }
         public User Reporter { get; set; }
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
