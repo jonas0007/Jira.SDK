@@ -29,8 +29,7 @@ namespace Jira.SDK
                 if (_issues == null)
                 {
                     _issues =
-                        Project.JiraEnvironment.Client.SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"",
-                            Project.Key, this.Name));
+                        Project.JiraEnvironment.Client.GetIssuesFromProjectVersion(this.Project.Key, this.Name);
                     _issues.ForEach(issue => issue.JiraEnvironment = Project.JiraEnvironment);
                 }
                 return _issues;

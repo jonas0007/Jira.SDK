@@ -19,7 +19,7 @@ namespace Jira.SDK
 
 		public User ProjectLead
 		{
-			get { return _lead ?? (_lead = JiraEnvironment.Client.GetItem<User>(JiraClient.JiraObjectEnum.User, new Dictionary<string,string>(){{"username", Lead.Username}})); }
+			get { return _lead ?? (_lead = JiraEnvironment.Client.GetUser(Lead.Username)); }
 		}
 
 		private List<User> _assignableUsers;
@@ -29,8 +29,7 @@ namespace Jira.SDK
 			{
 				return _assignableUsers ??
 					   (_assignableUsers =
-							JiraEnvironment.Client.GetList<User>(JiraClient.JiraObjectEnum.AssignableUser,
-							   parameters: new Dictionary<string, string>() { { "project", this.Key } }));
+							JiraEnvironment.Client.GetAssignableUsers(this.Key));
 			}
 		}
 
@@ -42,8 +41,7 @@ namespace Jira.SDK
 				if (_projectVersions == null)
 				{
 					_projectVersions =
-						   JiraEnvironment.Client.GetList<ProjectVersion>(JiraClient.JiraObjectEnum.ProjectVersions,
-							   keys: new Dictionary<string, string>() { { "projectKey", this.Key } });
+						   JiraEnvironment.Client.GetProjectVersions(this.Key);
 
 					_projectVersions.ForEach(vers => vers.Project = this);
 				}

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jira.SDK.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,8 +7,13 @@ namespace Jira.SDK
 {
     public class JiraEnvironment
     {
-        private JiraClient _client;
-        internal JiraClient Client { get { return _client; } }
+        private IJiraClient _client;
+		internal IJiraClient Client { get { return _client; } }
+
+		public void Connect(IJiraClient client)
+		{
+			_client = client;
+		}
 
         public void Connect(String url, String username, String password)
         {
@@ -16,19 +22,24 @@ namespace Jira.SDK
 
         public List<Project> GetProjects()
         {
-            List<Project> projects = _client.GetList<Project>(JiraClient.JiraObjectEnum.Projects);
+			List<Project> projects = _client.GetProjects();
             projects.ForEach(p => p.JiraEnvironment = this);
             return projects;
         }
 
         public Project GetProject(String key)
         {
-            Project project = _client.GetList<Project>(JiraClient.JiraObjectEnum.Project, keys: new Dictionary<string, string>() { { "projectKey", key } }).FirstOrDefault();
+            Project project = _client.GetProject(key);
             if (project != null)
             {
                 project.JiraEnvironment = this;
             }
             return project;
         }
+
+		public List<AgileBoard> GetAgileBoards()
+		{
+			return _client.GetAgileBoards();
+		}
     }
 }

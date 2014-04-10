@@ -28,7 +28,7 @@ namespace Jira.SDK
             {
                 if (_subtasks == null)
                 {
-                    _subtasks = Fields.Subtasks.Select(subtask => JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", subtask.Key } })).ToList();
+					_subtasks = Fields.Subtasks.Select(subtask => JiraEnvironment.Client.GetIssue(subtask.Key)).ToList();
                     _subtasks.ForEach(subtask => subtask.JiraEnvironment = JiraEnvironment);
                 }
                 return _subtasks;
@@ -43,7 +43,7 @@ namespace Jira.SDK
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
         {
-            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", this.Key }}).TimeTracking)); }
+            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Client.GetIssue(this.Key).TimeTracking)); }
         }
 
         private List<Worklog> _worklogs;
@@ -52,8 +52,7 @@ namespace Jira.SDK
             if (_worklogs == null)
             {
                 _worklogs =
-                   JiraEnvironment.Client.GetItem<WorklogSearchResult>(JiraClient.JiraObjectEnum.Worklog,
-                       keys: new Dictionary<String, String>() { { "issueKey", this.Key } }).Worklogs;
+                   JiraEnvironment.Client.GetWorkLogs(this.Key).Worklogs;
                 _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
@@ -66,8 +65,7 @@ namespace Jira.SDK
             {
                 if (_parent == null && Fields.Parent != null)
                 {
-                    _parent = JiraEnvironment.Client.GetItem<Issue>(JiraClient.JiraObjectEnum.Issue,
-                        keys: new Dictionary<String, String>() {{"issueKey", Fields.Parent.Key}});
+                    _parent = JiraEnvironment.Client.GetIssue(Fields.Parent.Key);
                     _parent.JiraEnvironment = JiraEnvironment;
                 }
                 return _parent;
