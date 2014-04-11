@@ -11,9 +11,7 @@ using Jira.SDK.Domain;
 
 namespace Jira.SDK
 {
-	
-
-	internal class JiraClient : IJiraClient
+	public class JiraClient : IJiraClient
 	{
 		public enum JiraObjectEnum
 		{
@@ -49,6 +47,11 @@ namespace Jira.SDK
 			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
 			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)}
         };
+
+		public JiraClient(RestClient client)
+		{
+			Client = client;
+		}
 
 		public JiraClient(String url, String username, String password)
 		{
