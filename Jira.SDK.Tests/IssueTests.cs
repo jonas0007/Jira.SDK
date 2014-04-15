@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Xunit;
+
+namespace Jira.SDK.Tests
+{
+	public class IssueTests
+	{
+		[Fact]
+		public void GetWorklogTest()
+		{
+			MockJiraClient mockClient = new MockJiraClient();
+			JiraEnvironment environment = new JiraEnvironment();
+			environment.Connect(mockClient);
+
+			//The first test issue contains 2 worklogs. One from Jonas, One from Marc
+			Issue firstIssue = mockClient.GetIssue("ITDEV-7");
+
+			firstIssue.JiraEnvironment = environment;
+
+			Assert.NotNull(firstIssue.GetWorklogs());
+			Assert.Equal(2, firstIssue.GetWorklogs().Count);
+
+			Assert.Equal("jverdick", firstIssue.GetWorklogs()[0].Author.Username);
+			Assert.Equal("mwillem", firstIssue.GetWorklogs()[1].Author.Username);
+
+			//The second test issue contains 1 worklogs from Marc
+			Issue secondIssue = mockClient.GetIssue("ITDEV-6");
+			secondIssue.JiraEnvironment = environment;
+
+			Assert.NotNull(secondIssue.GetWorklogs());
+			Assert.Equal(1, secondIssue.GetWorklogs().Count);
+
+			Assert.Equal("mwillem", secondIssue.GetWorklogs()[0].Author.Username);
+		}
+	}
+}
