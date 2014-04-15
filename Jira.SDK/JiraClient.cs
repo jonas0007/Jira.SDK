@@ -86,7 +86,7 @@ namespace Jira.SDK
 		}
 		#endregion
 
-		#region
+		#region Users
 		public User GetUser(String username)
 		{
 			return GetItem<User>(JiraObjectEnum.User, new Dictionary<string, string>() { { "username", username } });
@@ -108,6 +108,11 @@ namespace Jira.SDK
 		public List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID)
 		{
 			return GetList<Sprint>(JiraObjectEnum.Sprints, keys: new Dictionary<String, String>() { { "boardID", agileBoardID.ToString() } });
+		}
+
+		public List<Issue> GetIssuesFromSprint(int sprintID)
+		{
+			return SearchIssues(String.Format("Sprint = {0}", sprintID));
 		}
 		#endregion
 
@@ -160,7 +165,7 @@ namespace Jira.SDK
 			return response.Data;
 		}
 
-		private RestRequest GetRequest(JiraObjectEnum objectType, Dictionary<String, String> parameters,
+		public RestRequest GetRequest(JiraObjectEnum objectType, Dictionary<String, String> parameters,
 			Dictionary<String, String> keys)
 		{
 			if (!_methods.ContainsKey(objectType))

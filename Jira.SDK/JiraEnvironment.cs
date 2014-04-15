@@ -39,7 +39,9 @@ namespace Jira.SDK
 
 		public List<AgileBoard> GetAgileBoards()
 		{
-			return _client.GetAgileBoards();
+			List<AgileBoard> boards = _client.GetAgileBoards();
+			boards.ForEach(board => board.Environment = this);
+			return boards;
 		}
     }
 }
