@@ -96,6 +96,14 @@ namespace Jira.SDK
 			}
 		}
 
+		public Project Project
+		{
+			get
+			{
+				return this.Fields.Project;
+			}
+		}
+
         #region equality
 
         public override int GetHashCode()
