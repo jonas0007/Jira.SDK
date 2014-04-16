@@ -47,6 +47,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Domain\AgileBoard.cs" />
+    <Compile Include="Domain\AgileBoardView.cs" />
+    <Compile Include="Domain\Field.cs" />
     <Compile Include="Domain\ParentIssue.cs" />
     <Compile Include="Domain\Priority.cs" />
     <Compile Include="Domain\Comment.cs" />
@@ -54,6 +56,7 @@
     <Compile Include="Domain\IssueSearchResult.cs" />
     <Compile Include="Domain\Resolution.cs" />
     <Compile Include="Domain\SprintDetail.cs" />
+    <Compile Include="Domain\SprintResult.cs" />
     <Compile Include="Domain\Status.cs" />
     <Compile Include="Domain\SubTask.cs" />
     <Compile Include="Domain\TimeTracking.cs" />

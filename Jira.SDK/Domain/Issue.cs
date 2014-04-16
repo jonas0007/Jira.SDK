@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using RestSharp;
+using Jira.SDK.Domain;
 
 namespace Jira.SDK
 {
@@ -28,7 +29,7 @@ namespace Jira.SDK
             {
                 if (_subtasks == null)
                 {
-					_subtasks = Fields.Subtasks.Select(subtask => JiraEnvironment.Client.GetIssue(subtask.Key)).ToList();
+					_subtasks = JiraEnvironment.Client.GetSubtasksFromIssue(this.Key);
                     _subtasks.ForEach(subtask => subtask.JiraEnvironment = JiraEnvironment);
                 }
                 return _subtasks;
@@ -101,6 +102,23 @@ namespace Jira.SDK
 			get
 			{
 				return this.Fields.Project;
+			}
+		}
+
+		private Issue _epic;
+		public Issue Epic
+		{
+			get
+			{
+				if (_epic == null)
+				{
+					Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
+					if (field != null)
+					{
+
+					}
+				}
+				return _epic;
 			}
 		}
 

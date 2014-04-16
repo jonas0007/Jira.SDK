@@ -10,14 +10,17 @@ namespace Jira.SDK
         private IJiraClient _client;
 		internal IJiraClient Client { get { return _client; } }
 
+		public List<Field> Fields { get; private set; }
+
 		public void Connect(IJiraClient client)
 		{
 			_client = client;
+			Fields = _client.GetFields();
 		}
 
         public void Connect(String url, String username, String password)
         {
-            _client = new JiraClient(url, username, password);
+            Connect(new JiraClient(url, username, password));
         }
 
         public List<Project> GetProjects()

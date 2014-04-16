@@ -15,6 +15,7 @@ namespace Jira.SDK
 	{
 		public enum JiraObjectEnum
 		{
+			Fields,
 			Projects,
 			Project,
 			AssignableUser,
@@ -35,6 +36,7 @@ namespace Jira.SDK
 
 		private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
         {
+			{JiraObjectEnum.Fields, String.Format("{0}/field/", JiraAPIServiceURI)},
             {JiraObjectEnum.Projects, String.Format("{0}/project/", JiraAPIServiceURI)},
             {JiraObjectEnum.Project, String.Format("{0}/project/{{projectKey}}/", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectVersions, String.Format("{0}/project/{{projectKey}}/versions/", JiraAPIServiceURI)},
@@ -65,6 +67,13 @@ namespace Jira.SDK
 		{
 			return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "200" } }).Issues;
 		}
+
+		#region Fields
+		public List<Field> GetFields()
+		{
+			return GetList<Field>(JiraObjectEnum.Fields);
+		}
+		#endregion
 
 		#region Projects
 		public List<Project> GetProjects()
@@ -102,12 +111,12 @@ namespace Jira.SDK
 		#region Agile boards
 		public List<AgileBoard> GetAgileBoards()
 		{
-			return GetList<AgileBoard>(JiraObjectEnum.AgileBoards);
+			return GetItem<AgileBoardView>(JiraObjectEnum.AgileBoards).Views;
 		}
 
 		public List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID)
 		{
-			return GetList<Sprint>(JiraObjectEnum.Sprints, keys: new Dictionary<String, String>() { { "boardID", agileBoardID.ToString() } });
+			return GetItem<SprintResult>(JiraObjectEnum.Sprints, keys: new Dictionary<String, String>() { { "boardID", agileBoardID.ToString() } }).Sprints;
 		}
 
 		public List<Issue> GetIssuesFromSprint(int sprintID)
@@ -120,6 +129,11 @@ namespace Jira.SDK
 		public Issue GetIssue(String key)
 		{
 			return GetItem<Issue>(JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", key } });
+		}
+
+		public List<Issue> GetSubtasksFromIssue(String issueKey)
+		{
+			return SearchIssues(String.Format("parent=\"{0}\"", issueKey));
 		}
 
 		public List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName)

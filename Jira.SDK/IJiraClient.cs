@@ -12,6 +12,8 @@ namespace Jira.SDK
 		List<Project> GetProjects();
 		Project GetProject(String projectKey);
 
+		List<Field> GetFields();
+
 		List<ProjectVersion> GetProjectVersions(String projectKey);
 
 		User GetUser(String username);
@@ -23,6 +25,7 @@ namespace Jira.SDK
 
 		Issue GetIssue(String key);
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
+		List<Issue> GetSubtasksFromIssue(String p);
 		WorklogSearchResult GetWorkLogs(String issueKey);
 	}
 }
