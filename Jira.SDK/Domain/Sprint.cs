@@ -16,7 +16,12 @@ namespace Jira.SDK.Domain
 		private List<Issue> _issues;
 		public List<Issue> GetIssues()
 		{
-			return _issues ?? (_issues = Environment.Client.GetIssuesFromSprint(this.ID));
+			if (_issues == null)
+			{
+				_issues = Environment.Client.GetIssuesFromSprint(this.ID);
+				_issues.ForEach(issue => issue.JiraEnvironment = Environment);
+			}
+			return _issues;
 		}
 	}
 }
