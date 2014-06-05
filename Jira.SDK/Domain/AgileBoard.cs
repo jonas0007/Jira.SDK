@@ -23,5 +23,13 @@ namespace Jira.SDK.Domain
 			}
 			return _sprints;
 		}
+
+		public Sprint GetSprint(Int32 sprintID)
+		{
+			Sprint sprint = Environment.Client.GetSprint(this.ID, sprintID);
+			sprint.Environment = this.Environment;
+
+			return sprint;
+		}
 	}
 }

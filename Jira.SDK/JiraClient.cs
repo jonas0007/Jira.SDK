@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RestSharp.Extensions;
 using Jira.SDK.Domain;
+using System.Reflection;
 
 namespace Jira.SDK
 {
@@ -26,6 +27,7 @@ namespace Jira.SDK
 			User,
 			AgileBoards,
 			Sprints,
+			Sprint,
 			SprintIssues
 		}
 
@@ -47,6 +49,7 @@ namespace Jira.SDK
 			{JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
 			{JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
 			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
+			{JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
 			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)}
         };
 
@@ -119,6 +122,11 @@ namespace Jira.SDK
 			return GetItem<SprintResult>(JiraObjectEnum.Sprints, keys: new Dictionary<String, String>() { { "boardID", agileBoardID.ToString() } }).Sprints;
 		}
 
+		public Sprint GetSprint(Int32 agileBoardID, Int32 sprintID)
+		{
+			return GetItem<SprintResult>(JiraObjectEnum.Sprint, parameters: new Dictionary<String, String>() { { "rapidViewId", agileBoardID.ToString() }, { "sprintId", sprintID.ToString() } }).Sprint;
+		}
+
 		public List<Issue> GetIssuesFromSprint(int sprintID)
 		{
 			return SearchIssues(String.Format("Sprint = {0}", sprintID));
@@ -140,6 +148,21 @@ namespace Jira.SDK
 		{
 			return SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"",
 							projectKey, projectVersionName));
+		}
+
+		public Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key)
+		{
+			dynamic obj = ExecuteDynamic(JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", key } });
+
+			List<PropertyInfo> customFieldProperties = ((Type)(obj.fields).GetType()).GetProperties().Where(prop => prop.Name.StartsWith("customfield")).ToList();
+
+			Dictionary<String, String> customfields = new Dictionary<String, String>();
+			foreach (PropertyInfo property in customFieldProperties)
+			{
+				property.GetValue(obj.Fields);
+			}
+
+			return customfields;
 		}
 		#endregion
 
@@ -166,6 +189,22 @@ namespace Jira.SDK
 		private T Execute<T>(JiraObjectEnum objectType, Dictionary<String, String> parameters = null, Dictionary<String, String> keys = null) where T : new()
 		{
 			IRestResponse<T> response = Client.Execute<T>(GetRequest(objectType, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
+
+			if (response.ErrorException != null)
+			{
+				throw response.ErrorException;
+			}
+			if (response.ResponseStatus != ResponseStatus.Completed)
+			{
+				throw new Exception(response.ErrorMessage);
+			}
+
+			return response.Data;
+		}
+
+		private dynamic ExecuteDynamic(JiraObjectEnum objectType, Dictionary<String, String> parameters = null, Dictionary<String, String> keys = null)
+		{
+			IRestResponse<dynamic> response = Client.ExecuteDynamic(GetRequest(objectType, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
 
 			if (response.ErrorException != null)
 			{

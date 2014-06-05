@@ -76,5 +76,15 @@ namespace Jira.SDK
 				return ProjectVersions.Where(vers => vers.StartDate.CompareTo(DateTime.Now) > 0 && vers.ReleaseDate.CompareTo(DateTime.Now) > 0).OrderBy(vers => vers.StartDate).FirstOrDefault();
 			}
 		}
+
+		public override int GetHashCode()
+		{
+			return this.Key.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			return (obj is Project) && this.Key.Equals(((Project)obj).Key);
+		}
 	}
 }

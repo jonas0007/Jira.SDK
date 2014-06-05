@@ -21,11 +21,13 @@ namespace Jira.SDK
 
 		List<AgileBoard> GetAgileBoards();
 		List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID);
+		Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
 		List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
 		Issue GetIssue(String key);
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String p);
 		WorklogSearchResult GetWorkLogs(String issueKey);
+		Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key);
 	}
 }

@@ -97,11 +97,17 @@ namespace Jira.SDK
 			}
 		}
 
+		private Project _project = null;
 		public Project Project
 		{
 			get
 			{
-				return this.Fields.Project;
+				if (_project == null)
+				{
+					_project = this.Fields.Project;
+					_project.JiraEnvironment = JiraEnvironment;
+				}
+				return _project;
 			}
 		}
 
@@ -115,11 +121,17 @@ namespace Jira.SDK
 					Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
 					if (field != null)
 					{
-
+						JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
 					}
 				}
 				return _epic;
 			}
+		}
+
+		public Dictionary<String, String> CustomFields
+		{
+			get;
+			set;
 		}
 
         #region equality
@@ -156,5 +168,7 @@ namespace Jira.SDK
         public ParentIssue Parent { get; set; }
         public List<Subtask> Subtasks { get; set; }
         public TimeTracking TimeTracking { get; set; }
+
+		public Dictionary<String, String> Fields { get; set; }
     }
 }
