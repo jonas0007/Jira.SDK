@@ -116,15 +116,30 @@ namespace Jira.SDK
 		{
 			get
 			{
-				if (_epic == null)
+				if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
 				{
-					Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
-					if (field != null)
-					{
-						JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
-					}
+					//Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
+					//if (field != null)
+					//{
+					//	JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
+					//}
+
+					_epic = JiraEnvironment.Client.GetIssue(this.Fields.Customfield_10700);
+					_epic.JiraEnvironment = this.JiraEnvironment;
 				}
 				return _epic;
+			}
+		}
+
+		public Int32 Rank
+		{
+			get
+			{
+				return Fields.Customfield_10004;
+			}
+			set
+			{
+				Fields.Customfield_10004 = value;
 			}
 		}
 
@@ -168,7 +183,10 @@ namespace Jira.SDK
         public ParentIssue Parent { get; set; }
         public List<Subtask> Subtasks { get; set; }
         public TimeTracking TimeTracking { get; set; }
-
+		//Epic link
+		public String Customfield_10700 { get; set; }
+		//Rank
+		public Int32 Customfield_10004 { get; set; }
 		public Dictionary<String, String> Fields { get; set; }
     }
 }
