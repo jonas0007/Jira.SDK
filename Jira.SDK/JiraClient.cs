@@ -27,6 +27,7 @@ namespace Jira.SDK
 			User,
 			AgileBoards,
 			Sprints,
+			BacklogSprints,
 			Sprint,
 			SprintIssues
 		}
@@ -49,6 +50,7 @@ namespace Jira.SDK
 			{JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
 			{JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
 			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
+			{JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
 			{JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
 			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)}
         };
@@ -120,6 +122,11 @@ namespace Jira.SDK
 		public List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID)
 		{
 			return GetItem<SprintResult>(JiraObjectEnum.Sprints, keys: new Dictionary<String, String>() { { "boardID", agileBoardID.ToString() } }).Sprints;
+		}
+
+		public List<Sprint> GetBacklogSprintsFromAgileBoard(Int32 agileBoardID)
+		{
+			return GetItem<SprintResult>(JiraObjectEnum.BacklogSprints, parameters: new Dictionary<String, String>() { { "rapidViewId", agileBoardID.ToString() } }).Sprints;
 		}
 
 		public Sprint GetSprint(Int32 agileBoardID, Int32 sprintID)

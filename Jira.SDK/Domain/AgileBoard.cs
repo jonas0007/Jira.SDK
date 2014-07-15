@@ -24,6 +24,17 @@ namespace Jira.SDK.Domain
 			return _sprints;
 		}
 
+		private List<Sprint> _backlogsprints;
+		public List<Sprint> GetBacklogSprints()
+		{
+			if (_backlogsprints == null)
+			{
+				_backlogsprints = Environment.Client.GetBacklogSprintsFromAgileBoard(this.ID);
+				_backlogsprints.ForEach(sprint => sprint.Environment = this.Environment);
+			}
+			return _backlogsprints;
+		}
+
 		public Sprint GetSprint(Int32 sprintID)
 		{
 			Sprint sprint = Environment.Client.GetSprint(this.ID, sprintID);
