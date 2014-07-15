@@ -44,7 +44,22 @@ namespace Jira.SDK
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
         {
-            get { return (_timeTracking ?? (_timeTracking = Fields.TimeTracking ?? JiraEnvironment.Client.GetIssue(this.Key).TimeTracking)); }
+            get 
+			{
+				if (_timeTracking == null)
+				{
+					if(Fields.TimeTracking != null)
+					{
+						_timeTracking = Fields.TimeTracking;
+					}
+					else
+					{
+						Issue issue = JiraEnvironment.Client.GetIssue(this.Key);
+						_timeTracking = issue.Fields.TimeTracking;
+					}
+				}
+				return _timeTracking;
+			}
         }
 
         private List<Worklog> _worklogs;
@@ -143,6 +158,16 @@ namespace Jira.SDK
 			}
 		}
 
+		public String ERPCode
+		{
+			get {
+				return (Fields.Customfield_11000 != null ? Fields.Customfield_11000.Value : ""); 
+			}
+			set {
+				Fields.Customfield_11000 = new CustomField() { Value = value}; 
+			}
+		}
+
 		public Dictionary<String, String> CustomFields
 		{
 			get;
@@ -187,6 +212,8 @@ namespace Jira.SDK
 		public String Customfield_10700 { get; set; }
 		//Rank
 		public Int32 Customfield_10004 { get; set; }
+		//ERP Code
+		public CustomField Customfield_11000 { get; set; }
 		public Dictionary<String, String> Fields { get; set; }
     }
 }

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Domain\AgileBoard.cs" />
     <Compile Include="Domain\AgileBoardView.cs" />
+    <Compile Include="Domain\CustomField.cs" />
     <Compile Include="Domain\Field.cs" />
     <Compile Include="Domain\ParentIssue.cs" />
     <Compile Include="Domain\Priority.cs" />
