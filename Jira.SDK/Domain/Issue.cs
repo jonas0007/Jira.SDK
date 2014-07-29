@@ -29,7 +29,7 @@ namespace Jira.SDK
             {
                 if (_subtasks == null)
                 {
-					_subtasks = JiraEnvironment.Client.GetSubtasksFromIssue(this.Key);
+                    _subtasks = JiraEnvironment.Client.GetSubtasksFromIssue(this.Key);
                     _subtasks.ForEach(subtask => subtask.JiraEnvironment = JiraEnvironment);
                 }
                 return _subtasks;
@@ -44,22 +44,22 @@ namespace Jira.SDK
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
         {
-            get 
-			{
-				if (_timeTracking == null)
-				{
-					if(Fields.TimeTracking != null)
-					{
-						_timeTracking = Fields.TimeTracking;
-					}
-					else
-					{
-						Issue issue = JiraEnvironment.Client.GetIssue(this.Key);
-						_timeTracking = issue.Fields.TimeTracking;
-					}
-				}
-				return _timeTracking;
-			}
+            get
+            {
+                if (_timeTracking == null)
+                {
+                    if (Fields.TimeTracking != null)
+                    {
+                        _timeTracking = Fields.TimeTracking;
+                    }
+                    else
+                    {
+                        Issue issue = JiraEnvironment.Client.GetIssue(this.Key);
+                        _timeTracking = issue.Fields.TimeTracking;
+                    }
+                }
+                return _timeTracking;
+            }
         }
 
         private List<Worklog> _worklogs;
@@ -88,6 +88,14 @@ namespace Jira.SDK
             }
         }
 
+        public IssueType IssueType
+        {
+            get
+            {
+                return Fields.IssueType;
+            }
+        }
+
         public User Assignee
         {
             get { return Fields.Assignee ?? User.UndefinedUser; }
@@ -104,75 +112,77 @@ namespace Jira.SDK
             set { Fields.Updated = value; }
         }
 
-		public DateTime Resolved
-		{
-			get
-			{
-				return Fields.ResolutionDate;
-			}
-		}
+        public DateTime Resolved
+        {
+            get
+            {
+                return Fields.ResolutionDate;
+            }
+        }
 
-		private Project _project = null;
-		public Project Project
-		{
-			get
-			{
-				if (_project == null)
-				{
-					_project = this.Fields.Project;
-					_project.JiraEnvironment = JiraEnvironment;
-				}
-				return _project;
-			}
-		}
+        private Project _project = null;
+        public Project Project
+        {
+            get
+            {
+                if (_project == null)
+                {
+                    _project = this.Fields.Project;
+                    _project.JiraEnvironment = JiraEnvironment;
+                }
+                return _project;
+            }
+        }
 
-		private Issue _epic;
-		public Issue Epic
-		{
-			get
-			{
-				if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
-				{
-					//Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
-					//if (field != null)
-					//{
-					//	JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
-					//}
+        private Issue _epic;
+        public Issue Epic
+        {
+            get
+            {
+                if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
+                {
+                    //Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
+                    //if (field != null)
+                    //{
+                    //	JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
+                    //}
 
-					_epic = JiraEnvironment.Client.GetIssue(this.Fields.Customfield_10700);
-					_epic.JiraEnvironment = this.JiraEnvironment;
-				}
-				return _epic;
-			}
-		}
+                    _epic = JiraEnvironment.Client.GetIssue(this.Fields.Customfield_10700);
+                    _epic.JiraEnvironment = this.JiraEnvironment;
+                }
+                return _epic;
+            }
+        }
 
-		public Int32 Rank
-		{
-			get
-			{
-				return Fields.Customfield_10004;
-			}
-			set
-			{
-				Fields.Customfield_10004 = value;
-			}
-		}
+        public Int32 Rank
+        {
+            get
+            {
+                return Fields.Customfield_10004;
+            }
+            set
+            {
+                Fields.Customfield_10004 = value;
+            }
+        }
 
-		public String ERPCode
-		{
-			get {
-				return (Fields.Customfield_11000 != null ? Fields.Customfield_11000.Value : ""); 
-			}
-			set {
-				Fields.Customfield_11000 = new CustomField() { Value = value}; 
-			}
-		}
+        public String ERPCode
+        {
+            get
+            {
+                return (Fields.Customfield_11000 != null ? Fields.Customfield_11000.Value : "");
+            }
+            set
+            {
+                Fields.Customfield_11000 = new CustomField() { Value = value };
+            }
+        }
 
-		public Dictionary<String, String> CustomFields
-		{
-			get;
-			set;
-		}
+        public Dictionary<String, String> CustomFields
+        {
+            get;
+            set;
+        }
 
         #region equality
 
@@ -183,7 +193,7 @@ namespace Jira.SDK
 
         public override bool Equals(object obj)
         {
-            if(obj is Issue)
+            if (obj is Issue)
                 return Key.Equals(((Issue)obj).Key);
             return false;
         }
@@ -197,7 +207,8 @@ namespace Jira.SDK
         public String Description { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
-		public DateTime ResolutionDate { get; set; }
+        public DateTime ResolutionDate { get; set; }
+        public IssueType IssueType { get; set; }
         public User Reporter { get; set; }
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
@@ -208,12 +219,12 @@ namespace Jira.SDK
         public ParentIssue Parent { get; set; }
         public List<Subtask> Subtasks { get; set; }
         public TimeTracking TimeTracking { get; set; }
-		//Epic link
-		public String Customfield_10700 { get; set; }
-		//Rank
-		public Int32 Customfield_10004 { get; set; }
-		//ERP Code
-		public CustomField Customfield_11000 { get; set; }
-		public Dictionary<String, String> Fields { get; set; }
+        //Epic link
+        public String Customfield_10700 { get; set; }
+        //Rank
+        public Int32 Customfield_10004 { get; set; }
+        //ERP Code
+        public CustomField Customfield_11000 { get; set; }
+        public Dictionary<String, String> Fields { get; set; }
     }
 }

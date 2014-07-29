@@ -51,6 +51,7 @@
     <Compile Include="Domain\CustomField.cs" />
     <Compile Include="Domain\Field.cs" />
     <Compile Include="Domain\IssueFilter.cs" />
+    <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\ParentIssue.cs" />
     <Compile Include="Domain\Priority.cs" />
     <Compile Include="Domain\Comment.cs" />
