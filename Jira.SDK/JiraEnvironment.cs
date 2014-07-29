@@ -46,5 +46,12 @@ namespace Jira.SDK
 			boards.ForEach(board => board.Environment = this);
 			return boards;
 		}
+
+        public List<IssueFilter> GetFilters()
+        {
+            List<IssueFilter> filters = _client.GetFavoriteFilters();
+            filters.ForEach(filter => filter.JiraEnvironment = this);
+            return filters;
+        }
     }
 }

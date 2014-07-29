@@ -27,8 +27,12 @@ namespace Jira.SDK
 
 		Issue GetIssue(String key);
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
-		List<Issue> GetSubtasksFromIssue(String p);
+		List<Issue> GetSubtasksFromIssue(String issueKey);
 		WorklogSearchResult GetWorkLogs(String issueKey);
 		Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key);
+
+        List<IssueFilter> GetFavoriteFilters();
+
+        List<Issue> SearchIssues(String jql);
 	}
 }

@@ -29,7 +29,8 @@ namespace Jira.SDK
 			Sprints,
 			BacklogSprints,
 			Sprint,
-			SprintIssues
+			SprintIssues,
+            Filters
 		}
 
 		private RestClient Client { get; set; }
@@ -48,6 +49,7 @@ namespace Jira.SDK
             {JiraObjectEnum.Issues, String.Format("{0}/search/", JiraAPIServiceURI)},
             {JiraObjectEnum.Worklog, String.Format("{0}/issue/{{issueKey}}/worklog/", JiraAPIServiceURI)},
 			{JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
+            {JiraObjectEnum.Filters, String.Format("{0}/filter/favourite", JiraAPIServiceURI)},
 			{JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
 			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
 			{JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
@@ -68,9 +70,9 @@ namespace Jira.SDK
 			};
 		}
 
-		private List<Issue> SearchIssues(String jql)
+		public List<Issue> SearchIssues(String jql)
 		{
-			return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "200" } }).Issues;
+			return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" } }).Issues;
 		}
 
 		#region Fields
@@ -171,6 +173,11 @@ namespace Jira.SDK
 
 			return customfields;
 		}
+
+        public List<IssueFilter> GetFavoriteFilters()
+        {
+            return GetList<IssueFilter>(JiraObjectEnum.Filters);
+        }
 		#endregion
 
 		#region Worklog
