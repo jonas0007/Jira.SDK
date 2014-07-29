@@ -77,6 +77,11 @@ namespace Jira.SDK
 			}
 		}
 
+        public Issue GetEpic(String epicName)
+        {
+            return JiraEnvironment.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
+        }
+
 		public override int GetHashCode()
 		{
 			return this.Key.GetHashCode();
