@@ -152,6 +152,14 @@ namespace Jira.SDK
                 }
                 return _epic;
             }
+            set
+            {
+                _epic = value;
+                if (_epic.JiraEnvironment == null)
+                {
+                    _epic.JiraEnvironment = this.JiraEnvironment;
+                }
+            }
         }
 
         public Int32 Rank
