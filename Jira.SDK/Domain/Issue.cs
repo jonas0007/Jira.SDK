@@ -11,7 +11,7 @@ namespace Jira.SDK
 {
     public class Issue
     {
-        public JiraEnvironment JiraEnvironment { get; set; }
+        public Jira Jira { get; set; }
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
@@ -29,8 +29,8 @@ namespace Jira.SDK
             {
                 if (_subtasks == null)
                 {
-                    _subtasks = JiraEnvironment.Client.GetSubtasksFromIssue(this.Key);
-                    _subtasks.ForEach(subtask => subtask.JiraEnvironment = JiraEnvironment);
+                    _subtasks = Jira.Client.GetSubtasksFromIssue(this.Key);
+                    _subtasks.ForEach(subtask => subtask.Jira = Jira);
                 }
                 return _subtasks;
             }
@@ -54,7 +54,7 @@ namespace Jira.SDK
                     }
                     else
                     {
-                        Issue issue = JiraEnvironment.Client.GetIssue(this.Key);
+                        Issue issue = Jira.Client.GetIssue(this.Key);
                         _timeTracking = issue.Fields.TimeTracking;
                     }
                 }
@@ -68,7 +68,7 @@ namespace Jira.SDK
             if (_worklogs == null)
             {
                 _worklogs =
-                   JiraEnvironment.Client.GetWorkLogs(this.Key).Worklogs;
+                   Jira.Client.GetWorkLogs(this.Key).Worklogs;
                 _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
@@ -81,8 +81,8 @@ namespace Jira.SDK
             {
                 if (_parent == null && Fields.Parent != null)
                 {
-                    _parent = JiraEnvironment.Client.GetIssue(Fields.Parent.Key);
-                    _parent.JiraEnvironment = JiraEnvironment;
+                    _parent = Jira.Client.GetIssue(Fields.Parent.Key);
+                    _parent.Jira = Jira;
                 }
                 return _parent;
             }
@@ -128,7 +128,7 @@ namespace Jira.SDK
                 if (_project == null)
                 {
                     _project = this.Fields.Project;
-                    _project.JiraEnvironment = JiraEnvironment;
+                    _project.Jira = Jira;
                 }
                 return _project;
             }
@@ -147,17 +147,17 @@ namespace Jira.SDK
                     //	JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
                     //}
 
-                    _epic = JiraEnvironment.Client.GetIssue(this.Fields.Customfield_10700);
-                    _epic.JiraEnvironment = this.JiraEnvironment;
+                    _epic = Jira.Client.GetIssue(this.Fields.Customfield_10700);
+                    _epic.Jira = this.Jira;
                 }
                 return _epic;
             }
             set
             {
                 _epic = value;
-                if (_epic.JiraEnvironment == null)
+                if (_epic.Jira == null)
                 {
-                    _epic.JiraEnvironment = this.JiraEnvironment;
+                    _epic.Jira = this.Jira;
                 }
             }
         }

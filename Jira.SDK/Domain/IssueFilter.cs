@@ -8,7 +8,7 @@ namespace Jira.SDK.Domain
 {
     public class IssueFilter
     {
-        internal JiraEnvironment JiraEnvironment { get; set; }
+        internal Jira Jira { get; set; }
 
         public String Name { get; set; }
         public String Description { get; set; }
@@ -19,8 +19,8 @@ namespace Jira.SDK.Domain
         {
                 if (_issues == null)
                 {
-                    _issues = JiraEnvironment.Client.SearchIssues(this.JQL);
-                    _issues.ForEach(issue => issue.JiraEnvironment = this.JiraEnvironment);
+                    _issues = Jira.Client.SearchIssues(this.JQL);
+                    _issues.ForEach(issue => issue.Jira = this.Jira);
                 }
                 return _issues;
         }

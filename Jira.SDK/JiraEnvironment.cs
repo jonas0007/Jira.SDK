@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Jira.SDK
 {
-    public class JiraEnvironment
+    public class Jira
     {
         private IJiraClient _client;
 		internal IJiraClient Client { get { return _client; } }
@@ -26,7 +26,7 @@ namespace Jira.SDK
         public List<Project> GetProjects()
         {
 			List<Project> projects = _client.GetProjects();
-            projects.ForEach(p => p.JiraEnvironment = this);
+            projects.ForEach(p => p.Jira = this);
             return projects;
         }
 
@@ -35,7 +35,7 @@ namespace Jira.SDK
             Project project = _client.GetProject(key);
             if (project != null)
             {
-                project.JiraEnvironment = this;
+                project.Jira = this;
             }
             return project;
         }
@@ -43,7 +43,7 @@ namespace Jira.SDK
 		public List<AgileBoard> GetAgileBoards()
 		{
 			List<AgileBoard> boards = _client.GetAgileBoards();
-			boards.ForEach(board => board.Environment = this);
+			boards.ForEach(board => board.Jira = this);
 			return boards;
 		}
 
@@ -61,7 +61,7 @@ namespace Jira.SDK
         public List<IssueFilter> GetFilters()
         {
             List<IssueFilter> filters = _client.GetFavoriteFilters();
-            filters.ForEach(filter => filter.JiraEnvironment = this);
+            filters.ForEach(filter => filter.Jira = this);
             return filters;
         }
 

@@ -29,8 +29,8 @@ namespace Jira.SDK
                 if (_issues == null)
                 {
                     _issues =
-                        Project.JiraEnvironment.Client.GetIssuesFromProjectVersion(this.Project.Key, this.Name);
-                    _issues.ForEach(issue => issue.JiraEnvironment = Project.JiraEnvironment);
+                        Project.Jira.Client.GetIssuesFromProjectVersion(this.Project.Key, this.Name);
+                    _issues.ForEach(issue => issue.Jira = Project.Jira);
                 }
                 return _issues;
             }

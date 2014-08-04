@@ -11,15 +11,15 @@ namespace Jira.SDK.Domain
 		public Int32 ID { get; set; }
 		public String Name { get; set; }
 		public Boolean SprintSupport { get; set; }
-		public JiraEnvironment Environment { get; set; }
+		public Jira Jira { get; set; }
 
 		private List<Sprint> _sprints;
 		public List<Sprint> GetSprints()
 		{
 			if (_sprints == null)
 			{
-				_sprints = Environment.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList();
-				_sprints.ForEach(sprint => sprint.Environment = this.Environment);
+				_sprints = Jira.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList();
+				_sprints.ForEach(sprint => sprint.Jira = this.Jira);
 			}
 			return _sprints;
 		}
@@ -29,16 +29,16 @@ namespace Jira.SDK.Domain
 		{
 			if (_backlogsprints == null)
 			{
-				_backlogsprints = Environment.Client.GetBacklogSprintsFromAgileBoard(this.ID);
-				_backlogsprints.ForEach(sprint => sprint.Environment = this.Environment);
+				_backlogsprints = Jira.Client.GetBacklogSprintsFromAgileBoard(this.ID);
+				_backlogsprints.ForEach(sprint => sprint.Jira = this.Jira);
 			}
 			return _backlogsprints;
 		}
 
 		public Sprint GetSprint(Int32 sprintID)
 		{
-			Sprint sprint = Environment.Client.GetSprint(this.ID, sprintID);
-			sprint.Environment = this.Environment;
+			Sprint sprint = Jira.Client.GetSprint(this.ID, sprintID);
+			sprint.Jira = this.Jira;
 
 			return sprint;
 		}

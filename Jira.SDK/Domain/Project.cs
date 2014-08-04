@@ -8,7 +8,7 @@ namespace Jira.SDK
 {
 	public class Project
 	{
-		public JiraEnvironment JiraEnvironment { get; set; }
+		public Jira Jira { get; set; }
 
 		public String Key { get; set; }
 		public String Name { get; set; }
@@ -19,7 +19,7 @@ namespace Jira.SDK
 
 		public User ProjectLead
 		{
-			get { return _lead ?? (_lead = JiraEnvironment.Client.GetUser(Lead.Username)); }
+			get { return _lead ?? (_lead = Jira.Client.GetUser(Lead.Username)); }
 		}
 
 		private List<User> _assignableUsers;
@@ -29,7 +29,7 @@ namespace Jira.SDK
 			{
 				return _assignableUsers ??
 					   (_assignableUsers =
-							JiraEnvironment.Client.GetAssignableUsers(this.Key));
+							Jira.Client.GetAssignableUsers(this.Key));
 			}
 		}
 
@@ -41,7 +41,7 @@ namespace Jira.SDK
 				if (_projectVersions == null)
 				{
 					_projectVersions =
-						   JiraEnvironment.Client.GetProjectVersions(this.Key);
+						   Jira.Client.GetProjectVersions(this.Key);
 
 					_projectVersions.ForEach(vers => vers.Project = this);
 				}
@@ -79,7 +79,7 @@ namespace Jira.SDK
 
         public Issue GetEpic(String epicName)
         {
-            return JiraEnvironment.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
+            return Jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
         }
 
 		public override int GetHashCode()
