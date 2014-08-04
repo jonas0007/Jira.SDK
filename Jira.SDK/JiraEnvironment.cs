@@ -47,11 +47,33 @@ namespace Jira.SDK
 			return boards;
 		}
 
+		public AgileBoard GetAgileBoard(Int32 agileBoardID)
+		{
+			AgileBoard board = GetAgileBoards().Where(b => b.ID == agileBoardID).FirstOrDefault();
+			if (board == null)
+			{
+				throw new Exception(String.Format("The board with ID {0} does not exist", agileBoardID));
+			}
+
+			return board;
+		}
+
         public List<IssueFilter> GetFilters()
         {
             List<IssueFilter> filters = _client.GetFavoriteFilters();
             filters.ForEach(filter => filter.JiraEnvironment = this);
             return filters;
         }
+
+		public IssueFilter GetFilter(String filtername)
+		{
+			IssueFilter filter = GetFilters().Where(f => f.Name.Equals(filtername)).FirstOrDefault();
+			if (filter == null)
+			{
+				throw new Exception(String.Format("The filter with name {0} does not exist", filtername));
+			}
+
+			return filter;
+		}
     }
 }
