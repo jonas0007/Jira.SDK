@@ -18,7 +18,7 @@ namespace Jira.SDK.Domain
 		{
 			if (_sprints == null)
 			{
-				_sprints = Environment.Client.GetSprintsFromAgileBoard(this.ID);
+				_sprints = Environment.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList();
 				_sprints.ForEach(sprint => sprint.Environment = this.Environment);
 			}
 			return _sprints;
