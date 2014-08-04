@@ -26,5 +26,12 @@ namespace Jira.SDK.Domain
 			}
 			return _issues;
 		}
+
+		private List<User> _users;
+		public List<User> GetAssignableUsers()
+		{
+			List<Project> projects = GetIssues().Select(issue => Environment.GetProject(issue.Project.Key)).Distinct().ToList();
+			return projects.SelectMany(proj => proj.AssignableUsers).ToList();
+		}
 	}
 }
