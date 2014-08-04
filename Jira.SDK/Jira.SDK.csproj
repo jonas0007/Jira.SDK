@@ -64,7 +64,7 @@
     <Compile Include="Domain\TimeTracking.cs" />
     <Compile Include="Domain\Worklog.cs" />
     <Compile Include="IJiraClient.cs" />
-    <Compile Include="JiraEnvironment.cs" />
+    <Compile Include="Jira.cs" />
     <Compile Include="JiraClient.cs" />
     <Compile Include="Domain\Project.cs" />
     <Compile Include="Domain\ProjectVersion.cs" />
