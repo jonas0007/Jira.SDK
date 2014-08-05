@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
 	public class Project
 	{
@@ -77,9 +77,10 @@ namespace Jira.SDK
 			}
 		}
 
-        public Issue GetEpic(String epicName)
+        public Epic GetEpic(String epicName)
         {
-            return Jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
+            Issue epic = Jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
+			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, new List<Issue>(), new Sprint());
         }
 
 		public override int GetHashCode()

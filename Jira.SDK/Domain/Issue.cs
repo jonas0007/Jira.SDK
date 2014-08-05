@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using RestSharp;
-using Jira.SDK.Domain;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
     public class Issue
     {
@@ -34,6 +33,10 @@ namespace Jira.SDK
                 }
                 return _subtasks;
             }
+			set
+			{
+				_subtasks = value;
+			}
         }
 
         public StatusEnum Status
@@ -134,31 +137,22 @@ namespace Jira.SDK
             }
         }
 
-        private Issue _epic;
-        public Issue Epic
+		private Epic _epic;
+        public Epic Epic
         {
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
                 {
-                    //Field field = JiraEnvironment.Fields.Where(f => f.Name.Equals("Epic Link")).FirstOrDefault();
-                    //if (field != null)
-                    //{
-                    //	JiraEnvironment.Client.GetIssueCustomFieldsFromIssue(this.Key);
-                    //}
-
-                    _epic = Jira.Client.GetIssue(this.Fields.Customfield_10700);
-                    _epic.Jira = this.Jira;
+                    Issue issue = Jira.Client.GetIssue(this.Fields.Customfield_10700);
+					issue.Jira = this.Jira;
+					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank, new List<Issue>(), new Sprint());
                 }
                 return _epic;
             }
             set
             {
                 _epic = value;
-                if (_epic.Jira == null)
-                {
-                    _epic.Jira = this.Jira;
-                }
             }
         }
 

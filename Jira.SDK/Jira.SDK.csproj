@@ -49,6 +49,7 @@
     <Compile Include="Domain\AgileBoard.cs" />
     <Compile Include="Domain\AgileBoardView.cs" />
     <Compile Include="Domain\CustomField.cs" />
+    <Compile Include="Domain\Epic.cs" />
     <Compile Include="Domain\Field.cs" />
     <Compile Include="Domain\IssueFilter.cs" />
     <Compile Include="Domain\IssueType.cs" />
