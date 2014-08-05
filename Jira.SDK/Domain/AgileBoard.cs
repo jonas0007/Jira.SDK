@@ -18,8 +18,7 @@ namespace Jira.SDK.Domain
 		{
 			if (_sprints == null)
 			{
-				_sprints = Jira.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList();
-				_sprints.ForEach(sprint => sprint.Jira = this.Jira);
+				_sprints = GetDetailedSprints(Jira.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList());
 			}
 			return _sprints;
 		}
@@ -29,10 +28,20 @@ namespace Jira.SDK.Domain
 		{
 			if (_backlogsprints == null)
 			{
-				_backlogsprints = Jira.Client.GetBacklogSprintsFromAgileBoard(this.ID);
-				_backlogsprints.ForEach(sprint => sprint.Jira = this.Jira);
+				_backlogsprints = GetDetailedSprints(Jira.Client.GetBacklogSprintsFromAgileBoard(this.ID));
 			}
 			return _backlogsprints;
+		}
+
+		private List<Sprint> GetDetailedSprints(List<Sprint> sprints)
+		{
+			List<Sprint> detailedSprints = new List<Sprint>();
+			foreach (Sprint sprint in sprints)
+			{
+				detailedSprints.Add(GetSprint(sprint.ID));
+			}
+
+			return detailedSprints;
 		}
 
 		public Sprint GetSprint(Int32 sprintID)
