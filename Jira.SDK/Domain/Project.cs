@@ -8,7 +8,16 @@ namespace Jira.SDK.Domain
 {
 	public class Project
 	{
-		public Jira Jira { get; set; }
+		private Jira _jira { get; set; }
+		public Jira GetJira()
+		{
+			return _jira;
+		}
+
+		public void SetJira(Jira jira)
+		{
+			_jira = jira;
+		}
 
 		public String Key { get; set; }
 		public String Name { get; set; }
@@ -19,7 +28,7 @@ namespace Jira.SDK.Domain
 
 		public User ProjectLead
 		{
-			get { return _lead ?? (_lead = Jira.Client.GetUser(Lead.Username)); }
+			get { return _lead ?? (_lead = _jira.Client.GetUser(Lead.Username)); }
 		}
 
 		private List<User> _assignableUsers;
@@ -29,7 +38,7 @@ namespace Jira.SDK.Domain
 			{
 				return _assignableUsers ??
 					   (_assignableUsers =
-							Jira.Client.GetAssignableUsers(this.Key));
+							_jira.Client.GetAssignableUsers(this.Key));
 			}
 		}
 
@@ -41,7 +50,7 @@ namespace Jira.SDK.Domain
 				if (_projectVersions == null)
 				{
 					_projectVersions =
-						   Jira.Client.GetProjectVersions(this.Key);
+						   _jira.Client.GetProjectVersions(this.Key);
 
 					_projectVersions.ForEach(vers => vers.Project = this);
 				}
@@ -79,7 +88,7 @@ namespace Jira.SDK.Domain
 
         public Epic GetEpic(String epicName)
         {
-            Issue epic = Jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
+			Issue epic = _jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
 			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, new List<Issue>(), new Sprint());
         }
 

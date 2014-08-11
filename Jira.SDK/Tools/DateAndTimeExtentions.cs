@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK.BLL.Tools
+namespace Jira.SDK.Tools
 {
 	public static class DateAndTimeExtentions
 	{

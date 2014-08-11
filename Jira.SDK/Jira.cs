@@ -26,7 +26,7 @@ namespace Jira.SDK
         public List<Project> GetProjects()
         {
 			List<Project> projects = _client.GetProjects();
-            projects.ForEach(p => p.Jira = this);
+            projects.ForEach(project => project.SetJira(this));
             return projects;
         }
 
@@ -35,7 +35,7 @@ namespace Jira.SDK
             Project project = _client.GetProject(key);
             if (project != null)
             {
-                project.Jira = this;
+                project.SetJira(this);
             }
             return project;
         }
@@ -43,7 +43,7 @@ namespace Jira.SDK
 		public List<AgileBoard> GetAgileBoards()
 		{
 			List<AgileBoard> boards = _client.GetAgileBoards();
-			boards.ForEach(board => board.Jira = this);
+			boards.ForEach(board => board.SetJira(this));
 			return boards;
 		}
 
@@ -61,7 +61,7 @@ namespace Jira.SDK
         public List<IssueFilter> GetFilters()
         {
             List<IssueFilter> filters = _client.GetFavoriteFilters();
-            filters.ForEach(filter => filter.Jira = this);
+            filters.ForEach(filter => filter.SetJira(this));
             return filters;
         }
 

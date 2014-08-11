@@ -10,7 +10,16 @@ namespace Jira.SDK.Domain
 {
     public class Issue
     {
-        public Jira Jira { get; set; }
+        private Jira _jira { get; set; }
+		public Jira GetJira()
+		{
+			return _jira;
+		}
+
+		public void SetJira(Jira jira)
+		{
+			_jira = jira;
+		}
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
@@ -28,8 +37,8 @@ namespace Jira.SDK.Domain
             {
                 if (_subtasks == null)
                 {
-                    _subtasks = Jira.Client.GetSubtasksFromIssue(this.Key);
-                    _subtasks.ForEach(subtask => subtask.Jira = Jira);
+					_subtasks = _jira.Client.GetSubtasksFromIssue(this.Key);
+                    _subtasks.ForEach(subtask => subtask.SetJira(_jira));
                 }
                 return _subtasks;
             }
@@ -57,7 +66,7 @@ namespace Jira.SDK.Domain
                     }
                     else
                     {
-                        Issue issue = Jira.Client.GetIssue(this.Key);
+                        Issue issue = _jira.Client.GetIssue(this.Key);
                         _timeTracking = issue.Fields.TimeTracking;
                     }
                 }
@@ -71,7 +80,7 @@ namespace Jira.SDK.Domain
             if (_worklogs == null)
             {
                 _worklogs =
-                   Jira.Client.GetWorkLogs(this.Key).Worklogs;
+                   _jira.Client.GetWorkLogs(this.Key).Worklogs;
                 _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
@@ -84,8 +93,8 @@ namespace Jira.SDK.Domain
             {
                 if (_parent == null && Fields.Parent != null)
                 {
-                    _parent = Jira.Client.GetIssue(Fields.Parent.Key);
-                    _parent.Jira = Jira;
+                    _parent = _jira.Client.GetIssue(Fields.Parent.Key);
+                    _parent.SetJira(_jira);
                 }
                 return _parent;
             }
@@ -131,7 +140,7 @@ namespace Jira.SDK.Domain
                 if (_project == null)
                 {
                     _project = this.Fields.Project;
-                    _project.Jira = Jira;
+                    _project.SetJira(_jira);
                 }
                 return _project;
             }
@@ -144,8 +153,8 @@ namespace Jira.SDK.Domain
             {
                 if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
                 {
-                    Issue issue = Jira.Client.GetIssue(this.Fields.Customfield_10700);
-					issue.Jira = this.Jira;
+                    Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
+					issue.SetJira(_jira);
 					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank, new List<Issue>(), new Sprint());
                 }
                 return _epic;

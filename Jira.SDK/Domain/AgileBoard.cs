@@ -11,14 +11,23 @@ namespace Jira.SDK.Domain
 		public Int32 ID { get; set; }
 		public String Name { get; set; }
 		public Boolean SprintSupport { get; set; }
-		public Jira Jira { get; set; }
+		private Jira _jira { get; set; }
+		public Jira GetJira()
+		{
+			return _jira;
+		}
+
+		public void SetJira(Jira jira)
+		{
+			_jira = jira;
+		}
 
 		private List<Sprint> _sprints;
 		public List<Sprint> GetSprints()
 		{
 			if (_sprints == null)
 			{
-				_sprints = GetDetailedSprints(Jira.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList());
+				_sprints = GetDetailedSprints(_jira.Client.GetSprintsFromAgileBoard(this.ID).OrderByDescending(sprint => sprint.Name).ToList());
 			}
 			return _sprints;
 		}
@@ -28,7 +37,7 @@ namespace Jira.SDK.Domain
 		{
 			if (_backlogsprints == null)
 			{
-				_backlogsprints = GetDetailedSprints(Jira.Client.GetBacklogSprintsFromAgileBoard(this.ID));
+				_backlogsprints = GetDetailedSprints(_jira.Client.GetBacklogSprintsFromAgileBoard(this.ID));
 			}
 			return _backlogsprints;
 		}
@@ -46,8 +55,8 @@ namespace Jira.SDK.Domain
 
 		public Sprint GetSprint(Int32 sprintID)
 		{
-			Sprint sprint = Jira.Client.GetSprint(this.ID, sprintID);
-			sprint.Jira = this.Jira;
+			Sprint sprint = _jira.Client.GetSprint(this.ID, sprintID);
+			sprint.SetJira(_jira);
 
 			return sprint;
 		}
