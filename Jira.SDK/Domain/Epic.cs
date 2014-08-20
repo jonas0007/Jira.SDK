@@ -28,5 +28,28 @@ namespace Jira.SDK.Domain
 		}
 		public double TimeSpentInSeconds { get; private set; }
 		public double EstimateInSeconds { get; private set; }
+
+        #region equality
+
+        public override int GetHashCode()
+        {
+            return Key.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            Boolean isEqual = false;
+            if (obj is Epic)
+            {
+                isEqual = Key.Equals(((Epic)obj).Key);
+            }
+            else if (obj is Issue)
+            {
+                isEqual = Key.Equals(((Issue)obj).Key);
+            }
+            return false;
+        }
+
+        #endregion
 	}
 }
