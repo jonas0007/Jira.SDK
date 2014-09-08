@@ -47,7 +47,7 @@ namespace Jira.SDK.Domain
             {
                 isEqual = Key.Equals(((Issue)obj).Key);
             }
-            return false;
+			return isEqual;
         }
 
         #endregion
