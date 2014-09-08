@@ -63,6 +63,7 @@
     <Compile Include="Domain\Status.cs" />
     <Compile Include="Domain\SubTask.cs" />
     <Compile Include="Domain\TimeTracking.cs" />
+    <Compile Include="Domain\WorkDay.cs" />
     <Compile Include="Domain\Worklog.cs" />
     <Compile Include="IJiraClient.cs" />
     <Compile Include="Jira.cs" />
