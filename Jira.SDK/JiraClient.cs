@@ -178,6 +178,21 @@ namespace Jira.SDK
         {
             return GetList<IssueFilter>(JiraObjectEnum.Filters);
         }
+
+		public List<Issue> GetIssuesWithEpicLink(String epicLink)
+		{
+			return SearchIssues(String.Format("'Epic Link' = {0}", epicLink));
+		}
+
+		public List<Issue> GetEpicIssuesFromProject(String projectName)
+		{
+			return SearchIssues(String.Format("project = '{0}' AND Type = Epic", projectName));
+		}
+
+		public Issue GetEpicIssueFromProject(String projectName, String epicName)
+		{
+			return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", projectName, epicName)).FirstOrDefault();
+		}
 		#endregion
 
 		#region Worklog

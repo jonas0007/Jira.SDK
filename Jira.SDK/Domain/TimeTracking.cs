@@ -1,16 +1,18 @@
-﻿using System;
+﻿using Jira.SDK.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
     public class TimeTracking
     {
         public long OriginalEstimateSeconds { get; set; }
         public long RemainingEstimateSeconds { get; set; }
         public long TimeSpentSeconds { get; set; }
+		internal Issue Issue { get; set; }
 
         public TimeSpan OriginalEstimate
         {
@@ -26,5 +28,10 @@ namespace Jira.SDK
         {
             get { return TimeSpan.FromSeconds(this.TimeSpentSeconds); }
         }
+
+		public TimeSpan TimeOpen
+		{
+			get { return Issue.Resolved.Subtract(Issue.Created); }
+		}
     }
 }

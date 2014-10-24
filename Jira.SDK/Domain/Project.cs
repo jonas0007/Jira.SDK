@@ -86,10 +86,16 @@ namespace Jira.SDK.Domain
 			}
 		}
 
+		public List<Epic> GetEpics()
+		{
+			List<Issue> epics = _jira.Client.GetEpicIssuesFromProject(this.Name);
+			return epics.Select(epic => new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, GetJira())).ToList();
+		}
+
         public Epic GetEpic(String epicName)
         {
-			Issue epic = _jira.Client.SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", this.Name, epicName)).FirstOrDefault();
-			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, new List<Issue>(), new Sprint());
+			Issue epic = _jira.Client.GetEpicIssueFromProject(this.Name, epicName);
+			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank);
         }
 
 		public override int GetHashCode()

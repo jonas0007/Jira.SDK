@@ -32,6 +32,26 @@ namespace Jira.SDK.Domain
 			return _sprints;
 		}
 
+		private Sprint _currentSprint;
+		public Sprint GetCurrentSprint()
+		{
+			if (_currentSprint == null)
+			{
+				_currentSprint = GetSprints().Where(sprint => (!sprint.StartDate.Equals(DateTime.MinValue) ? sprint.StartDate : DateTime.MaxValue).Date.CompareTo(DateTime.Now.Date) <= 0 && (!sprint.EndDate.Equals(DateTime.MinValue) ? sprint.EndDate : DateTime.MaxValue).Date.CompareTo(DateTime.Now.Date) >= 0).FirstOrDefault();
+			}
+			return _currentSprint;
+		}
+
+		private Sprint _nextSprint;
+		public Sprint GetNextSprint()
+		{
+			if (_nextSprint == null)
+			{
+				_nextSprint = GetBacklogSprints().Where(sprint => sprint.StartDate.Date.CompareTo(DateTime.MinValue) == 0).FirstOrDefault();
+			}
+			return _nextSprint;
+		}
+
 		private List<Sprint> _backlogsprints;
 		public List<Sprint> GetBacklogSprints()
 		{
@@ -45,10 +65,10 @@ namespace Jira.SDK.Domain
 		private List<Sprint> GetDetailedSprints(List<Sprint> sprints)
 		{
 			List<Sprint> detailedSprints = new List<Sprint>();
-			foreach (Sprint sprint in sprints)
+			Parallel.ForEach(sprints, sprint =>
 			{
 				detailedSprints.Add(GetSprint(sprint.ID));
-			}
+			});
 
 			return detailedSprints;
 		}

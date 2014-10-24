@@ -48,18 +48,26 @@ namespace Jira.SDK.Domain
 		private List<User> _users;
 		public List<User> GetAssignableUsers(List<Issue> additionalIssues)
 		{
+			return GetAssignableUsers(additionalIssues, this.StartDate, this.EndDate);
+		}
+
+		public List<User> GetAssignableUsers(List<Issue> additionalIssues, DateTime from, DateTime until)
+		{
 			if (_users == null)
 			{
 				List<Project> projects = GetIssues().Select(issue => _jira.GetProject(issue.Project.Key)).Distinct().ToList();
-				_users = projects.SelectMany(proj => proj.AssignableUsers).ToList();
+				_users = projects.SelectMany(proj => proj.AssignableUsers).Where(user => !user.Username.Contains("svc")).ToList();
 
 				additionalIssues.AddRange(this.GetIssues());
+
+				//Remove the double issues.
+				additionalIssues.RemoveAll(issue => additionalIssues.Where(doubleissue => doubleissue.Equals(issue)).Count() > 1);
 
 				_users.ForEach(user =>
 				{
 					user.SetJira(this._jira);
 					user.IsProjectLead = projects.Any(project => project.ProjectLead.Equals(user));
-					user.SetWorkDays(additionalIssues, this.StartDate, this.EndDate);
+					user.SetWorkDays(additionalIssues, from, until);
 				});
 			}
 			return _users;

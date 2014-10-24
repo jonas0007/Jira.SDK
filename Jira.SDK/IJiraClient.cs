@@ -26,13 +26,18 @@ namespace Jira.SDK
 		List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
 		Issue GetIssue(String key);
+		List<Issue> SearchIssues(String jql);
+
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String issueKey);
 		WorklogSearchResult GetWorkLogs(String issueKey);
 		Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key);
 
-        List<IssueFilter> GetFavoriteFilters();
+		List<Issue> GetEpicIssuesFromProject(String projectName);
+		Issue GetEpicIssueFromProject(String projectName, String epicName);
 
-        List<Issue> SearchIssues(String jql);
+		List<Issue> GetIssuesWithEpicLink(String epicLink);
+
+        List<IssueFilter> GetFavoriteFilters();
 	}
 }

@@ -15,13 +15,30 @@ namespace Jira.SDK.Domain
 
 		public List<Issue> Issues { get; set; }
 		public Sprint sprint { get; set; }
-		public Epic(String key, String summary, String erpCode, Int32 rank,  List<Issue> issues, Sprint sprint)
+
+		public Epic(String key, String summary, String erpCode, Int32 rank)
 		{
 			Key = key;
 			Summary = summary;
 			ERPCode = erpCode;
 			Rank = rank;
 
+			Issues = new List<Issue>();
+			EstimateInSeconds = 0;
+			TimeSpentInSeconds = 0;
+		}
+
+		public Epic(String key, String summary, String erpCode, Int32 rank, Jira jira)
+			: this(key, summary, erpCode, rank)
+		{
+			Issues = jira.Client.GetIssuesWithEpicLink(this.Key);
+			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
+			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Sum(worklog => worklog.TimeSpentSeconds));
+		}
+
+		public Epic(String key, String summary, String erpCode, Int32 rank, List<Issue> issues, Sprint sprint)
+			: this(key, summary, erpCode, rank)
+		{
 			Issues = issues;
 			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
 			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Where(worklog => worklog.Started.CompareTo(sprint.StartDate) >= 0 && worklog.Started.CompareTo(sprint.EndDate) <= 0).Sum(worklog => worklog.TimeSpentSeconds));

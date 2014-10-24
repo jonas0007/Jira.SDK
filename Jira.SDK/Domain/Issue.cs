@@ -69,6 +69,8 @@ namespace Jira.SDK.Domain
                         Issue issue = _jira.Client.GetIssue(this.Key);
                         _timeTracking = issue.Fields.TimeTracking;
                     }
+
+					_timeTracking.Issue = this;
                 }
                 return _timeTracking;
             }
@@ -155,7 +157,7 @@ namespace Jira.SDK.Domain
                 {
                     Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
 					issue.SetJira(_jira);
-					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank, new List<Issue>(), new Sprint());
+					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank);
                 }
                 return _epic;
             }

@@ -24,6 +24,7 @@ namespace Jira.SDK
         Reopened,
         Resolved,
         Closed,
-		Waitingforinformation
+		Waitingforinformation,
+		Readyfortesting
     }
 }
