@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jira.SDK.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetProjectVersions()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			Project project = environment.GetProject("ITDEV");
@@ -29,7 +30,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetProjectVersionIssuesTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			Project project = environment.GetProject("ITDEV");

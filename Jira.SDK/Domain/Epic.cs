@@ -9,6 +9,7 @@ namespace Jira.SDK.Domain
 	public class Epic
 	{
 		public String Key { get; set; }
+		public User Reporter { get; set; }
 		public String Summary { get; set; }
 		public String ERPCode { get; set; }
 		public Int32 Rank { get; set; }
@@ -16,28 +17,29 @@ namespace Jira.SDK.Domain
 		public List<Issue> Issues { get; set; }
 		public Sprint sprint { get; set; }
 
-		public Epic(String key, String summary, String erpCode, Int32 rank)
+		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter)
 		{
 			Key = key;
 			Summary = summary;
 			ERPCode = erpCode;
 			Rank = rank;
+			Reporter = reporter;
 
 			Issues = new List<Issue>();
 			EstimateInSeconds = 0;
 			TimeSpentInSeconds = 0;
 		}
 
-		public Epic(String key, String summary, String erpCode, Int32 rank, Jira jira)
-			: this(key, summary, erpCode, rank)
+		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter, Jira jira)
+			: this(key, summary, erpCode, rank, reporter)
 		{
 			Issues = jira.Client.GetIssuesWithEpicLink(this.Key);
 			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
 			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Sum(worklog => worklog.TimeSpentSeconds));
 		}
 
-		public Epic(String key, String summary, String erpCode, Int32 rank, List<Issue> issues, Sprint sprint)
-			: this(key, summary, erpCode, rank)
+		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter, List<Issue> issues, Sprint sprint)
+			: this(key, summary, erpCode, rank, reporter)
 		{
 			Issues = issues;
 			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jira.SDK.Domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,13 +14,13 @@ namespace Jira.SDK.Tests
 		public void GetWorklogTest()
 		{
 			MockJiraClient mockClient = new MockJiraClient();
-			JiraEnvironment environment = new JiraEnvironment();
-			environment.Connect(mockClient);
+			Jira jira = new Jira();
+			jira.Connect(mockClient);
 
 			//The first test issue contains 2 worklogs. One from Jonas, One from Marc
 			Issue firstIssue = mockClient.GetIssue("ITDEV-7");
 
-			firstIssue.JiraEnvironment = environment;
+			firstIssue.SetJira(jira);
 
 			Assert.NotNull(firstIssue.GetWorklogs());
 			Assert.Equal(2, firstIssue.GetWorklogs().Count);
@@ -29,7 +30,7 @@ namespace Jira.SDK.Tests
 
 			//The second test issue contains 1 worklogs from Marc
 			Issue secondIssue = mockClient.GetIssue("ITDEV-6");
-			secondIssue.JiraEnvironment = environment;
+			secondIssue.SetJira(jira);
 
 			Assert.NotNull(secondIssue.GetWorklogs());
 			Assert.Equal(1, secondIssue.GetWorklogs().Count);

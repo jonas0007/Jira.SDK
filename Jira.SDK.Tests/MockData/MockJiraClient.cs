@@ -1379,5 +1379,56 @@ namespace Jira.SDK.Tests
 		{
 			return _issuesFromSprint[sprintID];
 		}
+
+
+		public List<Field> GetFields()
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Sprint> GetBacklogSprintsFromAgileBoard(int agileBoardID)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Sprint GetSprint(int agileBoardID, int sprintID)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Issue> SearchIssues(string jql)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Issue> GetSubtasksFromIssue(string issueKey)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Dictionary<string, string> GetIssueCustomFieldsFromIssue(string key)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Issue> GetEpicIssuesFromProject(string projectName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Issue GetEpicIssueFromProject(string projectName, string epicName)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<Issue> GetIssuesWithEpicLink(string epicLink)
+		{
+			throw new NotImplementedException();
+		}
+
+		public List<IssueFilter> GetFavoriteFilters()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

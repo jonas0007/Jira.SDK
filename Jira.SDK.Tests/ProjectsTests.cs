@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using FakeItEasy;
+using Jira.SDK.Domain;
 
 namespace Jira.SDK.Tests
 {
@@ -14,7 +15,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetProjectsTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			List<Project> projects = environment.GetProjects();
@@ -26,7 +27,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetExistingProjectTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			Project project = environment.GetProject("ITDEV");
@@ -38,7 +39,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetUnknownProjectTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			Project project = environment.GetProject("NOTEXISTING");
@@ -49,7 +50,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void ProjectLeadTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			Project project = environment.GetProject("ITDEV");

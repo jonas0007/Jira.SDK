@@ -13,7 +13,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetAgileBoardTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			List<AgileBoard> agileboards = environment.GetAgileBoards();
@@ -25,7 +25,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetSprintsFromAgileBoardTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			AgileBoard agileboard = environment.GetAgileBoards().First();
@@ -40,7 +40,7 @@ namespace Jira.SDK.Tests
 		[Fact]
 		public void GetIssuesFromSprintTest()
 		{
-			JiraEnvironment environment = new JiraEnvironment();
+			Jira environment = new Jira();
 			environment.Connect(new MockJiraClient());
 
 			//Get the first agile board

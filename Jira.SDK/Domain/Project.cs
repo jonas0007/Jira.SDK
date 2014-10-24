@@ -89,13 +89,13 @@ namespace Jira.SDK.Domain
 		public List<Epic> GetEpics()
 		{
 			List<Issue> epics = _jira.Client.GetEpicIssuesFromProject(this.Name);
-			return epics.Select(epic => new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, GetJira())).ToList();
+			return epics.Select(epic => new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, epic.Reporter)).ToList();
 		}
 
         public Epic GetEpic(String epicName)
         {
 			Issue epic = _jira.Client.GetEpicIssueFromProject(this.Name, epicName);
-			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank);
+			return new Epic(epic.Key, epic.Summary, epic.ERPCode, epic.Rank, epic.Reporter);
         }
 
 		public override int GetHashCode()

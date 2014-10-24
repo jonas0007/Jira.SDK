@@ -115,6 +115,13 @@ namespace Jira.SDK.Domain
             get { return Fields.Assignee ?? User.UndefinedUser; }
             set { Fields.Assignee = value; }
         }
+
+		public User Reporter
+		{
+			get { return Fields.Reporter ?? User.UndefinedUser; }
+			set { Fields.Reporter = value; }
+		}
+
         public DateTime Created
         {
             get { return Fields.Created; }
@@ -157,7 +164,7 @@ namespace Jira.SDK.Domain
                 {
                     Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
 					issue.SetJira(_jira);
-					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank);
+					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank, issue.Reporter);
                 }
                 return _epic;
             }
