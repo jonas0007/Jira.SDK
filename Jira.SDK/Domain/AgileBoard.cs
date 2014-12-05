@@ -32,6 +32,14 @@ namespace Jira.SDK.Domain
 			return _sprints;
 		}
 
+		public List<Sprint> GetAllSprints()
+		{
+			List<Sprint> sprints = GetSprints();
+			sprints.AddRange(GetBacklogSprints());
+
+			return sprints;
+		}
+
 		private Sprint _currentSprint;
 		public Sprint GetCurrentSprint()
 		{
@@ -67,16 +75,31 @@ namespace Jira.SDK.Domain
 			List<Sprint> detailedSprints = new List<Sprint>();
 			Parallel.ForEach(sprints, sprint =>
 			{
-				detailedSprints.Add(GetSprint(sprint.ID));
+				detailedSprints.Add(GetSprintDetail(sprint));
 			});
 
 			return detailedSprints;
 		}
 
-		public Sprint GetSprint(Int32 sprintID)
+		public Sprint GetSprintDetail(Sprint sprint)
+		{
+			Sprint detailedSprint = GetSprintByID(sprint.ID);
+			if (detailedSprint == null)
+			{
+				detailedSprint = sprint;
+			}
+			detailedSprint.SetJira(_jira);
+
+			return detailedSprint;
+		}
+
+		public Sprint GetSprintByID(Int32 sprintID)
 		{
 			Sprint sprint = _jira.Client.GetSprint(this.ID, sprintID);
-			sprint.SetJira(_jira);
+			if (sprint != null)
+			{
+				sprint.SetJira(_jira);
+			}
 
 			return sprint;
 		}

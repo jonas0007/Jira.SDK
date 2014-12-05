@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 using RestSharp;
+using System.Text.RegularExpressions;
 
 namespace Jira.SDK.Domain
 {
@@ -29,6 +30,12 @@ namespace Jira.SDK.Domain
             get { return Fields.Summary; }
             set { Fields.Summary = value; }
         }
+
+		public String Description
+		{
+			get { return Fields.Description; }
+			set { Fields.Description = value; }
+		}
 
         private List<Issue> _subtasks;
         public List<Issue> Subtasks
@@ -81,9 +88,16 @@ namespace Jira.SDK.Domain
         {
             if (_worklogs == null)
             {
-                _worklogs =
-                   _jira.Client.GetWorkLogs(this.Key).Worklogs;
-                _worklogs.ForEach(wl => wl.Issue = this);
+				if (Fields.Worklog != null)
+				{
+					_worklogs = Fields.Worklog.Worklogs;
+				}
+				else
+				{
+					_worklogs =
+					   _jira.Client.GetWorkLogs(this.Key).Worklogs;
+				}
+				_worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
         }
@@ -164,7 +178,8 @@ namespace Jira.SDK.Domain
                 {
                     Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
 					issue.SetJira(_jira);
-					_epic = new Epic(issue.Key, issue.Summary, issue.ERPCode, issue.Rank, issue.Reporter);
+
+					_epic = Epic.FromIssue(issue);
                 }
                 return _epic;
             }
@@ -197,6 +212,40 @@ namespace Jira.SDK.Domain
                 Fields.Customfield_11000 = new CustomField() { Value = value };
             }
         }
+
+		public Int32 SprintID
+		{
+			get
+			{
+				String sprintDescription = Fields.Customfield_10300;
+				if (!String.IsNullOrEmpty(sprintDescription))
+				{
+					MatchCollection matches = Regex.Matches(sprintDescription, ",id=(?<SprintID>\\d+)]");
+					Int32 id = -1;
+						
+					foreach(Match match in matches)
+					{
+						if (match.Success)
+						{
+							id = Int32.Parse(match.Groups["SprintID"].Value);
+						}
+					}
+					
+					return id;
+				}
+				return -1;
+			}
+		}
+
+		public String Severity
+		{
+			get
+			{
+				return (Fields.customfield_10103 != null ? Fields.customfield_10103.Value : "");
+			}
+		}
+
+		public Sprint Sprint { get; set; }
 
         public Dictionary<String, String> CustomFields
         {
@@ -245,6 +294,15 @@ namespace Jira.SDK.Domain
         public Int32 Customfield_10004 { get; set; }
         //ERP Code
         public CustomField Customfield_11000 { get; set; }
+		//Epic Status
+		public CustomField Customfield_10702 { get; set; }
+		//SprintID
+		public String Customfield_10300 { get; set; }
+		//Severity
+		public CustomField customfield_10103 { get; set; }
+
         public Dictionary<String, String> Fields { get; set; }
+
+		public WorklogSearchResult Worklog { get; set; }
     }
 }

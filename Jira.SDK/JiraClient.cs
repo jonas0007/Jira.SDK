@@ -72,7 +72,7 @@ namespace Jira.SDK
 
 		public List<Issue> SearchIssues(String jql)
 		{
-			return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" } }).Issues;
+			return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" } }).Issues;
 		}
 
 		#region Fields
@@ -191,7 +191,7 @@ namespace Jira.SDK
 
 		public Issue GetEpicIssueFromProject(String projectName, String epicName)
 		{
-			return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic name' = '{1}'", projectName, epicName)).FirstOrDefault();
+			return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic Name' = '{1}'", projectName, epicName)).FirstOrDefault();
 		}
 		#endregion
 

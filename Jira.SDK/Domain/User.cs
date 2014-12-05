@@ -64,10 +64,10 @@ namespace Jira.SDK
             {
                 return new User()
                 {
-                    DisplayName = "unassigned",
+                    DisplayName = "Unassigned",
                     EmailAddress = "",
-                    Name = "unassigned",
-                    Key = "unassigned"
+                    Name = "Unassigned",
+                    Key = "Unassigned"
                 };
             }
         }

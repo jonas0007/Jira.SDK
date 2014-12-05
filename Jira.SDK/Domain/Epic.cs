@@ -6,69 +6,123 @@ using System.Threading.Tasks;
 
 namespace Jira.SDK.Domain
 {
-	public class Epic
+	public class Epic : Issue
 	{
-		public String Key { get; set; }
-		public User Reporter { get; set; }
-		public String Summary { get; set; }
-		public String ERPCode { get; set; }
-		public Int32 Rank { get; set; }
+		private List<Issue> _issues;
+		public List<Issue> Issues
+		{
+			get
+			{
+				if (_issues == null)
+				{
+					throw new ArgumentException("The issues aren't loaded yet");
+				}
+				return _issues;
+			}
+			private set
+			{
+				_issues = value;
+			}
+		}
 
-		public List<Issue> Issues { get; set; }
-		public Sprint sprint { get; set; }
+		public List<Sprint> Sprints { private get; set; }
 
-		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter)
+		public String EpicStatus
+		{
+			get{
+				return (Fields.Customfield_10702 != null ? Fields.Customfield_10702.Value : "");
+			}
+		}
+
+		public double TimeSpentInSeconds { get; private set; }
+		public double EstimateInSeconds { get; private set; }
+
+		public double GetCost(Double costPerSecond)
+		{
+			return Math.Round(TimeSpentInSeconds * costPerSecond, 2);
+		}
+
+		public double GetEstimatedCost(Double costPerSecond)
+		{
+			return Math.Round(EstimateInSeconds * costPerSecond, 2);
+		}
+
+		public void LoadIssues(List<Sprint> sprints)
+		{
+			List<Issue> issues = GetJira().Client.GetIssuesWithEpicLink(this.Key);
+			issues.ForEach(issue => issue.SetJira(GetJira()));
+
+			foreach (Issue issue in issues)
+			{
+				issue.Sprint = sprints.Where(sprint => sprint.ID == issue.SprintID).FirstOrDefault();
+			}
+
+			LoadIssues(issues);
+		}
+
+		public void LoadIssues(List<Issue> issues)
+		{
+			LoadIssues(issues, DateTime.MinValue, DateTime.MaxValue);
+		}
+
+		public void LoadIssues(List<Issue> issues, DateTime worklogStartdate, DateTime worklogEnddate)
+		{
+			Issues = issues;
+
+			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
+			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Where(worklog => worklog.Started.CompareTo(worklogStartdate) >= 0 && worklog.Started.CompareTo(worklogEnddate) <= 0).Sum(worklog => worklog.TimeSpentSeconds));
+		}
+
+		public static Epic UndefinedEpic
+		{
+			get
+			{
+				return new Epic("NONE", "Issues without feature");
+			}
+		}
+
+		//The private constructor for undefined epics
+		private Epic(String key, IssueFields fields, Jira jira)
+		{
+			base.Key = key;
+			base.Fields = fields;
+			base.SetJira(jira);
+		}
+
+		private Epic(String key, String summary)
 		{
 			Key = key;
+
+			Fields = new IssueFields()
+			{
+				Assignee = User.UndefinedUser,
+				Reporter = User.UndefinedUser,
+				Summary = "",
+				Created = DateTime.MinValue,
+				Updated = DateTime.MinValue,
+				Status = new Status() { ID = 0, Name = StatusEnum.Open.ToString() },
+				TimeTracking = new TimeTracking()
+				{
+					Issue = this,
+					OriginalEstimateSeconds = 0,
+					RemainingEstimateSeconds = 0
+				}
+			};
+
 			Summary = summary;
-			ERPCode = erpCode;
-			Rank = rank;
-			Reporter = reporter;
+			ERPCode = "";
+			Rank = 0;
+			Reporter = User.UndefinedUser;
+			Assignee = User.UndefinedUser;
 
 			Issues = new List<Issue>();
 			EstimateInSeconds = 0;
 			TimeSpentInSeconds = 0;
 		}
 
-		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter, Jira jira)
-			: this(key, summary, erpCode, rank, reporter)
+		public static Epic FromIssue(Issue issue)
 		{
-			Issues = jira.Client.GetIssuesWithEpicLink(this.Key);
-			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
-			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Sum(worklog => worklog.TimeSpentSeconds));
+			return new Epic(issue.Key, issue.Fields, issue.GetJira());
 		}
-
-		public Epic(String key, String summary, String erpCode, Int32 rank, User reporter, List<Issue> issues, Sprint sprint)
-			: this(key, summary, erpCode, rank, reporter)
-		{
-			Issues = issues;
-			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
-			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Where(worklog => worklog.Started.CompareTo(sprint.StartDate) >= 0 && worklog.Started.CompareTo(sprint.EndDate) <= 0).Sum(worklog => worklog.TimeSpentSeconds));
-		}
-		public double TimeSpentInSeconds { get; private set; }
-		public double EstimateInSeconds { get; private set; }
-
-        #region equality
-
-        public override int GetHashCode()
-        {
-            return Key.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            Boolean isEqual = false;
-            if (obj is Epic)
-            {
-                isEqual = Key.Equals(((Epic)obj).Key);
-            }
-            else if (obj is Issue)
-            {
-                isEqual = Key.Equals(((Issue)obj).Key);
-            }
-			return isEqual;
-        }
-
-        #endregion
 	}
 }

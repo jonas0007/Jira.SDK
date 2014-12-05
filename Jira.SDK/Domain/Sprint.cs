@@ -72,5 +72,21 @@ namespace Jira.SDK.Domain
 			}
 			return _users;
 		}
+
+		public List<Epic> GetEpics()
+		{
+			Epic undefinedEpic = Epic.UndefinedEpic;
+			undefinedEpic.SetJira(this.GetJira());
+
+			Dictionary<Epic, List<Issue>> issuesByEpic = GetIssues().GroupBy(issue => issue.Epic != null ? issue.Epic : undefinedEpic).ToDictionary(group => group.Key, group => group.ToList());
+			List<Epic> epics = new List<Epic>();
+			foreach (Epic epic in issuesByEpic.Keys)
+			{
+				epic.LoadIssues(issuesByEpic[epic], this.StartDate, this.EndDate);
+				epics.Add(epic);
+			}
+
+			return epics.OrderBy(epic => epic.Rank).ToList();
+		}
 	}
 }

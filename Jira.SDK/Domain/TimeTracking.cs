@@ -29,9 +29,27 @@ namespace Jira.SDK.Domain
             get { return TimeSpan.FromSeconds(this.TimeSpentSeconds); }
         }
 
+		public double TimeOpenSeconds
+		{
+			get
+			{
+				return TimeOpen.TotalSeconds;
+			}
+		}
+
 		public TimeSpan TimeOpen
 		{
-			get { return Issue.Resolved.Subtract(Issue.Created); }
+			get 
+			{
+				if (Issue.Resolved == DateTime.MinValue)
+				{
+					return DateTime.Now.Subtract(Issue.Created);
+				}
+				else
+				{
+					return Issue.Resolved.Subtract(Issue.Created);
+				}
+			}
 		}
     }
 }
