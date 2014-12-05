@@ -19,6 +19,7 @@ namespace Jira.SDK.Domain
 			_jira = jira;
 		}
 
+		public Int32 ID { get; set; }
 		public String Key { get; set; }
 		public String Name { get; set; }
 
