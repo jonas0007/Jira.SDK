@@ -36,7 +36,7 @@ namespace Jira.SDK.Tools
 			return days;
 		}
 
-		public static String ToDetailedString(this TimeSpan time, Int32 hoursInDay)
+		public static String ToDetailedString(this TimeSpan time, Int32 hoursInDay, Int32 daysInWeek)
 		{
 			StringBuilder output = new StringBuilder("0h");
 			if (time.TotalMinutes > 0)
@@ -45,8 +45,8 @@ namespace Jira.SDK.Tools
 				Int32 days = (int)(time.TotalHours / hoursInDay);
 				Int32 hours = (((int)time.TotalHours) % hoursInDay);
 				Int32 minutes = (((int)time.TotalMinutes) % 60);
-				Int32 weeks = (int)days / 5;
-				days = days % 5;
+				Int32 weeks = (int)days / daysInWeek;
+				days = days % daysInWeek;
 
 				if (weeks > 0)
 					output.Append(String.Format("{0}w ", weeks));
