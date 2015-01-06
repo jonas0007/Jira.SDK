@@ -60,6 +60,11 @@ namespace Jira.SDK.Domain
 			LoadIssues(issues);
 		}
 
+		public void LoadIssues()
+		{
+			LoadIssues(GetJira().Client.GetIssuesWithEpicLink(this.Key));
+		}
+
 		public void LoadIssues(List<Issue> issues)
 		{
 			LoadIssues(issues, DateTime.MinValue, DateTime.MaxValue);
