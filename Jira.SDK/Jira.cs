@@ -40,6 +40,17 @@ namespace Jira.SDK
             return project;
         }
 
+		public Issue GetIssue(String key)
+		{
+			Issue issue = _client.GetIssue(key);
+			if (issue != null)
+			{
+				issue.SetJira(this);
+			}
+
+			return issue;
+		}
+
 		public List<AgileBoard> GetAgileBoards()
 		{
 			List<AgileBoard> boards = _client.GetAgileBoards();
