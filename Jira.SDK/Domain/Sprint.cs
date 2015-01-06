@@ -48,7 +48,7 @@ namespace Jira.SDK.Domain
 		private List<User> _users;
 		public List<User> GetAssignableUsers(List<Issue> additionalIssues)
 		{
-			return GetAssignableUsers(additionalIssues, this.StartDate, this.EndDate);
+			return GetAssignableUsers(additionalIssues, this.StartDate, this.EndDate).Where(user => !user.Username.StartsWith("svc_")).ToList();
 		}
 
 		public List<User> GetAssignableUsers(List<Issue> additionalIssues, DateTime from, DateTime until)
@@ -88,5 +88,23 @@ namespace Jira.SDK.Domain
 
 			return epics.OrderBy(epic => epic.Rank).ToList();
 		}
+
+		#region Equality
+		public override int GetHashCode()
+		{
+			return this.ID.GetHashCode();
+		}
+
+		public override bool Equals(object obj)
+		{
+			Boolean equals = false;
+			if (obj is Sprint && (obj as Sprint).ID == ID)
+			{
+				equals = true;
+			}
+
+			return equals;
+		}
+		#endregion
 	}
 }

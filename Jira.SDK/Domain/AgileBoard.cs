@@ -32,6 +32,14 @@ namespace Jira.SDK.Domain
 			return _sprints;
 		}
 
+		public List<Sprint> GetSprintsBetween(DateTime from, DateTime until)
+		{
+			return GetSprints().Where(sprint =>
+				(sprint.EndDate.CompareTo(from) >= 0) // The end date of the sprint comes after the start date of the period
+				|| (sprint.EndDate.CompareTo(from) >= 0 && sprint.StartDate.CompareTo(until) <= 0) //OR The end date of the sprint comes after the start date of the period AND the start date of the sprint comes after the start date of the period
+			).ToList();
+		}
+
 		public List<Sprint> GetAllSprints()
 		{
 			List<Sprint> sprints = GetSprints();
@@ -102,6 +110,28 @@ namespace Jira.SDK.Domain
 			}
 
 			return sprint;
+		}
+
+		public List<User> GetUserDetailsForPeriod(DateTime from, DateTime until, List<Issue> additionalIssues)
+		{
+			List<User> userDetails = new List<User>();
+			List<Sprint> sprints = GetSprintsBetween(from, until);
+			Sprint firstSprint = sprints.FirstOrDefault();
+
+			if (additionalIssues == null)
+			{
+				additionalIssues = new List<Issue>();
+			}
+
+			if (firstSprint != null)
+			{
+				sprints.Remove(firstSprint);
+				additionalIssues.AddRange(sprints.SelectMany(sprint => sprint.GetIssues()));
+
+				userDetails = firstSprint.GetAssignableUsers(additionalIssues, from, until);
+			}
+
+			return userDetails;
 		}
 	}
 }
