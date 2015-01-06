@@ -52,6 +52,8 @@
     <Compile Include="Domain\Epic.cs" />
     <Compile Include="Domain\Field.cs" />
     <Compile Include="Domain\IssueFilter.cs" />
+    <Compile Include="Domain\IssueLink.cs" />
+    <Compile Include="Domain\IssueLinkType.cs" />
     <Compile Include="Domain\IssueType.cs" />
     <Compile Include="Domain\ParentIssue.cs" />
     <Compile Include="Domain\Priority.cs" />
