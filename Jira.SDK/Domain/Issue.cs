@@ -55,10 +55,15 @@ namespace Jira.SDK.Domain
 			}
         }
 
-        public StatusEnum Status
+        public StatusEnum StatusEnum
         {
             get { return Fields.Status.ToEnum(); }
         }
+
+		public Status Status
+		{
+			get { return Fields.Status; }
+		}
 
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
@@ -241,7 +246,7 @@ namespace Jira.SDK.Domain
 		{
 			get
 			{
-				return (Fields.customfield_10103 != null ? Fields.customfield_10103.Value : "");
+				return (Fields.Customfield_10103 != null ? Fields.Customfield_10103.Value : "");
 			}
 		}
 
@@ -252,6 +257,71 @@ namespace Jira.SDK.Domain
             get;
             set;
         }
+
+		public String CurrentSituation
+		{
+			get
+			{
+				return Fields.Customfield_10402;
+			}
+			set
+			{
+				Fields.Customfield_10402 = value;
+			}
+		}
+
+		public String ToBeSituation
+		{
+			get
+			{
+				return Fields.Customfield_10401;
+			}
+			set
+			{
+				Fields.Customfield_10401 = value;
+			}
+		}
+
+		public String Benefit
+		{
+			get
+			{
+				return Fields.Customfield_10400;
+			}
+			set
+			{
+				Fields.Customfield_10400 = value;
+			}
+		}
+
+		private List<IssueLink> IssueLinks
+		{
+			get
+			{
+				return Fields.IssueLinks;
+			}
+			set
+			{
+				Fields.IssueLinks = value;
+			}
+		}
+
+		public List<Issue> GetClones()
+		{
+			List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners).Select(link => link.InwardIssue).ToList();
+			clones.ForEach(clone => { 
+				clone.SetJira(this._jira); 
+				clone.Load(); 
+			});
+
+			return clones;
+		}
+
+		public void Load()
+		{
+			Issue issue = _jira.Client.GetIssue(this.Key);
+			this.Fields = issue.Fields;
+		}
 
         #region equality
 
@@ -299,10 +369,16 @@ namespace Jira.SDK.Domain
 		//SprintID
 		public String Customfield_10300 { get; set; }
 		//Severity
-		public CustomField customfield_10103 { get; set; }
-
-        public Dictionary<String, String> Fields { get; set; }
+		public CustomField Customfield_10103 { get; set; }
+		//Current situation
+		public String Customfield_10402 { get; set; }
+		//To Be Situation
+		public String Customfield_10401 { get; set; }
+		//Benefit
+		public String Customfield_10400 { get; set; }
 
 		public WorklogSearchResult Worklog { get; set; }
+
+		public List<IssueLink> IssueLinks { get; set; }
     }
 }
