@@ -193,6 +193,13 @@ namespace Jira.SDK
 		{
 			return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic Name' = '{1}'", projectName, epicName)).FirstOrDefault();
 		}
+
+		public void AddIssue(Issue issue)
+		{
+			IRestRequest request = new RestRequest(String.Format("{0}/issue", JiraAPIServiceURI), Method.POST);
+			request.AddObject(issue);
+			Client.Post<Issue>(request);
+		}
 		#endregion
 
 		#region Worklog

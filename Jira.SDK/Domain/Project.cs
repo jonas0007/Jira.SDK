@@ -111,6 +111,25 @@ namespace Jira.SDK.Domain
 			return Epic.FromIssue(epicIssue);
 		}
 
+
+		public Epic CreateEpic(String summary, IssueType type, User reporter)
+		{
+			Issue epic = new Issue()
+			{
+				Fields = new IssueFields()
+				{
+					Summary = summary,
+					IssueType = type,
+					Reporter = reporter
+				}
+			};
+
+			GetJira().Client.AddIssue(epic);
+
+			epic.Load();
+			return Epic.FromIssue(epic);
+		}
+
 		public override int GetHashCode()
 		{
 			return this.Key.GetHashCode();

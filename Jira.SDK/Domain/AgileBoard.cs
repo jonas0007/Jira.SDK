@@ -63,7 +63,7 @@ namespace Jira.SDK.Domain
 		{
 			if (_nextSprint == null)
 			{
-				_nextSprint = GetBacklogSprints().Where(sprint => sprint.StartDate.Date.CompareTo(DateTime.MinValue) == 0).FirstOrDefault();
+				_nextSprint = GetBacklogSprints().Where(sprint => sprint.StartDate.Date.CompareTo(DateTime.MinValue) == 0).OrderBy(sprint => sprint.Name).FirstOrDefault();
 			}
 			return _nextSprint;
 		}

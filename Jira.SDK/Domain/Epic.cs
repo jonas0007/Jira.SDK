@@ -36,6 +36,7 @@ namespace Jira.SDK.Domain
 
 		public double TimeSpentInSeconds { get; private set; }
 		public double EstimateInSeconds { get; private set; }
+		public double RemainingEstimateInSeconds { get; private set; }
 
 		public double GetCost(Double costPerSecond)
 		{
@@ -75,7 +76,9 @@ namespace Jira.SDK.Domain
 			Issues = issues;
 
 			EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
-			TimeSpentInSeconds = Issues.Sum(issue => issue.GetWorklogs().Where(worklog => worklog.Started.CompareTo(worklogStartdate) >= 0 && worklog.Started.CompareTo(worklogEnddate) <= 0).Sum(worklog => worklog.TimeSpentSeconds));
+			TimeSpentInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.TimeSpentSeconds : 0));
+			RemainingEstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.RemainingEstimateSeconds : 0));
+
 		}
 
 		public static Epic UndefinedEpic

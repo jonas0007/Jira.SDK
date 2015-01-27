@@ -28,6 +28,8 @@ namespace Jira.SDK
 		Issue GetIssue(String key);
 		List<Issue> SearchIssues(String jql);
 
+		void AddIssue(Issue issue);
+
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String issueKey);
 		WorklogSearchResult GetWorkLogs(String issueKey);
