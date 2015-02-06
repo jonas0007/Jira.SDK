@@ -55,6 +55,24 @@ namespace Jira.SDK.Domain
 			}
         }
 
+		public List<Comment> _comments;
+		public List<Comment> Comments
+		{
+			get
+			{
+				if (_comments == null)
+				{
+					_comments = Fields.Comment.Comments;
+				}
+				return _comments;
+			}
+		}
+
+		public void AddComment(Comment comment)
+		{
+			_comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
+		}
+
         public StatusEnum StatusEnum
         {
             get { return Fields.Status.ToEnum(); }
@@ -344,6 +362,7 @@ namespace Jira.SDK.Domain
     {
         public String Summary { get; set; }
         public String Description { get; set; }
+		public CommentSearchResult Comment { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public DateTime ResolutionDate { get; set; }

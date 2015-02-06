@@ -30,7 +30,7 @@ namespace Jira.SDK
 			BacklogSprints,
 			Sprint,
 			SprintIssues,
-            Filters
+			Filters
 		}
 
 		private RestClient Client { get; set; }
@@ -174,10 +174,10 @@ namespace Jira.SDK
 			return customfields;
 		}
 
-        public List<IssueFilter> GetFavoriteFilters()
-        {
-            return GetList<IssueFilter>(JiraObjectEnum.Filters);
-        }
+		public List<IssueFilter> GetFavoriteFilters()
+		{
+			return GetList<IssueFilter>(JiraObjectEnum.Filters);
+		}
 
 		public List<Issue> GetIssuesWithEpicLink(String epicLink)
 		{
@@ -197,8 +197,30 @@ namespace Jira.SDK
 		public void AddIssue(Issue issue)
 		{
 			IRestRequest request = new RestRequest(String.Format("{0}/issue", JiraAPIServiceURI), Method.POST);
-			request.AddObject(issue);
+			request.RequestFormat = DataFormat.Json;
+			request.AddBody(issue);
 			Client.Post<Issue>(request);
+		}
+
+		public Comment AddCommentToIssue(Issue issue, Comment comment)
+		{
+			IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}/comment", JiraAPIServiceURI, issue.Key), Method.POST);
+			
+			request.RequestFormat = DataFormat.Json;
+			request.AddBody(new { body = comment.Body});
+
+			IRestResponse<Comment> response = Client.Post<Comment>(request);
+
+			if (response.ErrorException != null)
+			{
+				throw response.ErrorException;
+			}
+			if (response.ResponseStatus != ResponseStatus.Completed)
+			{
+				throw new Exception(response.ErrorMessage);
+			}
+
+			return response.Data;
 		}
 		#endregion
 

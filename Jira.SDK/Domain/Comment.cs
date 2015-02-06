@@ -13,10 +13,18 @@ namespace Jira.SDK
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public User UpdateAuthor { get; set; }
+
+		public Comment()
+		{ }
+
+		public Comment(String body)
+		{
+			this.Body = body;
+		}
     }
 
     public class CommentSearchResult
     {
-        public List<Comment> Worklogs { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

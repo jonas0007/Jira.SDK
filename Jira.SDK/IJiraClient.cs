@@ -29,6 +29,7 @@ namespace Jira.SDK
 		List<Issue> SearchIssues(String jql);
 
 		void AddIssue(Issue issue);
+		Comment AddCommentToIssue(Issue issue, Comment comment);
 
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String issueKey);
