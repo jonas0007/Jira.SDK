@@ -43,6 +43,10 @@ namespace Jira.SDK
 		public Issue GetIssue(String key)
 		{
 			Issue issue = _client.GetIssue(key);
+            if(String.IsNullOrEmpty(issue.Key))
+            {
+                return null;
+            }
 			if (issue != null)
 			{
 				issue.SetJira(this);

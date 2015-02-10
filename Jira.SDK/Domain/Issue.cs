@@ -12,15 +12,15 @@ namespace Jira.SDK.Domain
     public class Issue
     {
         private Jira _jira { get; set; }
-		public Jira GetJira()
-		{
-			return _jira;
-		}
+        public Jira GetJira()
+        {
+            return _jira;
+        }
 
-		public void SetJira(Jira jira)
-		{
-			_jira = jira;
-		}
+        public void SetJira(Jira jira)
+        {
+            _jira = jira;
+        }
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
@@ -31,11 +31,11 @@ namespace Jira.SDK.Domain
             set { Fields.Summary = value; }
         }
 
-		public String Description
-		{
-			get { return Fields.Description; }
-			set { Fields.Description = value; }
-		}
+        public String Description
+        {
+            get { return Fields.Description; }
+            set { Fields.Description = value; }
+        }
 
         private List<Issue> _subtasks;
         public List<Issue> Subtasks
@@ -44,44 +44,44 @@ namespace Jira.SDK.Domain
             {
                 if (_subtasks == null)
                 {
-					_subtasks = _jira.Client.GetSubtasksFromIssue(this.Key);
+                    _subtasks = _jira.Client.GetSubtasksFromIssue(this.Key);
                     _subtasks.ForEach(subtask => subtask.SetJira(_jira));
                 }
                 return _subtasks;
             }
-			set
-			{
-				_subtasks = value;
-			}
+            set
+            {
+                _subtasks = value;
+            }
         }
 
-		public List<Comment> _comments;
-		public List<Comment> Comments
-		{
-			get
-			{
-				if (_comments == null)
-				{
-					_comments = Fields.Comment.Comments;
-				}
-				return _comments;
-			}
-		}
+        public List<Comment> _comments;
+        public List<Comment> Comments
+        {
+            get
+            {
+                if (_comments == null)
+                {
+                    _comments = Fields.Comment.Comments;
+                }
+                return _comments;
+            }
+        }
 
-		public void AddComment(Comment comment)
-		{
-			_comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
-		}
+        public void AddComment(Comment comment)
+        {
+            Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
+        }
 
         public StatusEnum StatusEnum
         {
             get { return Fields.Status.ToEnum(); }
         }
 
-		public Status Status
-		{
-			get { return Fields.Status; }
-		}
+        public Status Status
+        {
+            get { return Fields.Status; }
+        }
 
         private TimeTracking _timeTracking;
         public TimeTracking TimeTracking
@@ -100,7 +100,7 @@ namespace Jira.SDK.Domain
                         _timeTracking = issue.Fields.TimeTracking;
                     }
 
-					_timeTracking.Issue = this;
+                    _timeTracking.Issue = this;
                 }
                 return _timeTracking;
             }
@@ -111,18 +111,42 @@ namespace Jira.SDK.Domain
         {
             if (_worklogs == null)
             {
-				if (Fields.Worklog != null)
-				{
-					_worklogs = Fields.Worklog.Worklogs;
-				}
-				else
-				{
-					_worklogs =
-					   _jira.Client.GetWorkLogs(this.Key).Worklogs;
-				}
-				_worklogs.ForEach(wl => wl.Issue = this);
+                if (Fields.Worklog != null)
+                {
+                    _worklogs = Fields.Worklog.Worklogs;
+                }
+                else
+                {
+                    _worklogs =
+                       _jira.Client.GetWorkLogs(this.Key).Worklogs;
+                }
+                _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
+        }
+
+        public List<Transition> Transitions { get; set; }
+        private List<Transition> _transitions;
+        public List<Transition> GetTransitions()
+        {
+            if (_transitions == null)
+            {
+                if (Transitions != null)
+                {
+                    _transitions = Transitions;
+                }
+                else
+                {
+                    _transitions =
+                       _jira.Client.GetTransitions(this.Key);
+                }
+            }
+            return _transitions;
+        }
+
+        public void TransitionIssue(Transition transition, Comment comment)
+        {
+            _jira.Client.TransitionIssue(this, transition, comment);
         }
 
         private Issue _parent;
@@ -153,11 +177,11 @@ namespace Jira.SDK.Domain
             set { Fields.Assignee = value; }
         }
 
-		public User Reporter
-		{
-			get { return Fields.Reporter ?? User.UndefinedUser; }
-			set { Fields.Reporter = value; }
-		}
+        public User Reporter
+        {
+            get { return Fields.Reporter ?? User.UndefinedUser; }
+            set { Fields.Reporter = value; }
+        }
 
         public DateTime Created
         {
@@ -192,7 +216,7 @@ namespace Jira.SDK.Domain
             }
         }
 
-		private Epic _epic;
+        private Epic _epic;
         public Epic Epic
         {
             get
@@ -200,9 +224,9 @@ namespace Jira.SDK.Domain
                 if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
                 {
                     Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
-					issue.SetJira(_jira);
+                    issue.SetJira(_jira);
 
-					_epic = Epic.FromIssue(issue);
+                    _epic = Epic.FromIssue(issue);
                 }
                 return _epic;
             }
@@ -236,39 +260,39 @@ namespace Jira.SDK.Domain
             }
         }
 
-		public Int32 SprintID
-		{
-			get
-			{
-				String sprintDescription = Fields.Customfield_10300;
-				if (!String.IsNullOrEmpty(sprintDescription))
-				{
-					MatchCollection matches = Regex.Matches(sprintDescription, ",id=(?<SprintID>\\d+)]");
-					Int32 id = -1;
-						
-					foreach(Match match in matches)
-					{
-						if (match.Success)
-						{
-							id = Int32.Parse(match.Groups["SprintID"].Value);
-						}
-					}
-					
-					return id;
-				}
-				return -1;
-			}
-		}
+        public Int32 SprintID
+        {
+            get
+            {
+                String sprintDescription = Fields.Customfield_10300;
+                if (!String.IsNullOrEmpty(sprintDescription))
+                {
+                    MatchCollection matches = Regex.Matches(sprintDescription, ",id=(?<SprintID>\\d+)]");
+                    Int32 id = -1;
 
-		public String Severity
-		{
-			get
-			{
-				return (Fields.Customfield_10103 != null ? Fields.Customfield_10103.Value : "");
-			}
-		}
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            id = Int32.Parse(match.Groups["SprintID"].Value);
+                        }
+                    }
 
-		public Sprint Sprint { get; set; }
+                    return id;
+                }
+                return -1;
+            }
+        }
+
+        public String Severity
+        {
+            get
+            {
+                return (Fields.Customfield_10103 != null ? Fields.Customfield_10103.Value : "");
+            }
+        }
+
+        public Sprint Sprint { get; set; }
 
         public Dictionary<String, String> CustomFields
         {
@@ -276,70 +300,71 @@ namespace Jira.SDK.Domain
             set;
         }
 
-		public String CurrentSituation
-		{
-			get
-			{
-				return Fields.Customfield_10402;
-			}
-			set
-			{
-				Fields.Customfield_10402 = value;
-			}
-		}
+        public String CurrentSituation
+        {
+            get
+            {
+                return Fields.Customfield_10402;
+            }
+            set
+            {
+                Fields.Customfield_10402 = value;
+            }
+        }
 
-		public String ToBeSituation
-		{
-			get
-			{
-				return Fields.Customfield_10401;
-			}
-			set
-			{
-				Fields.Customfield_10401 = value;
-			}
-		}
+        public String ToBeSituation
+        {
+            get
+            {
+                return Fields.Customfield_10401;
+            }
+            set
+            {
+                Fields.Customfield_10401 = value;
+            }
+        }
 
-		public String Benefit
-		{
-			get
-			{
-				return Fields.Customfield_10400;
-			}
-			set
-			{
-				Fields.Customfield_10400 = value;
-			}
-		}
+        public String Benefit
+        {
+            get
+            {
+                return Fields.Customfield_10400;
+            }
+            set
+            {
+                Fields.Customfield_10400 = value;
+            }
+        }
 
-		private List<IssueLink> IssueLinks
-		{
-			get
-			{
-				return Fields.IssueLinks;
-			}
-			set
-			{
-				Fields.IssueLinks = value;
-			}
-		}
+        private List<IssueLink> IssueLinks
+        {
+            get
+            {
+                return Fields.IssueLinks;
+            }
+            set
+            {
+                Fields.IssueLinks = value;
+            }
+        }
 
-		public List<Issue> GetClones()
-		{
-			List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners).Select(link => link.InwardIssue).ToList();
-			clones.ForEach(clone => { 
-				clone.SetJira(this._jira); 
-				clone.Load(); 
-			});
+        public List<Issue> GetClones()
+        {
+            List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners).Select(link => link.InwardIssue).ToList();
+            clones.ForEach(clone =>
+            {
+                clone.SetJira(this._jira);
+                clone.Load();
+            });
 
-			return clones;
-		}
+            return clones;
+        }
 
-		public void Load()
-		{
-			Issue issue = _jira.Client.GetIssue(this.Key);
-			this.Fields = issue.Fields;
-		}
+        public void Load()
+        {
+            Issue issue = _jira.Client.GetIssue(this.Key);
+            this.Fields = issue.Fields;
+        }
 
         #region equality
 
@@ -362,7 +387,7 @@ namespace Jira.SDK.Domain
     {
         public String Summary { get; set; }
         public String Description { get; set; }
-		public CommentSearchResult Comment { get; set; }
+        public CommentSearchResult Comment { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public DateTime ResolutionDate { get; set; }
@@ -383,21 +408,21 @@ namespace Jira.SDK.Domain
         public Int32 Customfield_10004 { get; set; }
         //ERP Code
         public CustomField Customfield_11000 { get; set; }
-		//Epic Status
-		public CustomField Customfield_10702 { get; set; }
-		//SprintID
-		public String Customfield_10300 { get; set; }
-		//Severity
-		public CustomField Customfield_10103 { get; set; }
-		//Current situation
-		public String Customfield_10402 { get; set; }
-		//To Be Situation
-		public String Customfield_10401 { get; set; }
-		//Benefit
-		public String Customfield_10400 { get; set; }
+        //Epic Status
+        public CustomField Customfield_10702 { get; set; }
+        //SprintID
+        public String Customfield_10300 { get; set; }
+        //Severity
+        public CustomField Customfield_10103 { get; set; }
+        //Current situation
+        public String Customfield_10402 { get; set; }
+        //To Be Situation
+        public String Customfield_10401 { get; set; }
+        //Benefit
+        public String Customfield_10400 { get; set; }
 
-		public WorklogSearchResult Worklog { get; set; }
+        public WorklogSearchResult Worklog { get; set; }
 
-		public List<IssueLink> IssueLinks { get; set; }
+        public List<IssueLink> IssueLinks { get; set; }
     }
 }

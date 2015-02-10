@@ -30,10 +30,12 @@ namespace Jira.SDK
 
 		void AddIssue(Issue issue);
 		Comment AddCommentToIssue(Issue issue, Comment comment);
+        void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String issueKey);
 		WorklogSearchResult GetWorkLogs(String issueKey);
+        List<Transition> GetTransitions(String issueKey);
 		Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key);
 
 		List<Issue> GetEpicIssuesFromProject(String projectName);

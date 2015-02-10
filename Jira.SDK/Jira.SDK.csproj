@@ -65,6 +65,7 @@
     <Compile Include="Domain\Status.cs" />
     <Compile Include="Domain\SubTask.cs" />
     <Compile Include="Domain\TimeTracking.cs" />
+    <Compile Include="Domain\Transition.cs" />
     <Compile Include="Domain\WorkDay.cs" />
     <Compile Include="Domain\Worklog.cs" />
     <Compile Include="IJiraClient.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Domain\User.cs" />
     <Compile Include="Domain\Sprint.cs" />
     <Compile Include="Tools\DateAndTimeExtentions.cs" />
+    <Compile Include="TransitionSearchResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
