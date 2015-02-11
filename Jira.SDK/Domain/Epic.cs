@@ -38,15 +38,21 @@ namespace Jira.SDK.Domain
 		public double EstimateInSeconds { get; private set; }
 		public double RemainingEstimateInSeconds { get; private set; }
 
-		public double GetCost(Double costPerSecond)
+        public Double GetCost(Double costPerSecond)
 		{
 			return Math.Round(TimeSpentInSeconds * costPerSecond, 2);
 		}
 
-		public double GetEstimatedCost(Double costPerSecond)
+        public Double GetEstimatedCost(Double costPerSecond)
 		{
 			return Math.Round(EstimateInSeconds * costPerSecond, 2);
 		}
+
+
+        public Double GetRemainingCost(Double costPerSecond)
+        {
+            return Math.Round(RemainingEstimateInSeconds * costPerSecond, 2);
+        }
 
 		public void LoadIssues(List<Sprint> sprints)
 		{
@@ -132,5 +138,5 @@ namespace Jira.SDK.Domain
 		{
 			return new Epic(issue.Key, issue.Fields, issue.GetJira());
 		}
-	}
+    }
 }
