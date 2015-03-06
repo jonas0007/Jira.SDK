@@ -73,11 +73,6 @@ namespace Jira.SDK.Domain
             Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
         }
 
-        public StatusEnum StatusEnum
-        {
-            get { return Fields.Status.ToEnum(); }
-        }
-
         public Status Status
         {
             get { return Fields.Status; }

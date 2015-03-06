@@ -114,7 +114,7 @@ namespace Jira.SDK.Domain
 				Summary = "",
 				Created = DateTime.MinValue,
 				Updated = DateTime.MinValue,
-				Status = new Status() { ID = 0, Name = StatusEnum.Open.ToString() },
+				Status = new Status() { ID = 0, Name = "Open" },
 				TimeTracking = new TimeTracking()
 				{
 					Issue = this,
