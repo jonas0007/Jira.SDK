@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
     public class Worklog
     {
@@ -17,6 +17,12 @@ namespace Jira.SDK
 
         public long TimeSpentSeconds { get; set; }
 
+        public Issue Issue { get; set; }
+
+        public TimeSpan TimeSpent
+        {
+            get { return TimeSpan.FromSeconds(TimeSpentSeconds); }
+        }
     }
 
     public class WorklogSearchResult

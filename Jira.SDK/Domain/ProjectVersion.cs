@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
     public class ProjectVersion
     {
@@ -26,7 +26,13 @@ namespace Jira.SDK
         {
             get
             {
-                return _issues ?? (_issues = Jira.Instance.Client.SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"", Project.Key, this.Name)));
+                if (_issues == null)
+                {
+                    _issues =
+                        Project.GetJira().Client.GetIssuesFromProjectVersion(this.Project.Key, this.Name);
+                    _issues.ForEach(issue => issue.SetJira(Project.GetJira()));
+                }
+                return _issues;
             }
         }
     }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Jira.SDK.Domain
 {
-    public class IssueSearchResult
-    {
-        public Int32 Total { get; set; }
-        public List<Issue> Issues { get; set; }
-    }
+	public class CustomField
+	{
+		public Int32 ID { get; set; }
+		public String Value { get; set; }
+	}
 }

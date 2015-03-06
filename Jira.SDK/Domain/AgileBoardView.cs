@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
-    public class Subtask
-    {
-        public String Key { get; set; }
-    }
+	public class AgileBoardView
+	{
+		public List<AgileBoard> Views { get; set; }
+	}
 }

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK
+namespace Jira.SDK.Domain
 {
-    public class Subtask
+    public class TransitionSearchResult
     {
-        public String Key { get; set; }
+        public List<Transition> Transitions { get; set; }
     }
 }

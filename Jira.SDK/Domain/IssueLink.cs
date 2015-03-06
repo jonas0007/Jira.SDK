@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace Jira.SDK.Domain
 {
-    public class IssueSearchResult
-    {
-        public Int32 Total { get; set; }
-        public List<Issue> Issues { get; set; }
-    }
+	public class IssueLink
+	{
+		public Int32 ID { get; set; }
+		public IssueLinkType Type { get; set; }
+		public Issue InwardIssue { get; set; }
+	}
 }
