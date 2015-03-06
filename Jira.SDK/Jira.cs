@@ -15,7 +15,6 @@ namespace Jira.SDK
 		public void Connect(IJiraClient client)
 		{
 			_client = client;
-			Fields = _client.GetFields();
 		}
 
         public void Connect(String url, String username, String password)
@@ -54,6 +53,13 @@ namespace Jira.SDK
 
 			return issue;
 		}
+
+        public List<Issue> SearchIssues(String jql)
+        {
+            List<Issue> issues = Client.SearchIssues(jql);
+            issues.ForEach(issue => issue.SetJira(this));
+            return issues;
+        }
 
 		public List<AgileBoard> GetAgileBoards()
 		{

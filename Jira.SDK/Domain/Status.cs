@@ -28,10 +28,10 @@ namespace Jira.SDK
 		Readyfortesting = 31,
 		InReview = 32,
 		InDevelopment = 21,
-		Analysing = 11,
+        Selectedforanalysis= 11,
+		Analysing = 12,
 		ReadyforRelease = 31,
 		Waitingforapproval = 2,
-		AnalysingbyQA = 12,
 		Approved = 3,
     }
 }
