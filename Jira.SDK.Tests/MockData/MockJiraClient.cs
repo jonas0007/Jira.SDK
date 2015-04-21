@@ -1452,5 +1452,11 @@ namespace Jira.SDK.Tests
         {
             throw new NotImplementedException();
         }
+
+
+        public void TransitionIssue(Issue issue, Transition transition, Comment comment)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

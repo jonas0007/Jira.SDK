@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -80,13 +81,13 @@ namespace Jira.SDK.Domain
 
 		private List<Sprint> GetDetailedSprints(List<Sprint> sprints)
 		{
-			List<Sprint> detailedSprints = new List<Sprint>();
+            ConcurrentBag<Sprint> detailedSprints = new ConcurrentBag<Sprint>();
 			Parallel.ForEach(sprints, sprint =>
 			{
 				detailedSprints.Add(GetSprintDetail(sprint));
 			});
 
-			return detailedSprints;
+			return detailedSprints.ToList();
 		}
 
 		public Sprint GetSprintDetail(Sprint sprint)

@@ -343,16 +343,77 @@ namespace Jira.SDK.Domain
             }
         }
 
+        /// <summary>
+        /// This method returns all issues which where cloned from this one.
+        /// </summary>
+        /// <returns>The list of issues which where cloned from this one</returns>
         public List<Issue> GetClones()
         {
             List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners).Select(link => link.InwardIssue).ToList();
-            clones.ForEach(clone =>
-            {
-                clone.SetJira(this._jira);
-                clone.Load();
-            });
+            loadIssues(clones);
 
             return clones;
+        }
+
+        /// <summary>
+        /// This method returns all issues which are blocking this one.
+        /// </summary>
+        /// <returns>The list of issues which are blocking this one</returns>
+        public List<Issue> GetBlockingIssues()
+        {
+            List<Issue> blockingIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks).Select(link => link.InwardIssue).ToList();
+            loadIssues(blockingIssues);
+
+            return blockingIssues;
+        }
+
+        /// <summary>
+        /// This method returns all of the issues which are blocked by this one.
+        /// </summary>
+        /// <returns>The list of issues which are blocked by this one</returns>
+        public List<Issue> GetImpactedIssues()
+        {
+            List<Issue> impactedIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks).Select(link => link.OutwardIssue).ToList();
+            loadIssues(impactedIssues);
+
+            return impactedIssues;
+        }
+
+        /// <summary>
+        /// This method returns all of the issues which are duplicates from this one.
+        /// </summary>
+        /// <returns>The list of issues which are duplicates from this one</returns>
+        public List<Issue> GetDuplicateIssues()
+        {
+            List<Issue> duplicateIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Duplicate).Select(link => (link.InwardIssue != null ? link.InwardIssue : link.OutwardIssue)).ToList();
+            loadIssues(duplicateIssues);
+
+            return duplicateIssues;
+        }
+
+        /// <summary>
+        /// This method returns all of the issues which relate to this one.
+        /// </summary>
+        /// <returns>The list of issues which are relate to this one</returns>
+        public List<Issue> GetRelatedIssues()
+        {
+            List<Issue> relatedIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Relates).Select(link => (link.InwardIssue != null ? link.InwardIssue : link.OutwardIssue)).ToList();
+            loadIssues(relatedIssues);
+
+            return relatedIssues;
+        }
+        
+        /// <summary>
+        /// This method iterates every issue in the issue list and makes sure this issue is loaded and ready for querying.
+        /// </summary>
+        /// <param name="issues"></param>
+        private void loadIssues(List<Issue> issues)
+        {
+            issues.Where(issue => issue != null).ToList().ForEach(issue =>
+            {
+                issue.SetJira(this._jira);
+                issue.Load();
+            });
         }
 
         public void Load()
