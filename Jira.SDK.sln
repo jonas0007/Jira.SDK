@@ -1,9 +1,18 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jira.SDK", "Jira.SDK\Jira.SDK.csproj", "{BDEC4AD5-DD6C-402A-A6EE-1D7D73E225D7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jira.SDK.Tests", "Jira.SDK.Tests\Jira.SDK.Tests.csproj", "{14CE4680-94C6-4ED7-8F65-5855CFC7357A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{20F87070-0ED2-4A3F-A67C-85E439B542D2}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jira.SDK.TestApp", "Jira.SDK.TestApp\Jira.SDK.TestApp.csproj", "{D94F54EE-416F-4FFE-9F2E-D108F8F76A10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,6 +28,10 @@ Global
 		{14CE4680-94C6-4ED7-8F65-5855CFC7357A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14CE4680-94C6-4ED7-8F65-5855CFC7357A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14CE4680-94C6-4ED7-8F65-5855CFC7357A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D94F54EE-416F-4FFE-9F2E-D108F8F76A10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D94F54EE-416F-4FFE-9F2E-D108F8F76A10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D94F54EE-416F-4FFE-9F2E-D108F8F76A10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D94F54EE-416F-4FFE-9F2E-D108F8F76A10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
