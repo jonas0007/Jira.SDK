@@ -349,7 +349,7 @@ namespace Jira.SDK.Domain
         /// <returns>The list of issues which where cloned from this one</returns>
         public List<Issue> GetClones()
         {
-            List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners).Select(link => link.InwardIssue).ToList();
+            List<Issue> clones = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners && link.InwardIssue != null).Select(link => link.InwardIssue).ToList();
             loadIssues(clones);
 
             return clones;
@@ -361,7 +361,7 @@ namespace Jira.SDK.Domain
         /// <returns>The list of issues which are blocking this one</returns>
         public List<Issue> GetBlockingIssues()
         {
-            List<Issue> blockingIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks).Select(link => link.InwardIssue).ToList();
+            List<Issue> blockingIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks && link.InwardIssue != null).Select(link => link.InwardIssue).ToList();
             loadIssues(blockingIssues);
 
             return blockingIssues;
@@ -373,7 +373,7 @@ namespace Jira.SDK.Domain
         /// <returns>The list of issues which are blocked by this one</returns>
         public List<Issue> GetImpactedIssues()
         {
-            List<Issue> impactedIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks).Select(link => link.OutwardIssue).ToList();
+            List<Issue> impactedIssues = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Blocks && link.OutwardIssue != null).Select(link => link.OutwardIssue).ToList();
             loadIssues(impactedIssues);
 
             return impactedIssues;
