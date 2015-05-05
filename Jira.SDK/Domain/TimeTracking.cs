@@ -41,7 +41,7 @@ namespace Jira.SDK.Domain
 		{
 			get 
 			{
-				if (Issue.Resolved == DateTime.MinValue)
+				if (Issue.Resolved == DateTime.MaxValue)
 				{
 					return DateTime.Now.Subtract(Issue.Created);
 				}
