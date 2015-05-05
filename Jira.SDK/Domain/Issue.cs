@@ -68,6 +68,14 @@ namespace Jira.SDK.Domain
             }
         }
 
+        public List<String> Labels
+        {
+            get
+            {
+                return Fields.Labels;
+            }
+        }
+
         public void AddComment(Comment comment)
         {
             Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
@@ -193,6 +201,10 @@ namespace Jira.SDK.Domain
         {
             get
             {
+                if(Fields.ResolutionDate.CompareTo(DateTime.MinValue) == 0)
+                {
+                    Fields.ResolutionDate = DateTime.MaxValue;
+                }
                 return Fields.ResolutionDate;
             }
         }
@@ -480,5 +492,7 @@ namespace Jira.SDK.Domain
         public WorklogSearchResult Worklog { get; set; }
 
         public List<IssueLink> IssueLinks { get; set; }
+
+        public List<String> Labels { get; set; }
     }
 }
