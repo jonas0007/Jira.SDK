@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using RestSharp.Extensions;
 using Jira.SDK.Domain;
 using System.Reflection;
+using Jira.SDK.Tools;
 
 namespace Jira.SDK
 {
@@ -247,12 +248,15 @@ namespace Jira.SDK
 
             request.RequestFormat = DataFormat.Json;
             request.AddBody(
-                new {
-                    transition = new { 
+                new
+                {
+                    transition = new
+                    {
                         id = transition.ID.ToString()
                     },
-                    update = new {
-                        comment = new []{
+                    update = new
+                    {
+                        comment = new[]{
                             new {
                                 add = new {
                                     body = comment.Body
@@ -328,8 +332,10 @@ namespace Jira.SDK
             RestRequest request = new RestRequest(_methods[objectType], Method.GET)
             {
                 RequestFormat = DataFormat.Json,
-                OnBeforeDeserialization = resp => resp.ContentType = "application/json"
+                OnBeforeDeserialization = resp => resp.ContentType = "application/json",
+                JsonSerializer = new RestSharpJsonNetSerializer()
             };
+
 
             foreach (KeyValuePair<String, String> key in keys)
             {

@@ -12,13 +12,21 @@ namespace Jira.SDK.TestApp
     {
         static void Main(string[] args)
         {
-            Jira jira = new Jira();
-            jira.Connect("http://jira.prod.hostengine.be", "svc_jira_datawriter", "Zoew6679");
-            Issue issue = jira.GetIssue("CR-256");
-            List<Issue> blocker = issue.GetBlockingIssues();
+            List<Task> tasks = new List<Task>();
+            for(int i = 1; i <= 10; i++)
+            {
+                tasks.Add(Task.Factory.StartNew(() => {
+                    Console.WriteLine("Started " + i);
+                    Jira jira = new Jira();
+                    jira.Connect("http://jira.prod.hostengine.be", "svc_jira_datawriter", "Zoew6679");
+                    DateTime start = DateTime.Now;
+                    jira.SearchIssues("((created <= \"2015-04-06\" AND resolved >= \"2015-04-06\") OR (created >= \"2015-04-06\")) AND created <= \"2015-05-06\" AND project = \"IT-DEV Scrum\" AND Type = Ticket");
+                    Console.WriteLine(DateTime.Now.Subtract(start));
+                }));
+            }
 
-            //blocker.GetImpactedIssues();
-
+            Task.WaitAll(tasks.ToArray());
+            Console.Read();
         }
     }
 }
