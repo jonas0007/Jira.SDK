@@ -44,7 +44,11 @@ namespace Jira.SDK.Domain
 		public List<Sprint> GetAllSprints()
 		{
 			List<Sprint> sprints = GetSprints();
-			sprints.AddRange(GetBacklogSprints());
+            List<Sprint> backlogSprints = GetBacklogSprints();
+            //Remove the active sprint from the backlog sprints because it is already listed in the sprints list.
+            backlogSprints = backlogSprints.Where(sprint => !sprint.State.Equals("ACTIVE")).ToList();
+            //Add the backlog sprints to the sprints list.
+            sprints.AddRange(backlogSprints);
 
 			return sprints;
 		}
