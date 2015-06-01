@@ -15,6 +15,7 @@ namespace Jira.SDK
 		public void Connect(IJiraClient client)
 		{
 			_client = client;
+            Fields = _client.GetFields();
 		}
 
         public void Connect(String url, String username, String password)

@@ -1406,11 +1406,6 @@ namespace Jira.SDK.Tests
 			throw new NotImplementedException();
 		}
 
-		public Dictionary<string, string> GetIssueCustomFieldsFromIssue(string key)
-		{
-			throw new NotImplementedException();
-		}
-
 		public List<Issue> GetEpicIssuesFromProject(string projectName)
 		{
 			throw new NotImplementedException();

@@ -10,5 +10,13 @@ namespace Jira.SDK.Domain
 	{
 		public Int32 ID { get; set; }
 		public String Value { get; set; }
+
+        public CustomField() { }
+
+        public CustomField(String value)
+        {
+            this.ID = 0;
+            this.Value = value;
+        }
 	}
 }

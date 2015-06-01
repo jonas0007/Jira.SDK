@@ -10,6 +10,8 @@ using RestSharp.Extensions;
 using Jira.SDK.Domain;
 using System.Reflection;
 using Jira.SDK.Tools;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Jira.SDK
 {
@@ -75,7 +77,7 @@ namespace Jira.SDK
 
         public List<Issue> SearchIssues(String jql)
         {
-            return GetItem<IssueSearchResult>(JiraObjectEnum.Issues, new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" }, { "expand", "transitions" } }).Issues;
+            return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" }, { "expand", "transitions" } });
         }
 
         #region Fields
@@ -148,7 +150,7 @@ namespace Jira.SDK
         #region Issues
         public Issue GetIssue(String key)
         {
-            return GetItem<Issue>(JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", key } });
+            return GetIssue(_methods[JiraObjectEnum.Issue], keys: new Dictionary<String, String>() { { "issueKey", key } });
         }
 
         public List<Issue> GetSubtasksFromIssue(String issueKey)
@@ -160,21 +162,6 @@ namespace Jira.SDK
         {
             return SearchIssues(String.Format("project=\"{0}\"&fixversion=\"{1}\"",
                             projectKey, projectVersionName));
-        }
-
-        public Dictionary<String, String> GetIssueCustomFieldsFromIssue(String key)
-        {
-            dynamic obj = ExecuteDynamic(JiraObjectEnum.Issue, keys: new Dictionary<String, String>() { { "issueKey", key } });
-
-            List<PropertyInfo> customFieldProperties = ((Type)(obj.fields).GetType()).GetProperties().Where(prop => prop.Name.StartsWith("customfield")).ToList();
-
-            Dictionary<String, String> customfields = new Dictionary<String, String>();
-            foreach (PropertyInfo property in customFieldProperties)
-            {
-                property.GetValue(obj.Fields);
-            }
-
-            return customfields;
         }
 
         public List<IssueFilter> GetFavoriteFilters()
@@ -307,29 +294,18 @@ namespace Jira.SDK
             return response.Data;
         }
 
-        private dynamic ExecuteDynamic(JiraObjectEnum objectType, Dictionary<String, String> parameters = null, Dictionary<String, String> keys = null)
-        {
-            IRestResponse<dynamic> response = Client.ExecuteDynamic(GetRequest(objectType, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
-
-            if (response.ErrorException != null)
-            {
-                throw response.ErrorException;
-            }
-            if (response.ResponseStatus != ResponseStatus.Completed)
-            {
-                throw new Exception(response.ErrorMessage);
-            }
-
-            return response.Data;
-        }
-
         public RestRequest GetRequest(JiraObjectEnum objectType, Dictionary<String, String> parameters,
             Dictionary<String, String> keys)
         {
             if (!_methods.ContainsKey(objectType))
                 throw new NotImplementedException();
 
-            RestRequest request = new RestRequest(_methods[objectType], Method.GET)
+            return GetRequest(_methods[objectType], parameters, keys);
+        }
+
+        public RestRequest GetRequest(String url, Dictionary<String, String> parameters, Dictionary<String, String> keys)
+        {
+            RestRequest request = new RestRequest(url, Method.GET)
             {
                 RequestFormat = DataFormat.Json,
                 OnBeforeDeserialization = resp => resp.ContentType = "application/json",
@@ -349,6 +325,50 @@ namespace Jira.SDK
 
             return request;
         }
+
+        private List<Issue> GetIssues(String url, Dictionary<String, String> parameters = null, Dictionary<String, String> keys = null)
+        {
+            IRestResponse response = Client.Execute(GetRequest(url, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return DeserializeIssues(response.Content);
+        }
+
+        private Issue GetIssue(String url, Dictionary<String, String> parameters = null, Dictionary<String, String> keys = null)
+        {
+            IRestResponse response = Client.Execute(GetRequest(url, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return DeserializeIssue(response.Content);
+        }
+
+        private List<Issue> DeserializeIssues(String json)
+        {
+            return new List<Issue>();
+        }
+
+        private Issue DeserializeIssue(String json)
+        {
+            JObject jsonObject = JObject.Parse(json);
+
+            return new Issue((String)jsonObject["key"], (JObject)jsonObject["fields"]);
+        }
         #endregion
-    };
+    }
 }

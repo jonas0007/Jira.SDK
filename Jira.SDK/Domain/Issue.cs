@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using RestSharp;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 
 namespace Jira.SDK.Domain
 {
@@ -20,6 +21,26 @@ namespace Jira.SDK.Domain
         public void SetJira(Jira jira)
         {
             _jira = jira;
+        }
+
+        public Issue() { }
+
+        public Issue(String key, JObject fields)
+        {
+            this.Key = key;
+            this.Fields = new IssueFields(fields);
+        }
+
+        public String GetCustomFieldValue(String customFieldName)
+        {
+            String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
+            return Fields.CustomFields[fieldId].Value;
+        }
+
+        public void SetCustomFieldValue(String customFieldName, String value)
+        {
+            String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
+            Fields.CustomFields[fieldId].Value = value;
         }
 
         public String Key { get; set; }
@@ -201,7 +222,7 @@ namespace Jira.SDK.Domain
         {
             get
             {
-                if(Fields.ResolutionDate.CompareTo(DateTime.MinValue) == 0)
+                if (Fields.ResolutionDate.CompareTo(DateTime.MinValue) == 0)
                 {
                     Fields.ResolutionDate = DateTime.MaxValue;
                 }
@@ -259,11 +280,11 @@ namespace Jira.SDK.Domain
         {
             get
             {
-                return (Fields.Customfield_11000 != null ? Fields.Customfield_11000.Value : "");
+                return GetCustomFieldValue("ERP Code");
             }
             set
             {
-                Fields.Customfield_11000 = new CustomField() { Value = value };
+                SetCustomFieldValue("ERP Code", value);
             }
         }
 
@@ -414,7 +435,7 @@ namespace Jira.SDK.Domain
 
             return relatedIssues;
         }
-        
+
         /// <summary>
         /// This method iterates every issue in the issue list and makes sure this issue is loaded and ready for querying.
         /// </summary>
@@ -470,6 +491,10 @@ namespace Jira.SDK.Domain
         public ParentIssue Parent { get; set; }
         public List<Subtask> Subtasks { get; set; }
         public TimeTracking TimeTracking { get; set; }
+        public WorklogSearchResult Worklog { get; set; }
+        public List<IssueLink> IssueLinks { get; set; }
+        public List<String> Labels { get; set; }
+        
         //Epic link
         public String Customfield_10700 { get; set; }
         //Rank
@@ -489,10 +514,152 @@ namespace Jira.SDK.Domain
         //Benefit
         public String Customfield_10400 { get; set; }
 
-        public WorklogSearchResult Worklog { get; set; }
+        public Dictionary<String, CustomField> CustomFields { get; set; }
 
-        public List<IssueLink> IssueLinks { get; set; }
+        public IssueFields() { }
 
-        public List<String> Labels { get; set; }
+        public IssueFields(JObject fieldsObj)
+        {
+            Dictionary<String, Object> fields = fieldsObj.ToObject<Dictionary<String, Object>>();
+
+            Created = fields["resolutiondate"] != null ? (DateTime)fields["created"] : DateTime.MinValue;
+            Updated = fields["resolutiondate"] != null ? (DateTime)fields["updated"] : DateTime.MinValue;
+            ResolutionDate = fields["resolutiondate"] != null ? (DateTime)fields["resolutiondate"] : DateTime.MinValue;
+
+            IssueType = null;
+            if (fields.ContainsKey("issuetype") && fields["issuetype"] != null)
+            {
+                IssueType = ((JObject)fields["issuetype"]).ToObject<IssueType>();
+            }
+
+            Reporter = null;
+            if (fields.ContainsKey("reporter") && fields["reporter"] != null)
+            {
+            Reporter = ((JObject)fields["reporter"]).ToObject<User>();
+            }
+
+            Assignee = null;
+            if (fields.ContainsKey("reporter") && fields["reporter"] != null)
+            {
+                Assignee = ((JObject)fields["reporter"]).ToObject<User>();
+            }
+
+            Summary = "";
+            if (fields.ContainsKey("summary") && fields["summary"] != null)
+            {
+                Summary = (String)fields["summary"];
+            }
+
+            Comment = new CommentSearchResult();
+            if (fields.ContainsKey("comment") && fields["comment"] != null)
+            {
+                Comment = ((JObject)fields["comment"]).ToObject<CommentSearchResult>();
+            }
+
+            Description = "";
+            if (fields.ContainsKey("description") && fields["description"] != null)
+            {
+                Description = (String)fields["description"];
+            }
+
+            FixVersions = new List<ProjectVersion>();
+            if (fields.ContainsKey("fixversions") && fields["fixversions"] != null)
+            {
+                JArray versionArray = (JArray)fields["fixversions"];
+                if (versionArray.Count > 0)
+                {
+                    FixVersions = ((JObject)fields["fixversions"]).ToObject<List<ProjectVersion>>();
+                }
+            }
+
+            Project = null;
+            if (fields.ContainsKey("project") && fields["project"] != null)
+            {
+                Project = ((JObject)fields["project"]).ToObject<Project>();
+            }
+
+            Status = null;
+            if (fields.ContainsKey("status") && fields["status"] != null)
+            {
+                Status = ((JObject)fields["status"]).ToObject<Status>();
+            }
+
+            Priority = null;
+            if (fields.ContainsKey("priority") && fields["priority"] != null)
+            {
+                Priority = ((JObject)fields["priority"]).ToObject<Priority>();
+            }
+
+            Resolution = null;
+            if (fields.ContainsKey("resolution") && fields["resolution"] != null)
+            {
+                Resolution = ((JObject)fields["resolution"]).ToObject<Resolution>();
+            }
+
+            Parent = null;
+            if (fields.ContainsKey("parent") && fields["parent"] != null)
+            {
+                //Parent = new Issue(;
+            }
+
+            Subtasks = null;
+            if (fields.ContainsKey("subtasks"))
+            {
+                JArray subtasks = (JArray)fields["subtasks"];
+
+                //Subtasks = null;
+            }
+
+            Worklog = new WorklogSearchResult();
+            if (fields.ContainsKey("worklog"))
+            {
+                Worklog = ((JObject)fields["worklog"]).ToObject<WorklogSearchResult>();
+            }
+
+            IssueLinks = new List<IssueLink>();
+            if (fields.ContainsKey("issuelinks"))
+            {
+                JArray linkArray = (JArray)fields["issuelinks"];
+                if (linkArray.Count > 0)
+                {
+                    IssueLinks = linkArray.Select(link => ((JObject)link).ToObject<IssueLink>()).ToList();
+                }
+            }
+
+            Labels = new List<String>();
+            if (fields.ContainsKey("labels"))
+            {
+                JArray labelArray = (JArray)fields["labels"];
+                if(labelArray.Count > 0)
+                {
+                    Labels = labelArray.Select(label => (String)label).ToList();
+                }
+            }
+
+            TimeTracking = null;
+            if (fields.ContainsKey("timetracking") && fields["timetracking"] != null)
+            {
+                TimeTracking = ((JObject)fields["timetracking"]).ToObject<TimeTracking>();
+            }
+
+            CustomFields = new Dictionary<String, CustomField>();
+            foreach (String customFieldName in fields.Keys.Where(key => key.StartsWith("customfield_")))
+            {
+                switch (fieldsObj[customFieldName].Type)
+                {
+                    case JTokenType.String:
+                        CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
+                        break;
+                    case JTokenType.Object:
+                        CustomFields.Add(customFieldName, ((JObject)fieldsObj[customFieldName]).ToObject<CustomField>());
+                        break;
+                    case JTokenType.Null:
+                    default:
+                        CustomFields.Add(customFieldName, null);
+                        break;
+                }
+
+            }
+        }
     }
 }
