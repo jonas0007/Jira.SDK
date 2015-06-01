@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Jira.SDK.Domain
 {
-    public class Issue
+    public partial class Issue
     {
         private Jira _jira { get; set; }
         public Jira GetJira()
@@ -244,124 +244,12 @@ namespace Jira.SDK.Domain
             }
         }
 
-        private Epic _epic;
-        public Epic Epic
-        {
-            get
-            {
-                if (_epic == null && !String.IsNullOrEmpty(this.Fields.Customfield_10700))
-                {
-                    Issue issue = _jira.Client.GetIssue(this.Fields.Customfield_10700);
-                    issue.SetJira(_jira);
-
-                    _epic = Epic.FromIssue(issue);
-                }
-                return _epic;
-            }
-            set
-            {
-                _epic = value;
-            }
-        }
-
-        public Int32 Rank
-        {
-            get
-            {
-                return Fields.Customfield_10004;
-            }
-            set
-            {
-                Fields.Customfield_10004 = value;
-            }
-        }
-
-        public String ERPCode
-        {
-            get
-            {
-                return GetCustomFieldValue("ERP Code");
-            }
-            set
-            {
-                SetCustomFieldValue("ERP Code", value);
-            }
-        }
-
-        public Int32 SprintID
-        {
-            get
-            {
-                String sprintDescription = Fields.Customfield_10300;
-                if (!String.IsNullOrEmpty(sprintDescription))
-                {
-                    MatchCollection matches = Regex.Matches(sprintDescription, ",id=(?<SprintID>\\d+)]");
-                    Int32 id = -1;
-
-                    foreach (Match match in matches)
-                    {
-                        if (match.Success)
-                        {
-                            id = Int32.Parse(match.Groups["SprintID"].Value);
-                        }
-                    }
-
-                    return id;
-                }
-                return -1;
-            }
-        }
-
-        public String Severity
-        {
-            get
-            {
-                return (Fields.Customfield_10103 != null ? Fields.Customfield_10103.Value : "");
-            }
-        }
-
         public Sprint Sprint { get; set; }
 
         public Dictionary<String, String> CustomFields
         {
             get;
             set;
-        }
-
-        public String CurrentSituation
-        {
-            get
-            {
-                return Fields.Customfield_10402;
-            }
-            set
-            {
-                Fields.Customfield_10402 = value;
-            }
-        }
-
-        public String ToBeSituation
-        {
-            get
-            {
-                return Fields.Customfield_10401;
-            }
-            set
-            {
-                Fields.Customfield_10401 = value;
-            }
-        }
-
-        public String Benefit
-        {
-            get
-            {
-                return Fields.Customfield_10400;
-            }
-            set
-            {
-                Fields.Customfield_10400 = value;
-            }
         }
 
         private List<IssueLink> IssueLinks
@@ -494,26 +382,6 @@ namespace Jira.SDK.Domain
         public WorklogSearchResult Worklog { get; set; }
         public List<IssueLink> IssueLinks { get; set; }
         public List<String> Labels { get; set; }
-        
-        //Epic link
-        public String Customfield_10700 { get; set; }
-        //Rank
-        public Int32 Customfield_10004 { get; set; }
-        //ERP Code
-        public CustomField Customfield_11000 { get; set; }
-        //Epic Status
-        public CustomField Customfield_10702 { get; set; }
-        //SprintID
-        public String Customfield_10300 { get; set; }
-        //Severity
-        public CustomField Customfield_10103 { get; set; }
-        //Current situation
-        public String Customfield_10402 { get; set; }
-        //To Be Situation
-        public String Customfield_10401 { get; set; }
-        //Benefit
-        public String Customfield_10400 { get; set; }
-
         public Dictionary<String, CustomField> CustomFields { get; set; }
 
         public IssueFields() { }
