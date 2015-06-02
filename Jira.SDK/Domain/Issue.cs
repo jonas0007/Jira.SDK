@@ -343,6 +343,72 @@ namespace Jira.SDK.Domain
             this.Fields = issue.Fields;
         }
 
+        #region Custom fields for Jira Agile
+        public Int32 SprintID
+        {
+            get
+            {
+                String sprintDescription = GetCustomFieldValue("Sprint");
+                if (!String.IsNullOrEmpty(sprintDescription))
+                {
+                    MatchCollection matches = Regex.Matches(sprintDescription, ",id=(?<SprintID>\\d+)]");
+                    Int32 id = -1;
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            id = Int32.Parse(match.Groups["SprintID"].Value);
+                        }
+                    }
+
+                    return id;
+                }
+                return -1;
+            }
+        }
+
+        private Epic _epic;
+        public Epic Epic
+        {
+            get
+            {
+                if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
+                {
+                    Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
+                    issue.SetJira(GetJira());
+
+                    _epic = Epic.FromIssue(issue);
+                }
+                return _epic;
+            }
+            set
+            {
+                _epic = value;
+            }
+        }
+
+        public Int32 Rank
+        {
+            get
+            {
+                return Int32.Parse(GetCustomFieldValue("Rank"));
+            }
+            set
+            {
+                SetCustomFieldValue("Rank", value.ToString());
+            }
+        }
+
+        public String Severity
+        {
+            get
+            {
+                return (GetCustomFieldValue("Severity") != null ? GetCustomFieldValue("Severity") : "");
+            }
+        }
+        #endregion
+
         #region equality
 
         public override int GetHashCode()

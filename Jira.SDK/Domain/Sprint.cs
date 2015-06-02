@@ -86,7 +86,7 @@ namespace Jira.SDK.Domain
 				epics.Add(epic);
 			}
 
-			return epics.OrderBy(epic => epic.Rank).ToList();
+			return epics;
 		}
 
 		#region Equality

@@ -360,7 +360,9 @@ namespace Jira.SDK
 
         private List<Issue> DeserializeIssues(String json)
         {
-            return new List<Issue>();
+            JObject jsonObject = JObject.Parse(json);
+
+            return new IssueSearchResult(jsonObject).Issues;
         }
 
         private Issue DeserializeIssue(String json)
