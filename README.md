@@ -28,7 +28,11 @@ To get started with this SDK, all you need to do is create a new Jira instance a
 
 ```C#
 Jira jira = new Jira();
+//Connect to Jira with username and password. Please be aware that the information returned by the Jira REST API depends on the access rigths of the user.
 jira.Connect("{{JIRA URL}}", "{{USERNAME}}", "{{PASSWORD}}");
+
+//You can also connect to Jira anonymously. Please make sure that the information you want to request with the SDK is accessible by unauthenticated users.
+jira.Connect("{{JIRA URL}}");
 
 //Gets all of the projects configured in your jira instance
 List<Project> projects = jira.GetProjects();

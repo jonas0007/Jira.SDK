@@ -18,6 +18,11 @@ namespace Jira.SDK
             Fields = _client.GetFields();
 		}
 
+        public void Connect(String url)
+        {
+            Connect(new JiraClient(url));
+        }
+
         public void Connect(String url, String username, String password)
         {
             Connect(new JiraClient(url, username, password));

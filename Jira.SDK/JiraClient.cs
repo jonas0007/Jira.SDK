@@ -67,6 +67,11 @@ namespace Jira.SDK
             Client = client;
         }
 
+        public JiraClient(String url)
+        {
+            Client = new RestClient(url);
+        }
+
         public JiraClient(String url, String username, String password)
         {
             Client = new RestClient(url)
