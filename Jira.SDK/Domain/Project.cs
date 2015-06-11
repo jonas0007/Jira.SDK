@@ -87,6 +87,17 @@ namespace Jira.SDK.Domain
 			}
 		}
 
+        private List<ProjectComponent> _components;
+        public List<ProjectComponent> Components
+        {
+            get
+            {
+                return _components ??
+                   (_components =
+                        _jira.Client.GetProjectComponents(this.Key));
+            }
+        }
+
 		public List<Epic> GetEpics()
 		{
 			List<Issue> epicIssues = _jira.Client.GetEpicIssuesFromProject(this.Name);
