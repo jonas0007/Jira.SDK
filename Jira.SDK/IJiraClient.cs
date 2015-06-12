@@ -16,6 +16,8 @@ namespace Jira.SDK
 
 		List<ProjectVersion> GetProjectVersions(String projectKey);
 
+        List<ProjectComponent> GetProjectComponents(String projectKey);
+
 		User GetUser(String username);
 		List<User> GetAssignableUsers(String projectKey);
 

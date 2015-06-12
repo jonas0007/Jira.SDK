@@ -34,7 +34,8 @@ namespace Jira.SDK
             Sprint,
             SprintIssues,
             Filters,
-            Transitions
+            Transitions,
+            ProjectComponents
         }
 
         private RestClient Client { get; set; }
@@ -59,7 +60,8 @@ namespace Jira.SDK
 			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
 			{JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
 			{JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
-			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)}
+			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
+            {JiraObjectEnum.ProjectComponents, String.Format("{0}/project/{{projectKey}}/components/", JiraAPIServiceURI)}
         };
 
         public JiraClient(RestClient client)
@@ -108,6 +110,14 @@ namespace Jira.SDK
         public List<ProjectVersion> GetProjectVersions(String projectKey)
         {
             return GetList<ProjectVersion>(JiraObjectEnum.ProjectVersions,
+                               keys: new Dictionary<string, string>() { { "projectKey", projectKey } });
+        }
+        #endregion
+
+        #region Project components
+        public List<ProjectComponent> GetProjectComponents(String projectKey)
+        {
+            return GetList<ProjectComponent>(JiraObjectEnum.ProjectComponents,
                                keys: new Dictionary<string, string>() { { "projectKey", projectKey } });
         }
         #endregion

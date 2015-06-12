@@ -64,6 +64,7 @@
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueSearchResult.cs" />
+    <Compile Include="Domain\ProjectComponent.cs" />
     <Compile Include="Domain\Resolution.cs" />
     <Compile Include="Domain\SprintResult.cs" />
     <Compile Include="Domain\Status.cs" />
