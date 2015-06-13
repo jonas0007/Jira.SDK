@@ -33,6 +33,30 @@ namespace Jira.SDK.Tests
 			}
 		};
 
+        Dictionary<string, List<ProjectComponent>> _projectComponents = new Dictionary<string, List<ProjectComponent>>()
+        {
+            { "ITDEV", new List<ProjectComponent>() {
+                new ProjectComponent() {
+                    ID = 1,
+                    Name = "Component1",
+                    Description = "Description1"
+                },
+                new ProjectComponent() {
+                    ID = 2,
+                    Name = "Component2",
+                    Description = "Description2"
+                }
+            }},
+
+            { "QA", new List<ProjectComponent>() {
+                new ProjectComponent() {
+                    ID = 3,
+                    Name = "Component3",
+                    Description = "Description3"
+                },
+            }},
+        };
+
 		List<ProjectVersion> _projectVersions = new List<ProjectVersion>()
 		{
 			new ProjectVersion(){
@@ -1335,6 +1359,16 @@ namespace Jira.SDK.Tests
 		{
 			return this._projectVersions.Where(version => version.Project.Key.Equals(projectKey)).ToList();
 		}
+
+        public List<ProjectComponent> GetProjectComponents(String projectKey)
+        {
+            if (!_projectComponents.ContainsKey(projectKey))
+            {
+                return null;
+            }
+
+            return _projectComponents.First(x => x.Key.Equals(projectKey)).Value;
+        }
 
 		public User GetUser(String username)
 		{
