@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Jira.SDK")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An SDK to query and update Jira from within .net")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("jonas0007")]
 [assembly: AssemblyProduct("Jira.SDK")]
 [assembly: AssemblyCopyright("Copyright ©  2013")]
 [assembly: AssemblyTrademark("")]

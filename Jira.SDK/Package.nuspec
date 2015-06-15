@@ -2,7 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
     <id>Jira.SDK</id>
-    <version>1.1.2.0</version>
+    <title>Jira.SDK</title>
+    <description>$description$</description>
+    <version>$version$</version>
     <authors>jonas0007</authors>
     <owners>jonas0007</owners>
     <projectUrl>https://github.com/jonas0007/Jira.SDK</projectUrl>
