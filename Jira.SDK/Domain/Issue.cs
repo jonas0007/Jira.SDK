@@ -33,7 +33,7 @@ namespace Jira.SDK.Domain
 
         public String GetCustomFieldValue(String customFieldName)
         {
-            Field field = GetJira().Fields.First(f => f.Name.Equals(customFieldName));
+            Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
             if(field == null)
             {
                 throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
