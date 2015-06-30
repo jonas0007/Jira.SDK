@@ -9,7 +9,6 @@
     <owners>jonas0007</owners>
     <projectUrl>https://github.com/jonas0007/Jira.SDK</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Package description</description>
     <tags>Jira REST</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0.8" />
