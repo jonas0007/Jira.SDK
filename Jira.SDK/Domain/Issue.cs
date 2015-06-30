@@ -33,13 +33,22 @@ namespace Jira.SDK.Domain
 
         public String GetCustomFieldValue(String customFieldName)
         {
-            String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
-            return Fields.CustomFields[fieldId].Value;
+            Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
+            if(field == null)
+            {
+                throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
+            }
+            String fieldId = field.ID;
+            return (Fields.CustomFields[fieldId] != null ? Fields.CustomFields[fieldId].Value : "");
         }
 
         public void SetCustomFieldValue(String customFieldName, String value)
         {
             String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
+            if (Fields.CustomFields[fieldId] == null)
+            {
+                Fields.CustomFields[fieldId] = new CustomField(value);
+            }
             Fields.CustomFields[fieldId].Value = value;
         }
 
@@ -274,6 +283,21 @@ namespace Jira.SDK.Domain
             loadIssues(clones);
 
             return clones;
+        }
+
+        /// <summary>
+        /// This method returns all issues which where cloned from this one.
+        /// </summary>
+        /// <returns>The list of issues which where cloned from this one</returns>
+        public Issue GetClonedIssue()
+        {
+            Issue cloned = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners && link.OutwardIssue != null).Select(link => link.OutwardIssue).FirstOrDefault();
+            if(cloned != null)
+            {
+                loadIssues(new List<Issue>() { cloned });
+            }
+
+            return cloned;
         }
 
         /// <summary>
