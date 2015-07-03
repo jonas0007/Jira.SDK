@@ -480,8 +480,8 @@ namespace Jira.SDK.Domain
         {
             Dictionary<String, Object> fields = fieldsObj.ToObject<Dictionary<String, Object>>();
 
-            Created = fields["resolutiondate"] != null ? (DateTime)fields["created"] : DateTime.MinValue;
-            Updated = fields["resolutiondate"] != null ? (DateTime)fields["updated"] : DateTime.MinValue;
+            Created = fields["created"] != null ? (DateTime)fields["created"] : DateTime.MinValue;
+            Updated = fields["updated"] != null ? (DateTime)fields["updated"] : DateTime.MinValue;
             ResolutionDate = fields["resolutiondate"] != null ? (DateTime)fields["resolutiondate"] : DateTime.MinValue;
 
             IssueType = null;
@@ -497,9 +497,9 @@ namespace Jira.SDK.Domain
             }
 
             Assignee = null;
-            if (fields.ContainsKey("reporter") && fields["reporter"] != null)
+            if (fields.ContainsKey("assignee") && fields["assignee"] != null)
             {
-                Assignee = ((JObject)fields["reporter"]).ToObject<User>();
+                Assignee = ((JObject)fields["assignee"]).ToObject<User>();
             }
 
             Summary = "";
@@ -557,7 +557,7 @@ namespace Jira.SDK.Domain
             Parent = null;
             if (fields.ContainsKey("parent") && fields["parent"] != null)
             {
-                //Parent = new Issue(;
+                //Parent = new Issue();
             }
 
             Subtasks = null;
