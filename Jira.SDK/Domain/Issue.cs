@@ -605,15 +605,18 @@ namespace Jira.SDK.Domain
             {
                 switch (fieldsObj[customFieldName].Type)
                 {
-                    case JTokenType.String:
-                        CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
-                        break;
                     case JTokenType.Object:
                         CustomFields.Add(customFieldName, ((JObject)fieldsObj[customFieldName]).ToObject<CustomField>());
                         break;
                     case JTokenType.Null:
-                    default:
                         CustomFields.Add(customFieldName, null);
+                        break;
+                    case JTokenType.Array:
+                        // TODO Handle Array Type
+                        CustomFields.Add(customFieldName, null);
+                        break;
+                    default:
+                        CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
                         break;
                 }
 
