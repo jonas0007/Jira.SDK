@@ -135,6 +135,7 @@ namespace Jira.SDK.Domain
             };
 
             Summary = summary;
+            Rank = 0;
             Reporter = User.UndefinedUser;
             Assignee = User.UndefinedUser;
 

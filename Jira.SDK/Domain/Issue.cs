@@ -44,17 +44,12 @@ namespace Jira.SDK.Domain
 
         public void SetCustomFieldValue(String customFieldName, String value)
         {
-            Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
-            if (field == null)
+            String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
+            if (Fields.CustomFields[fieldId] == null)
             {
-                throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
+                Fields.CustomFields[fieldId] = new CustomField(value);
             }
-
-            if (Fields.CustomFields[field.ID] == null)
-            {
-                Fields.CustomFields[field.ID] = new CustomField(value);
-            }
-            Fields.CustomFields[field.ID].Value = value;
+            Fields.CustomFields[fieldId].Value = value;
         }
 
         public String Key { get; set; }
