@@ -80,9 +80,7 @@ namespace Jira.SDK.Domain
         }
 
         public void LoadIssues(List<Issue> issues, DateTime worklogStartdate, DateTime worklogEnddate)
-        {
-            Issues = issues;
-            
+        {            
             //Get all worklogs within the reach of the start- and enddate provided in the method.
             List<Worklog> worklogs = Issues.SelectMany(issue => issue.GetWorklogs()).ToList();
             worklogs = worklogs.Where(worklog => worklog.Started.CompareTo(worklogStartdate) >= 0 && worklog.Started.CompareTo(worklogEnddate) <= 0).ToList();
@@ -93,6 +91,8 @@ namespace Jira.SDK.Domain
 
         private void LoadIssues(List<Issue> issues, double timeSpentInSeconds)
         {
+            Issues = issues;
+
             TimeSpentInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.TimeSpentSeconds : 0));
             RemainingEstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.RemainingEstimateSeconds : 0));
             EstimateInSeconds = Issues.Sum(issue => (issue.TimeTracking != null ? issue.TimeTracking.OriginalEstimateSeconds : 0));
