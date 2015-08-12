@@ -71,6 +71,7 @@ namespace Jira.SDK.Domain
         public void LoadIssues()
         {
             LoadIssues(GetJira().Client.GetIssuesWithEpicLink(this.Key));
+            Issues.ForEach(issue => issue.SetJira(this.GetJira()));
         }
 
         public void LoadIssues(List<Issue> issues)
