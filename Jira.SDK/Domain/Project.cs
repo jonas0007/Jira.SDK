@@ -123,22 +123,12 @@ namespace Jira.SDK.Domain
 		}
 
 
-		public Epic CreateEpic(String summary, IssueType type, User reporter)
+		public Issue CreateIssue(IssueFields fields)
 		{
-			Issue epic = new Issue()
-			{
-				Fields = new IssueFields()
-				{
-					Summary = summary,
-					IssueType = type,
-					Reporter = reporter
-				}
-			};
+			Issue issue = GetJira().Client.AddIssue(fields);
+            issue.SetJira(this.GetJira());
 
-			GetJira().Client.AddIssue(epic);
-
-			epic.Load();
-			return Epic.FromIssue(epic);
+            return issue;
 		}
 
 		public override int GetHashCode()

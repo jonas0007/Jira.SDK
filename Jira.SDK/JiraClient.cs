@@ -45,7 +45,7 @@ namespace Jira.SDK
 
         private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
         {
-			{JiraObjectEnum.Fields, String.Format("{0}/field/", JiraAPIServiceURI)},
+            {JiraObjectEnum.Fields, String.Format("{0}/field/", JiraAPIServiceURI)},
             {JiraObjectEnum.Projects, String.Format("{0}/project/", JiraAPIServiceURI)},
             {JiraObjectEnum.Project, String.Format("{0}/project/{{projectKey}}/", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectVersions, String.Format("{0}/project/{{projectKey}}/versions/", JiraAPIServiceURI)},
@@ -54,13 +54,13 @@ namespace Jira.SDK
             {JiraObjectEnum.Issues, String.Format("{0}/search/", JiraAPIServiceURI)},
             {JiraObjectEnum.Worklog, String.Format("{0}/issue/{{issueKey}}/worklog/", JiraAPIServiceURI)},
             {JiraObjectEnum.Transitions, String.Format("{0}/issue/{{issueKey}}/transitions/", JiraAPIServiceURI)},
-			{JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
+            {JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
             {JiraObjectEnum.Filters, String.Format("{0}/filter/favourite", JiraAPIServiceURI)},
-			{JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
-			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
-			{JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
-			{JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
-			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
+            {JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
+            {JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
+            {JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
+            {JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
+            {JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
             {JiraObjectEnum.ProjectComponents, String.Format("{0}/project/{{projectKey}}/components/", JiraAPIServiceURI)}
         };
 
@@ -199,12 +199,26 @@ namespace Jira.SDK
             return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic Name' = '{1}'", projectName, epicName)).FirstOrDefault();
         }
 
-        public void AddIssue(Issue issue)
+        public Issue AddIssue(IssueFields issueFields)
         {
             IRestRequest request = new RestRequest(String.Format("{0}/issue", JiraAPIServiceURI), Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddBody(issue);
-            Client.Post<Issue>(request);
+            request.AddBody(new
+            {
+                Fields = issueFields
+            });
+            IRestResponse<Issue> response = Client.Post<Issue>(request);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return response.Data;
         }
 
         public Comment AddCommentToIssue(Issue issue, Comment comment)

@@ -30,7 +30,7 @@ namespace Jira.SDK
 		Issue GetIssue(String key);
 		List<Issue> SearchIssues(String jql);
 
-		void AddIssue(Issue issue);
+		Issue AddIssue(IssueFields fields);
 		Comment AddCommentToIssue(Issue issue, Comment comment);
         void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
