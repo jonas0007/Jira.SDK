@@ -203,10 +203,47 @@ namespace Jira.SDK
         {
             IRestRequest request = new RestRequest(String.Format("{0}/issue", JiraAPIServiceURI), Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddBody(new
+
+            JObject tempjson = JObject.FromObject(new
             {
-                Fields = issueFields
+                project = new
+                {
+                    id = issueFields.Project.ID
+                },
+                issuetype = new
+                {
+                    id = issueFields.IssueType.ID
+                },
+                summary = issueFields.Summary,
+                //description = issueFields.Description,
+
+                //User Reporter { get; set; }
+                //User Assignee { get; set; }
             });
+
+            List<Field> fields = GetFields();
+            
+
+            foreach (KeyValuePair<String, CustomField> customfield in issueFields.CustomFields)
+            {
+                Field field = fields.Where(f => f.ID.Equals(customfield.Key)).FirstOrDefault();
+                
+                switch(field.Schema.Custom)
+                {
+                    case "com.atlassian.jira.plugin.system.customfieldtypes:select":
+                        tempjson.Add(customfield.Key.ToLower(), JToken.FromObject(new { value = customfield.Value.Value }));
+                        break;
+                    default:
+                        tempjson.Add(customfield.Key.ToLower(), customfield.Value.Value );
+                        break;
+                }
+            }
+
+            JObject json = new JObject();
+            json.Add("fields", tempjson.Root);
+
+            request.AddParameter("Application/Json", json.ToString(), ParameterType.RequestBody);
+
             IRestResponse<Issue> response = Client.Post<Issue>(request);
 
             if (response.ErrorException != null)
