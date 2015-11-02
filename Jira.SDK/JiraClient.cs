@@ -12,6 +12,7 @@ using System.Reflection;
 using Jira.SDK.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RestSharp.Authenticators;
 
 namespace Jira.SDK
 {
