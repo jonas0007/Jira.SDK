@@ -1,5 +1,6 @@
 *.suo
-Jira.SDK/bin/*
-Jira.SDK/obj/*
-Jira.SDK/packages/*
+*/bin/*
+*/obj/*
+*/packages/*
 *.user
+

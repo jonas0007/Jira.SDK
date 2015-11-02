@@ -1487,5 +1487,10 @@ namespace Jira.SDK.Tests
         {
             throw new NotImplementedException();
         }
+
+        public Issue AddIssue(IssueFields fields)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
