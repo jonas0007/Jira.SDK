@@ -12,6 +12,7 @@ using System.Reflection;
 using Jira.SDK.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using RestSharp.Authenticators;
 
 namespace Jira.SDK
 {
@@ -45,7 +46,7 @@ namespace Jira.SDK
 
         private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
         {
-			{JiraObjectEnum.Fields, String.Format("{0}/field/", JiraAPIServiceURI)},
+            {JiraObjectEnum.Fields, String.Format("{0}/field/", JiraAPIServiceURI)},
             {JiraObjectEnum.Projects, String.Format("{0}/project/", JiraAPIServiceURI)},
             {JiraObjectEnum.Project, String.Format("{0}/project/{{projectKey}}/", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectVersions, String.Format("{0}/project/{{projectKey}}/versions/", JiraAPIServiceURI)},
@@ -54,13 +55,13 @@ namespace Jira.SDK
             {JiraObjectEnum.Issues, String.Format("{0}/search/", JiraAPIServiceURI)},
             {JiraObjectEnum.Worklog, String.Format("{0}/issue/{{issueKey}}/worklog/", JiraAPIServiceURI)},
             {JiraObjectEnum.Transitions, String.Format("{0}/issue/{{issueKey}}/transitions/", JiraAPIServiceURI)},
-			{JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
+            {JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
             {JiraObjectEnum.Filters, String.Format("{0}/filter/favourite", JiraAPIServiceURI)},
-			{JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
-			{JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
-			{JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
-			{JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
-			{JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
+            {JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
+            {JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
+            {JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
+            {JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
+            {JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
             {JiraObjectEnum.ProjectComponents, String.Format("{0}/project/{{projectKey}}/components/", JiraAPIServiceURI)}
         };
 
@@ -199,12 +200,63 @@ namespace Jira.SDK
             return SearchIssues(String.Format("project = '{0}' AND Type = Epic and 'Epic Name' = '{1}'", projectName, epicName)).FirstOrDefault();
         }
 
-        public void AddIssue(Issue issue)
+        public Issue AddIssue(IssueFields issueFields)
         {
             IRestRequest request = new RestRequest(String.Format("{0}/issue", JiraAPIServiceURI), Method.POST);
             request.RequestFormat = DataFormat.Json;
-            request.AddBody(issue);
-            Client.Post<Issue>(request);
+
+            JObject tempjson = JObject.FromObject(new
+            {
+                project = new
+                {
+                    id = issueFields.Project.ID
+                },
+                issuetype = new
+                {
+                    id = issueFields.IssueType.ID
+                },
+                summary = issueFields.Summary,
+                //description = issueFields.Description,
+
+                //User Reporter { get; set; }
+                //User Assignee { get; set; }
+            });
+
+            List<Field> fields = GetFields();
+            
+
+            foreach (KeyValuePair<String, CustomField> customfield in issueFields.CustomFields)
+            {
+                Field field = fields.Where(f => f.ID.Equals(customfield.Key)).FirstOrDefault();
+                
+                switch(field.Schema.Custom)
+                {
+                    case "com.atlassian.jira.plugin.system.customfieldtypes:select":
+                        tempjson.Add(customfield.Key.ToLower(), JToken.FromObject(new { value = customfield.Value.Value }));
+                        break;
+                    default:
+                        tempjson.Add(customfield.Key.ToLower(), customfield.Value.Value );
+                        break;
+                }
+            }
+
+            JObject json = new JObject();
+            json.Add("fields", tempjson.Root);
+
+            request.AddParameter("Application/Json", json.ToString(), ParameterType.RequestBody);
+
+            IRestResponse<Issue> response = Client.Post<Issue>(request);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return response.Data;
         }
 
         public Comment AddCommentToIssue(Issue issue, Comment comment)

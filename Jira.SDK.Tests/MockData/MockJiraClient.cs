@@ -1417,53 +1417,53 @@ namespace Jira.SDK.Tests
 
 		public List<Field> GetFields()
 		{
-			throw new NotImplementedException();
+            return new List<Field>();
 		}
 
 		public List<Sprint> GetBacklogSprintsFromAgileBoard(int agileBoardID)
 		{
-			throw new NotImplementedException();
+            return new List<Sprint>();
 		}
 
 		public Sprint GetSprint(int agileBoardID, int sprintID)
 		{
-			throw new NotImplementedException();
+            return _sprints[agileBoardID].Where(sprint => sprint.ID == sprintID).FirstOrDefault();
 		}
 
 		public List<Issue> SearchIssues(string jql)
 		{
-			throw new NotImplementedException();
+            return new List<Issue>();
 		}
 
 		public List<Issue> GetSubtasksFromIssue(string issueKey)
 		{
-			throw new NotImplementedException();
-		}
+            return new List<Issue>();
+        }
 
 		public List<Issue> GetEpicIssuesFromProject(string projectName)
 		{
-			throw new NotImplementedException();
-		}
+            return new List<Issue>();
+        }
 
 		public Issue GetEpicIssueFromProject(string projectName, string epicName)
 		{
-			throw new NotImplementedException();
-		}
+            return _issues.First();
+        }
 
 		public List<Issue> GetIssuesWithEpicLink(string epicLink)
 		{
-			throw new NotImplementedException();
-		}
+            return new List<Issue>();
+        }
 
 		public List<IssueFilter> GetFavoriteFilters()
 		{
-			throw new NotImplementedException();
+            return new List<IssueFilter>();
 		}
 
 
 		public void AddIssue(Issue issue)
 		{
-			throw new NotImplementedException();
+			//
 		}
 
 
@@ -1484,6 +1484,11 @@ namespace Jira.SDK.Tests
 
 
         public void TransitionIssue(Issue issue, Transition transition, Comment comment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Issue AddIssue(IssueFields fields)
         {
             throw new NotImplementedException();
         }
