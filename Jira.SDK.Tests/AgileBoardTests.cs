@@ -48,8 +48,11 @@ namespace Jira.SDK.Tests
 			Assert.Equal(1, agileboard.ID);
 
 			//Get the first sprint from the first agile board
-			Sprint sprint = agileboard.GetSprints().First();
-			Assert.Equal(1, sprint.ID);
+			List<Sprint> sprints = agileboard.GetSprints();
+			Assert.Equal(3, sprints.Count);
+
+            //Get a sprint and try to select an issue.
+            Sprint sprint = sprints.Where(s => s.ID == 1).First();
 
 			List<Issue> issues = sprint.GetIssues();
 			Assert.NotNull(issues);
