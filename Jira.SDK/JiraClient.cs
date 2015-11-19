@@ -83,6 +83,11 @@ namespace Jira.SDK
             };
         }
 
+        public string GetBaseUrl()
+        {
+            return Client.BaseUrl.ToString();
+        }
+
         public List<Issue> SearchIssues(String jql)
         {
             return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" }, { "expand", "transitions" } });
