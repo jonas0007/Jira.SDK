@@ -62,7 +62,7 @@ namespace Jira.SDK.Domain
         public String Url {
             get
             {
-                return string.Format("{0}/browse/{1}", _jira.Client.GetBaseUrl(), Key);
+                return string.Format("{0}browse/{1}", _jira.Client.GetBaseUrl(), Key);
             }
         }
 
