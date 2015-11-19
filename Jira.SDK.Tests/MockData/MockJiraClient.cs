@@ -1495,7 +1495,7 @@ namespace Jira.SDK.Tests
 
         public string GetBaseUrl()
         {
-            return "http//jira.example.com";
+            return "http://jira.example.com/";
         }
     }
 }

@@ -37,7 +37,7 @@ namespace Jira.SDK.Tests
 
 			Assert.Equal("mwillem", secondIssue.GetWorklogs()[0].Author.Username);
 
-            Assert.Equal("http//jira.example.com/browse/ITDEV-6", secondIssue.Url);
+            Assert.Equal("http://jira.example.com/browse/ITDEV-6", secondIssue.Url);
 
 		}
 	}
