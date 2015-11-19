@@ -9,7 +9,9 @@ namespace Jira.SDK
 {
 	public interface IJiraClient
 	{
-		List<Project> GetProjects();
+        string GetBaseUrl();
+
+        List<Project> GetProjects();
 		Project GetProject(String projectKey);
 
 		List<Field> GetFields();

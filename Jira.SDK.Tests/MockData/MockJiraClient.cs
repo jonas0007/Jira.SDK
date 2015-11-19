@@ -1492,5 +1492,10 @@ namespace Jira.SDK.Tests
         {
             throw new NotImplementedException();
         }
+
+        public string GetBaseUrl()
+        {
+            return "http//jira.example.com";
+        }
     }
 }

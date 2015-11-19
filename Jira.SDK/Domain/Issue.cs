@@ -59,6 +59,12 @@ namespace Jira.SDK.Domain
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
+        public String Url {
+            get
+            {
+                return string.Format("{0}/browse/{1}", _jira.Client.GetBaseUrl(), Key);
+            }
+        }
 
         public String Summary
         {
