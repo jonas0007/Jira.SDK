@@ -51,7 +51,6 @@ List<AgileBoard> agilaboards = jira.GetAgileBoards();
 
 //Get a specific issue with key
 Issue issue = jira.GetIssue("{{issuekey}}");
-```
 
 //Add a new issue to a project
 Project project = jira.GetProject("{{projectname}}");
@@ -64,3 +63,4 @@ Issue newIssue = project.AddIssue(new IssueFields()
                 }
             });
 );
+```
