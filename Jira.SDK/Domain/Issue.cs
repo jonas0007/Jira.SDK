@@ -34,7 +34,7 @@ namespace Jira.SDK.Domain
         public String GetCustomFieldValue(String customFieldName)
         {
             Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
-            if(field == null)
+            if (field == null)
             {
                 throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
             }
@@ -59,7 +59,8 @@ namespace Jira.SDK.Domain
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
-        public String Url {
+        public String Url
+        {
             get
             {
                 return string.Format("{0}browse/{1}", _jira.Client.GetBaseUrl(), Key);
@@ -171,15 +172,8 @@ namespace Jira.SDK.Domain
 
         public void RefreshWorklogs()
         {
-            try
-            {
-                _worklogs = _jira.Client.GetWorkLogs(this.Key).Worklogs;    
-            }
-            catch
-            {
-                
-            }
-            
+            // this will force the re-loading of any work logs
+            _worklogs = _jira.Client.GetWorkLogs(this.Key).Worklogs;
         }
 
         public List<Transition> Transitions { get; set; }
@@ -316,7 +310,7 @@ namespace Jira.SDK.Domain
         public Issue GetClonedIssue()
         {
             Issue cloned = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners && link.OutwardIssue != null).Select(link => link.OutwardIssue).FirstOrDefault();
-            if(cloned != null)
+            if (cloned != null)
             {
                 loadIssues(new List<Issue>() { cloned });
             }
@@ -517,7 +511,7 @@ namespace Jira.SDK.Domain
             Reporter = null;
             if (fields.ContainsKey("reporter") && fields["reporter"] != null)
             {
-            Reporter = ((JObject)fields["reporter"]).ToObject<User>();
+                Reporter = ((JObject)fields["reporter"]).ToObject<User>();
             }
 
             Assignee = null;
@@ -612,7 +606,7 @@ namespace Jira.SDK.Domain
             if (fields.ContainsKey("labels"))
             {
                 JArray labelArray = (JArray)fields["labels"];
-                if(labelArray.Count > 0)
+                if (labelArray.Count > 0)
                 {
                     Labels = labelArray.Select(label => (String)label).ToList();
                 }
