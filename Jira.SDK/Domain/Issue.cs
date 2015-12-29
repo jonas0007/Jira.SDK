@@ -169,6 +169,19 @@ namespace Jira.SDK.Domain
             return _worklogs;
         }
 
+        public void RefreshWorklogs()
+        {
+            try
+            {
+                _worklogs = _jira.Client.GetWorkLogs(this.Key).Worklogs;    
+            }
+            catch
+            {
+                
+            }
+            
+        }
+
         public List<Transition> Transitions { get; set; }
         private List<Transition> _transitions;
         public List<Transition> GetTransitions()
