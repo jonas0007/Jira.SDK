@@ -1497,5 +1497,97 @@ namespace Jira.SDK.Tests
         {
             return "http://jira.example.com/";
         }
+
+
+        public bool CreateProject(CreateProject newProject)
+        {
+            return newProject != null && newProject.Key != "FAILED";
+        }
+
+        public List<ProjectCategory> GetProjectCategories()
+        {
+            return new List<ProjectCategory> {
+                new ProjectCategory
+                {
+                    Id = 10100,
+                    Description = "Test 1",
+                    Name = "Test1",
+                    Self = "SELF_URL",
+                },
+                new ProjectCategory
+                {
+                    Id = 10101,
+                    Description = "Test 2",
+                    Name = "Test2",
+                    Self = "SELF_URL",
+                }
+            }
+        }
+
+        public List<ProjectType> GetProjectTypes()
+        {
+            return new List<ProjectType> {
+                new ProjectType
+                {
+                    Color = "#C0C0C0",
+                    Description = "Type 1",
+                    Key = "type1",
+                    FormattedKey = "Type1"
+                },
+                new ProjectType
+                {
+                    Color = "#C0C0C0",
+                    Description = "Type 2",
+                    Key = "type2",
+                    FormattedKey = "Type2"
+                }
+            };
+        }
+
+        public List<ProjectRole> GetProjectRoles(string key)
+        {
+            return new List<ProjectRole>
+            {
+                new ProjectRole
+                {
+                    Name = "Administrators",
+                    Id = 10001,
+                    Self = "SELF_URL"
+                }
+            };
+        }
+
+        public ProjectRole AddGroupActor(string projectKey, int id, string group)
+        {
+            return new ProjectRole
+                {
+                    Name = "Administrators",
+                    Id = 10001,
+                    Self = "SELF_URL",
+                    Actors = new List<ProjectRoleActor>
+                    {
+                    }
+                };
+        }
+
+        public bool DeleteGroupActor(string projectKey, int id, string group)
+        {
+            return true;
+        }
+
+        public List<IssueSecurityScheme> GetIssueSecuritySchemes()
+        {
+            return new List<IssueSecurityScheme>();
+        }
+
+        public List<PermissionScheme> GetPermissionSchemes()
+        {
+            return new List<PermissionScheme>();
+        }
+
+        public List<NotificationScheme> GetNotificationSchemes()
+        {
+            return new List<NotificationScheme>();
+        }
     }
 }
