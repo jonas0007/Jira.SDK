@@ -1589,5 +1589,18 @@ namespace Jira.SDK.Tests
         {
             return new List<NotificationScheme>();
         }
+
+        public GroupResult GetGroup(string groupName)
+        {
+            return new GroupResult
+            {
+                Self = "GROUP_SELF_URL",
+                MaxResults = 50,
+                StartAt = 0,
+                Total = 0,
+                IsLast = true,
+                Users = new List<User>()
+            };
+        }
     }
 }

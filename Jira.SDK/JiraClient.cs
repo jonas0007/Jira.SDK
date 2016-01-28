@@ -29,6 +29,7 @@ namespace Jira.SDK
             Issues,
             Worklog,
             User,
+            Group,
             AgileBoards,
             Sprints,
             BacklogSprints,
@@ -63,6 +64,7 @@ namespace Jira.SDK
             {JiraObjectEnum.Worklog, String.Format("{0}/issue/{{issueKey}}/worklog/", JiraAPIServiceURI)},
             {JiraObjectEnum.Transitions, String.Format("{0}/issue/{{issueKey}}/transitions/", JiraAPIServiceURI)},
             {JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
+            {JiraObjectEnum.Group, String.Format("{0}/rest/api/2/group", JiraAPIServiceURI) },
             {JiraObjectEnum.Filters, String.Format("{0}/filter/favourite", JiraAPIServiceURI)},
             {JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
             {JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
@@ -106,6 +108,13 @@ namespace Jira.SDK
         {
             return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" }, { "expand", "transitions" } });
         }
+
+        #region Groups
+        public GroupResult GetGroup(string groupName)
+        {
+            return Execute<GroupResult>(JiraObjectEnum.Group, parameters: new Dictionary<string, string> { { "groupname", groupName } });
+        }
+        #endregion
 
         #region Fields
         public List<Field> GetFields()

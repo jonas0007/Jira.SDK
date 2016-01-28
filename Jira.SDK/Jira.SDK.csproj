@@ -57,6 +57,7 @@
     <Compile Include="Domain\CustomField.cs" />
     <Compile Include="Domain\Epic.cs" />
     <Compile Include="Domain\Field.cs" />
+    <Compile Include="Domain\GroupResult.cs" />
     <Compile Include="Domain\NotificationSchemeEvent.cs" />
     <Compile Include="Domain\NotificationScheme.cs" />
     <Compile Include="Domain\PermissionScheme.cs" />

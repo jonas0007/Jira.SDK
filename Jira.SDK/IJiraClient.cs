@@ -11,6 +11,8 @@ namespace Jira.SDK
 	{
         string GetBaseUrl();
 
+        GroupResult GetGroup(string groupName);
+
         bool CreateProject(CreateProject newProject);
         List<Project> GetProjects();
 		Project GetProject(String projectKey);

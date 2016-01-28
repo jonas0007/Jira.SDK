@@ -38,6 +38,13 @@ namespace Jira.SDK
             return _client.CreateProject(newProject);
         }
 
+        public GroupResult GetGroup(string groupName)
+        {
+            var result = _client.GetGroup(groupName);
+            result.Jira = this;
+            return result;
+        }
+
         public List<Project> GetProjects()
         {
 			List<Project> projects = _client.GetProjects();
