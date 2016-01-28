@@ -1521,7 +1521,7 @@ namespace Jira.SDK.Tests
                     Name = "Test2",
                     Self = "SELF_URL",
                 }
-            }
+            };
         }
 
         public List<ProjectType> GetProjectTypes()
