@@ -74,6 +74,7 @@
     <Compile Include="Domain\ProjectType.cs" />
     <Compile Include="Domain\ProjectCategory.cs" />
     <Compile Include="Domain\ProjectComponent.cs" />
+    <Compile Include="Domain\ProjectRole.cs" />
     <Compile Include="Domain\Resolution.cs" />
     <Compile Include="Domain\SprintResult.cs" />
     <Compile Include="Domain\Status.cs" />

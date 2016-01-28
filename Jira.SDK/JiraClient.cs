@@ -73,7 +73,7 @@ namespace Jira.SDK
             {JiraObjectEnum.IssueSecuritySchemes, String.Format("{0}/issuesecurityschemes/", JiraAPIServiceURI)},
             {JiraObjectEnum.PermissionScheme, String.Format("{0}/permissionscheme/", JiraAPIServiceURI)},
             {JiraObjectEnum.NotificationScheme, String.Format("{0}/notificationscheme/", JiraAPIServiceURI)},
-            {JiraObjectEnum.ProjectRoles, String.Format("{0}/project/{{projectKey}}/role", JiraAPIServiceURI)},
+            {JiraObjectEnum.ProjectRoles, String.Format("{0}/project/{{projectKey}}/role/", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectRole, String.Format("{0}/project/{{projectKey}}/role/{{id}}", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectCategories, String.Format("{0}/projectCategory", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectTypes, String.Format("{0}/project/type", JiraAPIServiceURI)},
@@ -192,6 +192,43 @@ namespace Jira.SDK
         {
             return GetList<ProjectComponent>(JiraObjectEnum.ProjectComponents,
                                keys: new Dictionary<string, string>() { { "projectKey", projectKey } });
+        }
+        #endregion
+
+        #region Project roles
+        public List<ProjectRole> GetProjectRoles(String projectKey)
+        {
+            var responses = this.Execute<Dictionary<string, string>>(JiraObjectEnum.ProjectRoles, keys: new Dictionary<string, string>() { { "projectKey", projectKey } });
+            var roles = new List<ProjectRole>();
+            foreach (var response in responses)
+                roles.Add(new ProjectRole
+                {
+                    Name = response.Key,
+                    Self = response.Value,
+                    Id = Int32.Parse(response.Value.Split('/').Last())
+                });
+            return roles;
+        }
+
+        public ProjectRole AddGroupActor(String projectKey, Int32 id, String group)
+        {
+            var request = this.GetRequest(JiraObjectEnum.ProjectRole,
+                new Dictionary<string, string>(),
+                new Dictionary<string, string>() { { "projectKey", projectKey }, { "id", id.ToString() } });
+            request.Method = Method.POST;
+            request.AddJsonBody(new { group = new List<string> { group } });
+            var response = Client.Execute<ProjectRole>(request);
+            return response.Data;
+        }
+
+        public bool DeleteGroupActor(string projectKey, Int32 id, String group)
+        {
+            var request = this.GetRequest(JiraObjectEnum.ProjectRole,
+                new Dictionary<string, string>() { { "group", group } },
+                new Dictionary<string, string>() { { "projectKey", projectKey }, { "id", id.ToString() } });
+            request.Method = Method.DELETE;
+            var response = Client.Execute<ProjectRole>(request);
+            return response.StatusCode == System.Net.HttpStatusCode.NoContent;
         }
         #endregion
 

@@ -61,6 +61,25 @@ namespace Jira.SDK
             return categories;
         }
 
+        public List<ProjectRole> GetProjectRoles(String key)
+        {
+            var roles = _client.GetProjectRoles(key);
+            roles.ForEach(role => role.Jira = this);
+            return roles;
+        }
+
+        public ProjectRole AddGroupActor(String projectKey, Int32 id, String group)
+        {
+            var projectRole = _client.AddGroupActor(projectKey, id, group);
+            projectRole.Jira = this;
+            return projectRole;
+        }
+
+        public bool DeleteGroupActor(string projectKey, Int32 id, String group)
+        {
+            return _client.DeleteGroupActor(projectKey, id, group);
+        }
+
         public List<ProjectType> GetProjectTypes()
         {
             var types = _client.GetProjectTypes();

@@ -16,7 +16,9 @@ namespace Jira.SDK
 		Project GetProject(String projectKey);
         List<ProjectCategory> GetProjectCategories();
         List<ProjectType> GetProjectTypes();
-
+        List<ProjectRole> GetProjectRoles(String key);
+        ProjectRole AddGroupActor(String projectKey, Int32 id, String group);
+        bool DeleteGroupActor(string projectKey, Int32 id, String group);
 
         List<Field> GetFields();
 
