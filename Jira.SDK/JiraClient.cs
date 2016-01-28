@@ -64,7 +64,7 @@ namespace Jira.SDK
             {JiraObjectEnum.Worklog, String.Format("{0}/issue/{{issueKey}}/worklog/", JiraAPIServiceURI)},
             {JiraObjectEnum.Transitions, String.Format("{0}/issue/{{issueKey}}/transitions/", JiraAPIServiceURI)},
             {JiraObjectEnum.User, String.Format("{0}/user/", JiraAPIServiceURI)},
-            {JiraObjectEnum.Group, String.Format("{0}/rest/api/2/group", JiraAPIServiceURI) },
+            {JiraObjectEnum.Group, String.Format("{0}/group", JiraAPIServiceURI) },
             {JiraObjectEnum.Filters, String.Format("{0}/filter/favourite", JiraAPIServiceURI)},
             {JiraObjectEnum.AgileBoards, String.Format("{0}/rapidviews/list/", JiraAgileServiceURI)},
             {JiraObjectEnum.Sprints, String.Format("{0}/sprintquery/{{boardID}}/", JiraAgileServiceURI)},
