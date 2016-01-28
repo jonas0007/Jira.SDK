@@ -28,6 +28,16 @@ namespace Jira.SDK
             Connect(new JiraClient(url, username, password));
         }
 
+        public User GetUser(string username)
+        {
+            return _client.GetUser(username);
+        }
+
+        public bool CreateProject(CreateProject newProject)
+        {
+            return _client.CreateProject(newProject);
+        }
+
         public List<Project> GetProjects()
         {
 			List<Project> projects = _client.GetProjects();
@@ -44,8 +54,21 @@ namespace Jira.SDK
             }
             return project;
         }
+        public List<ProjectCategory> GetProjectCategories()
+        {
+            var categories = _client.GetProjectCategories();
+            categories.ForEach(cat => cat.Jira = this);
+            return categories;
+        }
 
-		public Issue GetIssue(String key)
+        public List<ProjectType> GetProjectTypes()
+        {
+            var types = _client.GetProjectTypes();
+            types.ForEach(cat => cat.Jira = this);
+            return types;
+        }
+
+        public Issue GetIssue(String key)
 		{
 			Issue issue = _client.GetIssue(key);
             if(String.IsNullOrEmpty(issue.Key))
@@ -102,5 +125,26 @@ namespace Jira.SDK
 
 			return filter;
 		}
+
+        public List<IssueSecurityScheme> GetIssueSecuritySchemes()
+        {
+            var schemes = _client.GetIssueSecuritySchemes();
+            schemes.ForEach(scheme => scheme.Jira = this);
+            return schemes;
+        }
+
+        public List<PermissionScheme> GetPermissionSchemes()
+        {
+            var schemes = _client.GetPermissionSchemes();
+            schemes.ForEach(scheme => scheme.Jira = this);
+            return schemes;
+        }
+
+        public List<NotificationScheme> GetNotificationSchemes()
+        {
+            var schemes = _client.GetNotificationSchemes();
+            schemes.ForEach(scheme => scheme.Jira = this);
+            return schemes;
+        }
     }
 }

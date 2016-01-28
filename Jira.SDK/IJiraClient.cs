@@ -11,10 +11,14 @@ namespace Jira.SDK
 	{
         string GetBaseUrl();
 
+        bool CreateProject(CreateProject newProject);
         List<Project> GetProjects();
 		Project GetProject(String projectKey);
+        List<ProjectCategory> GetProjectCategories();
+        List<ProjectType> GetProjectTypes();
 
-		List<Field> GetFields();
+
+        List<Field> GetFields();
 
 		List<ProjectVersion> GetProjectVersions(String projectKey);
 
@@ -47,5 +51,12 @@ namespace Jira.SDK
 		List<Issue> GetIssuesWithEpicLink(String epicLink);
 
         List<IssueFilter> GetFavoriteFilters();
-	}
+
+        List<IssueSecurityScheme> GetIssueSecuritySchemes();
+
+        List<PermissionScheme> GetPermissionSchemes();
+
+        List<NotificationScheme> GetNotificationSchemes();
+
+    }
 }

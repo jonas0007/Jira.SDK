@@ -57,6 +57,10 @@
     <Compile Include="Domain\CustomField.cs" />
     <Compile Include="Domain\Epic.cs" />
     <Compile Include="Domain\Field.cs" />
+    <Compile Include="Domain\NotificationSchemeEvent.cs" />
+    <Compile Include="Domain\NotificationScheme.cs" />
+    <Compile Include="Domain\PermissionScheme.cs" />
+    <Compile Include="Domain\IssueSecurityScheme.cs" />
     <Compile Include="Domain\IssueFilter.cs" />
     <Compile Include="Domain\IssueLink.cs" />
     <Compile Include="Domain\IssueLinkType.cs" />
@@ -66,6 +70,9 @@
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueSearchResult.cs" />
+    <Compile Include="Domain\CreateProject.cs" />
+    <Compile Include="Domain\ProjectType.cs" />
+    <Compile Include="Domain\ProjectCategory.cs" />
     <Compile Include="Domain\ProjectComponent.cs" />
     <Compile Include="Domain\Resolution.cs" />
     <Compile Include="Domain\SprintResult.cs" />

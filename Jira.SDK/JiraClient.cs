@@ -36,7 +36,14 @@ namespace Jira.SDK
             SprintIssues,
             Filters,
             Transitions,
-            ProjectComponents
+            ProjectComponents,
+            IssueSecuritySchemes,
+            PermissionScheme,
+            NotificationScheme,
+            ProjectRoles,
+            ProjectRole,
+            ProjectCategories,
+            ProjectTypes,
         }
 
         private RestClient Client { get; set; }
@@ -62,7 +69,14 @@ namespace Jira.SDK
             {JiraObjectEnum.BacklogSprints, String.Format("{0}/xboard/plan/backlog/data.json", JiraAgileServiceURI)},
             {JiraObjectEnum.Sprint, String.Format("{0}/rapid/charts/sprintreport/", JiraAgileServiceURI)},
             {JiraObjectEnum.SprintIssues, String.Format("{0}/sprintquery/", JiraAgileServiceURI)},
-            {JiraObjectEnum.ProjectComponents, String.Format("{0}/project/{{projectKey}}/components/", JiraAPIServiceURI)}
+            {JiraObjectEnum.ProjectComponents, String.Format("{0}/project/{{projectKey}}/components/", JiraAPIServiceURI)},
+            {JiraObjectEnum.IssueSecuritySchemes, String.Format("{0}/issuesecurityschemes/", JiraAPIServiceURI)},
+            {JiraObjectEnum.PermissionScheme, String.Format("{0}/permissionscheme/", JiraAPIServiceURI)},
+            {JiraObjectEnum.NotificationScheme, String.Format("{0}/notificationscheme/", JiraAPIServiceURI)},
+            {JiraObjectEnum.ProjectRoles, String.Format("{0}/project/{{projectKey}}/role", JiraAPIServiceURI)},
+            {JiraObjectEnum.ProjectRole, String.Format("{0}/project/{{projectKey}}/role/{{id}}", JiraAPIServiceURI)},
+            {JiraObjectEnum.ProjectCategories, String.Format("{0}/projectCategory", JiraAPIServiceURI)},
+            {JiraObjectEnum.ProjectTypes, String.Format("{0}/project/type", JiraAPIServiceURI)},
         };
 
         public JiraClient(RestClient client)
@@ -101,6 +115,15 @@ namespace Jira.SDK
         #endregion
 
         #region Projects
+        public bool CreateProject(CreateProject newProject)
+        {
+            var request = GetRequest(JiraObjectEnum.Projects, new Dictionary<string, string>(), new Dictionary<string, string>());
+            request.Method = Method.POST;
+            request.AddJsonBody(newProject);
+            var response = this.Client.Execute(request);
+            return response.StatusCode == System.Net.HttpStatusCode.Created;
+        }
+
         public List<Project> GetProjects()
         {
             return GetList<Project>(JiraObjectEnum.Projects);
@@ -109,6 +132,50 @@ namespace Jira.SDK
         public Project GetProject(String projectKey)
         {
             return GetList<Project>(JiraObjectEnum.Project, keys: new Dictionary<string, string>() { { "projectKey", projectKey } }).FirstOrDefault();
+        }
+
+        public List<ProjectCategory> GetProjectCategories()
+        {
+            return GetList<ProjectCategory>(JiraObjectEnum.ProjectCategories);
+        }
+
+        public List<ProjectType> GetProjectTypes()
+        {
+            return GetList<ProjectType>(JiraObjectEnum.ProjectTypes);
+        }
+        #endregion
+
+        #region Security
+        private class hiddenIssueSecuritySchemes
+        {
+            public List<IssueSecurityScheme> IssueSecuritySchemes { get; set; }
+        }
+        public List<IssueSecurityScheme> GetIssueSecuritySchemes()
+        {
+            return GetItem<hiddenIssueSecuritySchemes>(JiraObjectEnum.IssueSecuritySchemes).IssueSecuritySchemes;
+        }
+
+        private class hiddenPermissionSchemes
+        {
+            public List<PermissionScheme> PermissionSchemes { get; set; }
+        }
+        public List<PermissionScheme> GetPermissionSchemes()
+        {
+            return GetItem<hiddenPermissionSchemes>(JiraObjectEnum.PermissionScheme).PermissionSchemes;
+        }
+
+        private class hiddenNotificationScheme
+        {
+            public Int32 MaxResults { get; set; }
+            public Int32 StartAt { get; set; }
+            public Int32 Total { get; set; }
+            public bool IsLast { get; set; }
+            public List<NotificationScheme> values { get; set; }
+        }
+        public List<NotificationScheme> GetNotificationSchemes()
+        {
+            var response = GetItem<hiddenNotificationScheme>(JiraObjectEnum.NotificationScheme);
+            return response.values;
         }
         #endregion
 
