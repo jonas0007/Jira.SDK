@@ -11,10 +11,18 @@ namespace Jira.SDK
 	{
         string GetBaseUrl();
 
+        GroupResult GetGroup(string groupName);
+
+        bool CreateProject(CreateProject newProject);
         List<Project> GetProjects();
 		Project GetProject(String projectKey);
+        List<ProjectCategory> GetProjectCategories();
+        List<ProjectType> GetProjectTypes();
+        List<ProjectRole> GetProjectRoles(String key);
+        ProjectRole AddGroupActor(String projectKey, Int32 id, String group);
+        bool DeleteGroupActor(string projectKey, Int32 id, String group);
 
-		List<Field> GetFields();
+        List<Field> GetFields();
 
 		List<ProjectVersion> GetProjectVersions(String projectKey);
 
@@ -47,5 +55,12 @@ namespace Jira.SDK
 		List<Issue> GetIssuesWithEpicLink(String epicLink);
 
         List<IssueFilter> GetFavoriteFilters();
-	}
+
+        List<IssueSecurityScheme> GetIssueSecuritySchemes();
+
+        List<PermissionScheme> GetPermissionSchemes();
+
+        List<NotificationScheme> GetNotificationSchemes();
+
+    }
 }
