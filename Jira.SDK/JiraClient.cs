@@ -467,6 +467,10 @@ namespace Jira.SDK
         {
             IRestResponse<T> response = Client.Execute<T>(GetRequest(objectType, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
 
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedAccessException(response.Request.Resource);
+            }
             if (response.ErrorException != null)
             {
                 throw response.ErrorException;
