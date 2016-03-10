@@ -410,6 +410,30 @@ namespace Jira.SDK.Domain
             }
         }
 
+        public String SprintNames
+        {
+            get
+            {
+                String sprintDescription = GetCustomFieldValue("Sprint");
+                if (!String.IsNullOrEmpty(sprintDescription))
+                {
+                    MatchCollection matches = Regex.Matches(sprintDescription, ",name=(?<SprintName>.*?),");
+                    String names = "";
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            names += match.Groups["SprintName"].Value + ", ";
+                        }
+                    }
+
+                    return names;
+                }
+                return "";
+            }
+        }
+
         private Epic _epic;
         public Epic Epic
         {
@@ -653,7 +677,7 @@ namespace Jira.SDK.Domain
                         break;
                     case JTokenType.Array:
                         // TODO Handle Array Type
-                        CustomFields.Add(customFieldName, null);
+                        CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString()));
                         break;
                     default:
                         CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));

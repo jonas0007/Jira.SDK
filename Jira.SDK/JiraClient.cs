@@ -553,7 +553,9 @@ namespace Jira.SDK
         private Issue DeserializeIssue(String json)
         {
             JObject jsonObject = JObject.Parse(json);
-
+            if(jsonObject["fields"] == null) {
+                return null;
+            }
             return new Issue((String)jsonObject["key"], (JObject)jsonObject["fields"]);
         }
         #endregion
