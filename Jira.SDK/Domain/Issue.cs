@@ -481,6 +481,7 @@ namespace Jira.SDK.Domain
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
         public List<ProjectVersion> AffectsVersions { get; set; }
+        public List<Component> Components { get; set; }
         public Project Project { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
@@ -556,6 +557,16 @@ namespace Jira.SDK.Domain
                 if (versionArray.Count > 0)
                 {
                     AffectsVersions = ((JArray)fields["versions"]).ToObject<List<ProjectVersion>>();
+                }
+            }
+
+            Components = new List<Component>();
+            if (fields.ContainsKey("components") && fields["components"] != null)
+            {
+                JArray versionArray = (JArray)fields["components"];
+                if (versionArray.Count > 0)
+                {
+                    Components = ((JArray)fields["components"]).ToObject<List<Component>>();
                 }
             }
 
