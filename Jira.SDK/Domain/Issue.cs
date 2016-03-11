@@ -440,11 +440,14 @@ namespace Jira.SDK.Domain
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
-                {
+                {                   
                     Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
-                    issue.SetJira(GetJira());
-
-                    _epic = Epic.FromIssue(issue);
+                    if ( issue != null)
+                    {
+                        issue.SetJira(GetJira());
+                        _epic = Epic.FromIssue(issue);
+                    }
+                    
                 }
                 return _epic;
             }
