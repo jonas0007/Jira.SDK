@@ -424,7 +424,11 @@ namespace Jira.SDK.Domain
                     {
                         if (match.Success)
                         {
-                            names += match.Groups["SprintName"].Value + ", ";
+                            names += match.Groups["SprintName"].Value;
+                            if (match.NextMatch().Success)
+                            {
+                                names += ", ";
+                            }
                         }
                     }
 
@@ -680,7 +684,7 @@ namespace Jira.SDK.Domain
                         break;
                     case JTokenType.Array:
                         // TODO Handle Array Type
-                        CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString()));
+                        CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString(Newtonsoft.Json.Formatting.None)));
                         break;
                     default:
                         CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
