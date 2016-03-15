@@ -410,17 +410,48 @@ namespace Jira.SDK.Domain
             }
         }
 
+        public String SprintNames
+        {
+            get
+            {
+                String sprintDescription = GetCustomFieldValue("Sprint");
+                if (!String.IsNullOrEmpty(sprintDescription))
+                {
+                    MatchCollection matches = Regex.Matches(sprintDescription, ",name=(?<SprintName>.*?),");
+                    String names = "";
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            names += match.Groups["SprintName"].Value;
+                            if (match.NextMatch().Success)
+                            {
+                                names += ", ";
+                            }
+                        }
+                    }
+
+                    return names;
+                }
+                return "";
+            }
+        }
+
         private Epic _epic;
         public Epic Epic
         {
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
-                {
+                {                   
                     Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
-                    issue.SetJira(GetJira());
-
-                    _epic = Epic.FromIssue(issue);
+                    if ( issue != null)
+                    {
+                        issue.SetJira(GetJira());
+                        _epic = Epic.FromIssue(issue);
+                    }
+                    
                 }
                 return _epic;
             }
@@ -481,6 +512,7 @@ namespace Jira.SDK.Domain
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
         public List<ProjectVersion> AffectsVersions { get; set; }
+        public List<Component> Components { get; set; }
         public Project Project { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
@@ -556,6 +588,16 @@ namespace Jira.SDK.Domain
                 if (versionArray.Count > 0)
                 {
                     AffectsVersions = ((JArray)fields["versions"]).ToObject<List<ProjectVersion>>();
+                }
+            }
+
+            Components = new List<Component>();
+            if (fields.ContainsKey("components") && fields["components"] != null)
+            {
+                JArray versionArray = (JArray)fields["components"];
+                if (versionArray.Count > 0)
+                {
+                    Components = ((JArray)fields["components"]).ToObject<List<Component>>();
                 }
             }
 
@@ -642,7 +684,7 @@ namespace Jira.SDK.Domain
                         break;
                     case JTokenType.Array:
                         // TODO Handle Array Type
-                        CustomFields.Add(customFieldName, null);
+                        CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString(Newtonsoft.Json.Formatting.None)));
                         break;
                     default:
                         CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
