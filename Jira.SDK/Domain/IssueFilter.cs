@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Jira.SDK.Domain {
-    public class IssueFilter {
+namespace Jira.SDK.Domain
+{
+    public class IssueFilter
+    {
         private Jira _jira { get; set; }
         public Jira GetJira()
         {
@@ -23,7 +25,7 @@ namespace Jira.SDK.Domain {
 
         private List<Issue> _issues;
         public List<Issue> GetIssues(Int32 maxResults = 700)
-            {
+        {
             if (_issues == null)
             {
                 _issues = _jira.Client.SearchIssues(this.JQL, maxResults);
