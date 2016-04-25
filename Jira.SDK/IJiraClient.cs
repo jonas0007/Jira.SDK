@@ -38,7 +38,7 @@ namespace Jira.SDK
 		List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
 		Issue GetIssue(String key);
-		List<Issue> SearchIssues(String jql);
+		List<Issue> SearchIssues(String jql, Int32 maxResults);
 
 		Issue AddIssue(IssueFields fields);
 		Comment AddCommentToIssue(Issue issue, Comment comment);

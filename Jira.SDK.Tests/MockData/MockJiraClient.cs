@@ -1430,7 +1430,7 @@ namespace Jira.SDK.Tests
             return _sprints[agileBoardID].Where(sprint => sprint.ID == sprintID).FirstOrDefault();
 		}
 
-		public List<Issue> SearchIssues(string jql)
+		public List<Issue> SearchIssues(string jql, int maxResults)
 		{
             return new List<Issue>();
 		}

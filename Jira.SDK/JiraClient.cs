@@ -104,9 +104,9 @@ namespace Jira.SDK
             return Client.BaseUrl.ToString();
         }
 
-        public List<Issue> SearchIssues(String jql)
+        public List<Issue> SearchIssues(String jql, Int32 maxResults=700)
         {
-            return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", "700" }, { "fields", "*all" }, { "expand", "transitions" } });
+            return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", maxResults.ToString() }, { "fields", "*all" }, { "expand", "transitions" } });
         }
 
         #region Groups
