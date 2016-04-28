@@ -572,12 +572,12 @@ namespace Jira.SDK.Domain
             }
 
             FixVersions = new List<ProjectVersion>();
-            if (fields.ContainsKey("fixversions") && fields["fixversions"] != null)
+            if (fields.ContainsKey("fixVersions") && fields["fixVersions"] != null)
             {
-                JArray versionArray = (JArray)fields["fixversions"];
+                JArray versionArray = (JArray)fields["fixVersions"];
                 if (versionArray.Count > 0)
                 {
-                    FixVersions = ((JObject)fields["fixversions"]).ToObject<List<ProjectVersion>>();
+                    FixVersions = ((JArray)fields["fixVersions"]).ToObject<List<ProjectVersion>>();
                 }
             }
 
