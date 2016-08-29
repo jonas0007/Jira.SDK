@@ -465,7 +465,18 @@ namespace Jira.SDK.Domain
         {
             get
             {
-                return Int32.Parse(GetCustomFieldValue("Rank"));
+                MatchCollection matches = Regex.Matches(GetCustomFieldValue("Rank"), ",^(?<Rank>\\d+)]");
+                Int32 rank = -1;
+
+                foreach (Match match in matches)
+                {
+                    if (match.Success)
+                    {
+                        rank = Int32.Parse(match.Groups["Rank"].Value);
+                    }
+                }
+
+                return rank;
             }
             set
             {
@@ -685,6 +696,9 @@ namespace Jira.SDK.Domain
                     case JTokenType.Array:
                         // TODO Handle Array Type
                         CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString(Newtonsoft.Json.Formatting.None)));
+                        break;
+                    case JTokenType.Float:
+                        CustomFields.Add(customFieldName, new CustomField(((float)fieldsObj[customFieldName]).ToString()));
                         break;
                     default:
                         CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
