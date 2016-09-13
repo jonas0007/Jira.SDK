@@ -133,6 +133,20 @@ namespace Jira.SDK
             return response.StatusCode == System.Net.HttpStatusCode.Created;
         }
 
+        /// <summary></summary>
+        /// <param name="existingProject">Any field left as NULL will not be updated. Key must be set.</param>
+        /// <returns>True on success</returns>
+        public bool UpdateProject(CreateProject existingProject)
+        {
+            if (string.IsNullOrWhiteSpace(existingProject.Key))
+                throw new ArgumentOutOfRangeException("Project key not set");
+            var request = GetRequest(JiraObjectEnum.Project, new Dictionary<string, string>(), new Dictionary<string, string>() { { "projectKey", existingProject.Key } });
+            request.Method = Method.PUT;
+            request.AddJsonBody(existingProject);
+            var response = this.Client.Execute(request);
+            return response.StatusCode == System.Net.HttpStatusCode.Created;
+        }
+
         public List<Project> GetProjects()
         {
             return GetList<Project>(JiraObjectEnum.Projects);
