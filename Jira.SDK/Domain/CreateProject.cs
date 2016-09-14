@@ -21,13 +21,13 @@ namespace Jira.SDK.Domain
         [JsonProperty(propertyName: "name")]
         public String Name { get; set; }
         [JsonProperty(propertyName: "issueSecurityScheme")]
-        public Int32 IssueSecurityScheme { get; set; }
+        public Int32? IssueSecurityScheme { get; set; }
         [JsonProperty(propertyName: "permissionScheme")]
-        public Int32 PermissionScheme { get; set; }
+        public Int32? PermissionScheme { get; set; }
         [JsonProperty(propertyName: "notificationScheme")]
-        public Int32 NotificationScheme { get; set; }
+        public Int32? NotificationScheme { get; set; }
         [JsonProperty(propertyName: "categoryId")]
-        public Int32 CategoryId { get; set; }
+        public Int32? CategoryId { get; set; }
         [JsonProperty(propertyName: "assigneeType")]
         public string AssigneeType { get; set; }
         [JsonProperty(propertyName: "lead")]

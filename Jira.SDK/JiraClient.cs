@@ -144,14 +144,13 @@ namespace Jira.SDK
             request.Method = Method.PUT;
             request.AddJsonBody(existingProject);
             var response = this.Client.Execute(request);
-            return response.StatusCode == System.Net.HttpStatusCode.Created;
+            return response.StatusCode == System.Net.HttpStatusCode.OK;
         }
 
         public ProjectCategory CreateProjectCategory(string Name, string Description)
         {
-            
             var request = GetRequest(JiraObjectEnum.ProjectCategories, new Dictionary<string, string>(), new Dictionary<string, string>());
-            request.Method = Method.PUT;
+            request.Method = Method.POST;
             request.AddJsonBody(new { name = Name, description = Description });
             var response = this.Client.Execute<ProjectCategory>(request);
             if (response.StatusCode == System.Net.HttpStatusCode.Created)
