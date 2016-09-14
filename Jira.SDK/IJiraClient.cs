@@ -14,6 +14,7 @@ namespace Jira.SDK
         GroupResult GetGroup(string groupName);
 
         bool CreateProject(CreateProject newProject);
+        bool UpdateProject(CreateProject existingProject);
         List<Project> GetProjects();
 		Project GetProject(String projectKey);
         List<ProjectCategory> GetProjectCategories();
@@ -34,7 +35,8 @@ namespace Jira.SDK
 		List<AgileBoard> GetAgileBoards();
 		List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID);
 		List<Sprint> GetBacklogSprintsFromAgileBoard(Int32 agileBoardID);
-		Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
+        ProjectCategory CreateProjectCategory(string Name, string Description);
+        Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
 		List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
 		Issue GetIssue(String key);

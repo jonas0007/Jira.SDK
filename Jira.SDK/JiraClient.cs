@@ -133,6 +133,32 @@ namespace Jira.SDK
             return response.StatusCode == System.Net.HttpStatusCode.Created;
         }
 
+        /// <summary></summary>
+        /// <param name="existingProject">Any field left as NULL will not be updated. Key must be set.</param>
+        /// <returns>True on success</returns>
+        public bool UpdateProject(CreateProject existingProject)
+        {
+            if (string.IsNullOrWhiteSpace(existingProject.Key))
+                throw new ArgumentOutOfRangeException("Project key not set");
+            var request = GetRequest(JiraObjectEnum.Project, new Dictionary<string, string>(), new Dictionary<string, string>() { { "projectKey", existingProject.Key } });
+            request.Method = Method.PUT;
+            request.AddJsonBody(existingProject);
+            var response = this.Client.Execute(request);
+            return response.StatusCode == System.Net.HttpStatusCode.OK;
+        }
+
+        public ProjectCategory CreateProjectCategory(string Name, string Description)
+        {
+            var request = GetRequest(JiraObjectEnum.ProjectCategories, new Dictionary<string, string>(), new Dictionary<string, string>());
+            request.Method = Method.POST;
+            request.AddJsonBody(new { name = Name, description = Description });
+            var response = this.Client.Execute<ProjectCategory>(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                return response.Data;
+            else
+                return null;
+        }
+
         public List<Project> GetProjects()
         {
             return GetList<Project>(JiraObjectEnum.Projects);
@@ -467,6 +493,10 @@ namespace Jira.SDK
         {
             IRestResponse<T> response = Client.Execute<T>(GetRequest(objectType, parameters ?? new Dictionary<String, String>(), keys ?? new Dictionary<String, String>()));
 
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizedAccessException(response.Request.Resource);
+            }
             if (response.ErrorException != null)
             {
                 throw response.ErrorException;

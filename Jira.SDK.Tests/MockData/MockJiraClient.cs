@@ -1504,6 +1504,21 @@ namespace Jira.SDK.Tests
             return newProject != null && newProject.Key != "FAILED";
         }
 
+        public bool UpdateProject(CreateProject updatedProject)
+        {
+            return updatedProject != null && !string.IsNullOrWhiteSpace(updatedProject.Key);
+        }
+
+        public ProjectCategory CreateProjectCategory(string Name, string Description)
+        {
+            return new ProjectCategory
+            {
+                Description = Description,
+                Name = Name,
+                Id = 10000,
+            };
+        }
+
         public List<ProjectCategory> GetProjectCategories()
         {
             return new List<ProjectCategory> {
