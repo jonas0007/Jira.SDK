@@ -33,12 +33,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="RestSharp, Version=105.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.105.0.1\lib\net4\RestSharp.dll</HintPath>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -57,6 +57,11 @@
     <Compile Include="Domain\CustomField.cs" />
     <Compile Include="Domain\Epic.cs" />
     <Compile Include="Domain\Field.cs" />
+    <Compile Include="Domain\GroupResult.cs" />
+    <Compile Include="Domain\NotificationSchemeEvent.cs" />
+    <Compile Include="Domain\NotificationScheme.cs" />
+    <Compile Include="Domain\PermissionScheme.cs" />
+    <Compile Include="Domain\IssueSecurityScheme.cs" />
     <Compile Include="Domain\IssueFilter.cs" />
     <Compile Include="Domain\IssueLink.cs" />
     <Compile Include="Domain\IssueLinkType.cs" />
@@ -66,7 +71,12 @@
     <Compile Include="Domain\Comment.cs" />
     <Compile Include="Domain\Issue.cs" />
     <Compile Include="Domain\IssueSearchResult.cs" />
+    <Compile Include="Domain\CreateProject.cs" />
+    <Compile Include="Domain\ProjectType.cs" />
+    <Compile Include="Domain\ProjectCategory.cs" />
     <Compile Include="Domain\ProjectComponent.cs" />
+    <Compile Include="Domain\ProjectRole.cs" />
+    <Compile Include="Domain\Component.cs" />
     <Compile Include="Domain\Resolution.cs" />
     <Compile Include="Domain\SprintResult.cs" />
     <Compile Include="Domain\Status.cs" />
@@ -91,7 +101,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Package.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

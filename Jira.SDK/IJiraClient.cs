@@ -9,10 +9,21 @@ namespace Jira.SDK
 {
 	public interface IJiraClient
 	{
-		List<Project> GetProjects();
-		Project GetProject(String projectKey);
+        string GetBaseUrl();
 
-		List<Field> GetFields();
+        GroupResult GetGroup(string groupName);
+
+        bool CreateProject(CreateProject newProject);
+        bool UpdateProject(CreateProject existingProject);
+        List<Project> GetProjects();
+		Project GetProject(String projectKey);
+        List<ProjectCategory> GetProjectCategories();
+        List<ProjectType> GetProjectTypes();
+        List<ProjectRole> GetProjectRoles(String key);
+        ProjectRole AddGroupActor(String projectKey, Int32 id, String group);
+        bool DeleteGroupActor(string projectKey, Int32 id, String group);
+
+        List<Field> GetFields();
 
 		List<ProjectVersion> GetProjectVersions(String projectKey);
 
@@ -24,13 +35,14 @@ namespace Jira.SDK
 		List<AgileBoard> GetAgileBoards();
 		List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID);
 		List<Sprint> GetBacklogSprintsFromAgileBoard(Int32 agileBoardID);
-		Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
+        ProjectCategory CreateProjectCategory(string Name, string Description);
+        Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
 		List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
 		Issue GetIssue(String key);
-		List<Issue> SearchIssues(String jql);
+		List<Issue> SearchIssues(String jql, Int32 maxResults);
 
-		void AddIssue(Issue issue);
+		Issue AddIssue(IssueFields fields);
 		Comment AddCommentToIssue(Issue issue, Comment comment);
         void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
@@ -45,5 +57,12 @@ namespace Jira.SDK
 		List<Issue> GetIssuesWithEpicLink(String epicLink);
 
         List<IssueFilter> GetFavoriteFilters();
-	}
+
+        List<IssueSecurityScheme> GetIssueSecuritySchemes();
+
+        List<PermissionScheme> GetPermissionSchemes();
+
+        List<NotificationScheme> GetNotificationSchemes();
+
+    }
 }

@@ -14,6 +14,7 @@ namespace Jira.SDK.Domain
         public DateTime Updated { get; set; }
         public DateTime Started { get; set; }
         public User UpdateAuthor { get; set; }
+        public String Id { get; set; }
 
         public long TimeSpentSeconds { get; set; }
 

@@ -34,7 +34,7 @@ namespace Jira.SDK.Domain
         public String GetCustomFieldValue(String customFieldName)
         {
             Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
-            if(field == null)
+            if (field == null)
             {
                 throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
             }
@@ -44,16 +44,28 @@ namespace Jira.SDK.Domain
 
         public void SetCustomFieldValue(String customFieldName, String value)
         {
-            String fieldId = GetJira().Fields.First(field => field.Name.Equals(customFieldName)).ID;
-            if (Fields.CustomFields[fieldId] == null)
+            Field field = GetJira().Fields.FirstOrDefault(f => f.Name.Equals(customFieldName));
+            if (field == null)
             {
-                Fields.CustomFields[fieldId] = new CustomField(value);
+                throw new ArgumentException(String.Format("The field with name {0} does not exist.", customFieldName), customFieldName);
             }
-            Fields.CustomFields[fieldId].Value = value;
+
+            if (Fields.CustomFields[field.ID] == null)
+            {
+                Fields.CustomFields[field.ID] = new CustomField(value);
+            }
+            Fields.CustomFields[field.ID].Value = value;
         }
 
         public String Key { get; set; }
         public IssueFields Fields { get; set; }
+        public String Url
+        {
+            get
+            {
+                return string.Format("{0}browse/{1}", _jira.Client.GetBaseUrl(), Key);
+            }
+        }
 
         public String Summary
         {
@@ -156,6 +168,12 @@ namespace Jira.SDK.Domain
                 _worklogs.ForEach(wl => wl.Issue = this);
             }
             return _worklogs;
+        }
+
+        public void RefreshWorklogs()
+        {
+            // this will force the re-loading of any work logs
+            _worklogs = _jira.Client.GetWorkLogs(this.Key).Worklogs;
         }
 
         public List<Transition> Transitions { get; set; }
@@ -292,7 +310,7 @@ namespace Jira.SDK.Domain
         public Issue GetClonedIssue()
         {
             Issue cloned = IssueLinks.Where(link => link.Type.ToEnum() == IssueLinkType.IssueLinkTypeEnum.Cloners && link.OutwardIssue != null).Select(link => link.OutwardIssue).FirstOrDefault();
-            if(cloned != null)
+            if (cloned != null)
             {
                 loadIssues(new List<Issue>() { cloned });
             }
@@ -392,17 +410,48 @@ namespace Jira.SDK.Domain
             }
         }
 
+        public String SprintNames
+        {
+            get
+            {
+                String sprintDescription = GetCustomFieldValue("Sprint");
+                if (!String.IsNullOrEmpty(sprintDescription))
+                {
+                    MatchCollection matches = Regex.Matches(sprintDescription, ",name=(?<SprintName>.*?),");
+                    String names = "";
+
+                    foreach (Match match in matches)
+                    {
+                        if (match.Success)
+                        {
+                            names += match.Groups["SprintName"].Value;
+                            if (match.NextMatch().Success)
+                            {
+                                names += ", ";
+                            }
+                        }
+                    }
+
+                    return names;
+                }
+                return "";
+            }
+        }
+
         private Epic _epic;
         public Epic Epic
         {
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
-                {
+                {                   
                     Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
-                    issue.SetJira(GetJira());
-
-                    _epic = Epic.FromIssue(issue);
+                    if ( issue != null)
+                    {
+                        issue.SetJira(GetJira());
+                        _epic = Epic.FromIssue(issue);
+                    }
+                    
                 }
                 return _epic;
             }
@@ -416,7 +465,18 @@ namespace Jira.SDK.Domain
         {
             get
             {
-                return Int32.Parse(GetCustomFieldValue("Rank"));
+                MatchCollection matches = Regex.Matches(GetCustomFieldValue("Rank"), ",^(?<Rank>\\d+)]");
+                Int32 rank = -1;
+
+                foreach (Match match in matches)
+                {
+                    if (match.Success)
+                    {
+                        rank = Int32.Parse(match.Groups["Rank"].Value);
+                    }
+                }
+
+                return rank;
             }
             set
             {
@@ -462,6 +522,8 @@ namespace Jira.SDK.Domain
         public User Reporter { get; set; }
         public User Assignee { get; set; }
         public List<ProjectVersion> FixVersions { get; set; }
+        public List<ProjectVersion> AffectsVersions { get; set; }
+        public List<Component> Components { get; set; }
         public Project Project { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
@@ -493,7 +555,7 @@ namespace Jira.SDK.Domain
             Reporter = null;
             if (fields.ContainsKey("reporter") && fields["reporter"] != null)
             {
-            Reporter = ((JObject)fields["reporter"]).ToObject<User>();
+                Reporter = ((JObject)fields["reporter"]).ToObject<User>();
             }
 
             Assignee = null;
@@ -521,12 +583,32 @@ namespace Jira.SDK.Domain
             }
 
             FixVersions = new List<ProjectVersion>();
-            if (fields.ContainsKey("fixversions") && fields["fixversions"] != null)
+            if (fields.ContainsKey("fixVersions") && fields["fixVersions"] != null)
             {
-                JArray versionArray = (JArray)fields["fixversions"];
+                JArray versionArray = (JArray)fields["fixVersions"];
                 if (versionArray.Count > 0)
                 {
-                    FixVersions = ((JObject)fields["fixversions"]).ToObject<List<ProjectVersion>>();
+                    FixVersions = ((JArray)fields["fixVersions"]).ToObject<List<ProjectVersion>>();
+                }
+            }
+
+            AffectsVersions = new List<ProjectVersion>();
+            if (fields.ContainsKey("versions") && fields["versions"] != null)
+            {
+                JArray versionArray = (JArray)fields["versions"];
+                if (versionArray.Count > 0)
+                {
+                    AffectsVersions = ((JArray)fields["versions"]).ToObject<List<ProjectVersion>>();
+                }
+            }
+
+            Components = new List<Component>();
+            if (fields.ContainsKey("components") && fields["components"] != null)
+            {
+                JArray versionArray = (JArray)fields["components"];
+                if (versionArray.Count > 0)
+                {
+                    Components = ((JArray)fields["components"]).ToObject<List<Component>>();
                 }
             }
 
@@ -588,7 +670,7 @@ namespace Jira.SDK.Domain
             if (fields.ContainsKey("labels"))
             {
                 JArray labelArray = (JArray)fields["labels"];
-                if(labelArray.Count > 0)
+                if (labelArray.Count > 0)
                 {
                     Labels = labelArray.Select(label => (String)label).ToList();
                 }
@@ -605,15 +687,21 @@ namespace Jira.SDK.Domain
             {
                 switch (fieldsObj[customFieldName].Type)
                 {
-                    case JTokenType.String:
-                        CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
-                        break;
                     case JTokenType.Object:
                         CustomFields.Add(customFieldName, ((JObject)fieldsObj[customFieldName]).ToObject<CustomField>());
                         break;
                     case JTokenType.Null:
-                    default:
                         CustomFields.Add(customFieldName, null);
+                        break;
+                    case JTokenType.Array:
+                        // TODO Handle Array Type
+                        CustomFields.Add(customFieldName, new CustomField(((JArray)fieldsObj[customFieldName]).ToString(Newtonsoft.Json.Formatting.None)));
+                        break;
+                    case JTokenType.Float:
+                        CustomFields.Add(customFieldName, new CustomField(((float)fieldsObj[customFieldName]).ToString()));
+                        break;
+                    default:
+                        CustomFields.Add(customFieldName, new CustomField((String)fieldsObj[customFieldName]));
                         break;
                 }
 

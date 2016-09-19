@@ -51,4 +51,16 @@ List<AgileBoard> agilaboards = jira.GetAgileBoards();
 
 //Get a specific issue with key
 Issue issue = jira.GetIssue("{{issuekey}}");
+
+//Add a new issue to a project
+Project project = jira.GetProject("{{projectname}}");
+Issue newIssue = project.AddIssue(new IssueFields()
+{
+                Summary = "Summary of the new issue",
+                IssueType = new IssueType(0, "Type"),
+                CustomFields = new Dictionary<string, CustomField>() {
+                    { "customfield_11000", new CustomField(11000, "Value") }
+                }
+            });
+);
 ```
