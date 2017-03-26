@@ -1617,5 +1617,10 @@ namespace Jira.SDK.Tests
                 Users = new List<User>()
             };
         }
+
+        public Issue AddPriorityToIssue(int priorityId, string issueId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

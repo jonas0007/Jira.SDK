@@ -104,7 +104,7 @@ namespace Jira.SDK
             return Client.BaseUrl.ToString();
         }
 
-        public List<Issue> SearchIssues(String jql, Int32 maxResults=700)
+        public List<Issue> SearchIssues(String jql, Int32 maxResults = 700)
         {
             return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", maxResults.ToString() }, { "fields", "*all" }, { "expand", "transitions" } });
         }
@@ -360,26 +360,31 @@ namespace Jira.SDK
                     id = issueFields.IssueType.ID
                 },
                 summary = issueFields.Summary,
-                //description = issueFields.Description,
-
-                //User Reporter { get; set; }
-                //User Assignee { get; set; }
+                description = issueFields.Description,
+                assignee = new
+                {
+                    name = issueFields.Assignee.Name
+                },
+                reporter = new
+                {
+                    name = issueFields.Reporter.Name
+                }
             });
 
             List<Field> fields = GetFields();
-            
+
 
             foreach (KeyValuePair<String, CustomField> customfield in issueFields.CustomFields)
             {
                 Field field = fields.Where(f => f.ID.Equals(customfield.Key)).FirstOrDefault();
-                
-                switch(field.Schema.Custom)
+
+                switch (field.Schema.Custom)
                 {
                     case "com.atlassian.jira.plugin.system.customfieldtypes:select":
                         tempjson.Add(customfield.Key.ToLower(), JToken.FromObject(new { value = customfield.Value.Value }));
                         break;
                     default:
-                        tempjson.Add(customfield.Key.ToLower(), customfield.Value.Value );
+                        tempjson.Add(customfield.Key.ToLower(), customfield.Value.Value);
                         break;
                 }
             }
@@ -387,6 +392,39 @@ namespace Jira.SDK
             JObject json = new JObject();
             json.Add("fields", tempjson.Root);
 
+            request.AddParameter("Application/Json", json.ToString(), ParameterType.RequestBody);
+
+            IRestResponse<Issue> response = Client.Post<Issue>(request);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return response.Data;
+        }
+
+        public Issue AddPriorityToIssue(int priorityId, string issueId)
+        {
+            IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}", JiraAPIServiceURI, issueId), Method.POST);
+            request.RequestFormat = DataFormat.Json;
+
+            JObject tempjson = JObject.FromObject(new
+            {
+                priority = new
+                {
+                    id = priorityId
+                }
+            });
+
+            JObject json = new JObject
+            {
+                { "fields", tempjson.Root }
+            };
             request.AddParameter("Application/Json", json.ToString(), ParameterType.RequestBody);
 
             IRestResponse<Issue> response = Client.Post<Issue>(request);
@@ -583,7 +621,8 @@ namespace Jira.SDK
         private Issue DeserializeIssue(String json)
         {
             JObject jsonObject = JObject.Parse(json);
-            if(jsonObject["fields"] == null) {
+            if (jsonObject["fields"] == null)
+            {
                 return null;
             }
             return new Issue((String)jsonObject["key"], (JObject)jsonObject["fields"]);

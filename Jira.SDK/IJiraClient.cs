@@ -43,7 +43,9 @@ namespace Jira.SDK
 		List<Issue> SearchIssues(String jql, Int32 maxResults);
 
 		Issue AddIssue(IssueFields fields);
-		Comment AddCommentToIssue(Issue issue, Comment comment);
+        Issue AddPriorityToIssue(int priorityId, string issueId);
+
+        Comment AddCommentToIssue(Issue issue, Comment comment);
         void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
@@ -63,6 +65,5 @@ namespace Jira.SDK
         List<PermissionScheme> GetPermissionSchemes();
 
         List<NotificationScheme> GetNotificationSchemes();
-
     }
 }
