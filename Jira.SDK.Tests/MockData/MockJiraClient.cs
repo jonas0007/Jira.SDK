@@ -1618,8 +1618,9 @@ namespace Jira.SDK.Tests
             };
         }
 
-        bool IJiraClient.SetPriorityToIssue(Priority priority, Issue issueId)
+        public void SetPriorityToIssue(Priority priority, Issue issueId)
         {
+            // Implementing interface
             throw new NotImplementedException();
         }
     }

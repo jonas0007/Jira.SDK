@@ -409,7 +409,7 @@ namespace Jira.SDK
             return response.Data;
         }
 
-        public bool SetPriorityToIssue(Priority priority, Issue issue)
+        public void SetPriorityToIssue(Priority priority, Issue issue)
         {
             IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}", JiraAPIServiceURI, issue.Key), Method.PUT);
 
@@ -426,11 +426,10 @@ namespace Jira.SDK
             {
                 throw new Exception(response.ErrorMessage);
             }
-            if (response.StatusCode == HttpStatusCode.NoContent)
+            if (response.StatusCode != HttpStatusCode.NoContent)
             {
-                return true;
+                throw new Exception(response.StatusCode.ToString());
             }
-            return false;
         }
 
         public Comment AddCommentToIssue(Issue issue, Comment comment)
