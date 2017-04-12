@@ -43,7 +43,7 @@ namespace Jira.SDK
 		List<Issue> SearchIssues(String jql, Int32 maxResults);
 
 		Issue AddIssue(IssueFields fields);
-        Issue AddPriorityToIssue(int priorityId, string issueId);
+        bool SetPriorityToIssue(Priority priority, Issue issueId);
 
         Comment AddCommentToIssue(Issue issue, Comment comment);
         void TransitionIssue(Issue issue, Transition transition, Comment comment);

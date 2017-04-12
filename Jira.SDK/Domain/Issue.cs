@@ -123,6 +123,11 @@ namespace Jira.SDK.Domain
             Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
         }
 
+        public void SetPriority(Priority priority)
+        {
+            GetJira().Client.SetPriorityToIssue(priority, this);
+        }
+
         public Status Status
         {
             get { return Fields.Status; }

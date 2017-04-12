@@ -13,6 +13,7 @@ using Jira.SDK.Tools;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp.Authenticators;
+using System.Net;
 
 namespace Jira.SDK
 {
@@ -408,26 +409,14 @@ namespace Jira.SDK
             return response.Data;
         }
 
-        public Issue AddPriorityToIssue(int priorityId, string issueId)
+        public bool SetPriorityToIssue(Priority priority, Issue issue)
         {
-            IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}", JiraAPIServiceURI, issueId), Method.POST);
+            IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}", JiraAPIServiceURI, issue.Key), Method.PUT);
+
             request.RequestFormat = DataFormat.Json;
+            request.AddBody(new { update = new { priority = new[] { new { set = new { name = priority.Name } } } } });
 
-            JObject tempjson = JObject.FromObject(new
-            {
-                priority = new
-                {
-                    id = priorityId
-                }
-            });
-
-            JObject json = new JObject
-            {
-                { "fields", tempjson.Root }
-            };
-            request.AddParameter("Application/Json", json.ToString(), ParameterType.RequestBody);
-
-            IRestResponse<Issue> response = Client.Post<Issue>(request);
+            IRestResponse<object> response = Client.Put<object>(request);
 
             if (response.ErrorException != null)
             {
@@ -437,8 +426,11 @@ namespace Jira.SDK
             {
                 throw new Exception(response.ErrorMessage);
             }
-
-            return response.Data;
+            if (response.StatusCode == HttpStatusCode.NoContent)
+            {
+                return true;
+            }
+            return false;
         }
 
         public Comment AddCommentToIssue(Issue issue, Comment comment)

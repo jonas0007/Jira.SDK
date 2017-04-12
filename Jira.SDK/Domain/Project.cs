@@ -144,14 +144,6 @@ namespace Jira.SDK.Domain
             return issue;
         }
 
-        public Issue AddPriorityToIssue(int priorityId, string issueId)
-        {
-            Issue issue = GetJira().Client.AddPriorityToIssue(priorityId, issueId);
-            issue.SetJira(this.GetJira());
-            issue.Load();
-            return issue;
-        }
-
         public override int GetHashCode()
         {
             return this.Key.GetHashCode();
