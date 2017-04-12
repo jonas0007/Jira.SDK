@@ -418,14 +418,6 @@ namespace Jira.SDK
 
             IRestResponse<object> response = Client.Put<object>(request);
 
-            if (response.ErrorException != null)
-            {
-                throw response.ErrorException;
-            }
-            if (response.ResponseStatus != ResponseStatus.Completed)
-            {
-                throw new Exception(response.ErrorMessage);
-            }
             if (response.StatusCode != HttpStatusCode.NoContent)
             {
                 throw new Exception(response.StatusCode.ToString());
