@@ -449,14 +449,14 @@ namespace Jira.SDK.Domain
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
-                {                   
+                {
                     Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
-                    if ( issue != null)
+                    if (issue != null)
                     {
                         issue.SetJira(GetJira());
                         _epic = Epic.FromIssue(issue);
                     }
-                    
+
                 }
                 return _epic;
             }
@@ -519,31 +519,45 @@ namespace Jira.SDK.Domain
     {
         public String Summary { get; set; }
         public String Description { get; set; }
-        public CommentSearchResult Comment { get; set; } = new CommentSearchResult();
+        public CommentSearchResult Comment { get; set; }
         public DateTime Created { get; set; }
         public DateTime Updated { get; set; }
         public DateTime ResolutionDate { get; set; }
         public IssueType IssueType { get; set; }
         public User Reporter { get; set; }
         public User Assignee { get; set; }
-        public List<ProjectVersion> FixVersions { get; set; } = new List<ProjectVersion>();
-        public List<ProjectVersion> AffectsVersions { get; set; } = new List<ProjectVersion>();
-        public List<Component> Components { get; set; } = new List<Component>();
+        public List<ProjectVersion> FixVersions { get; set; }
+        public List<ProjectVersion> AffectsVersions { get; set; }
+        public List<Component> Components { get; set; }
         public Project Project { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
-        public Resolution Resolution { get; set; } = new Resolution();
-        public ParentIssue Parent { get; set; } = new ParentIssue();
-        public List<Subtask> Subtasks { get; set; } = new List<Subtask>();
-        public TimeTracking TimeTracking { get; set; } = new TimeTracking();
-        public WorklogSearchResult Worklog { get; set; } = new WorklogSearchResult();
-        public List<IssueLink> IssueLinks { get; set; } = new List<IssueLink>();
-        public List<String> Labels { get; set; } = new List<String>();
-        public Dictionary<String, CustomField> CustomFields { get; set; } = new Dictionary<String, CustomField>();
+        public Resolution Resolution { get; set; }
+        public ParentIssue Parent { get; set; }
+        public List<Subtask> Subtasks { get; set; }
+        public TimeTracking TimeTracking { get; set; }
+        public WorklogSearchResult Worklog { get; set; }
+        public List<IssueLink> IssueLinks { get; set; }
+        public List<String> Labels { get; set; }
+        public Dictionary<String, CustomField> CustomFields { get; set; }
 
-        public IssueFields() { }
+        public IssueFields()
+        {
+            Comment = new CommentSearchResult();
+            FixVersions = new List<ProjectVersion>();
+            AffectsVersions = new List<ProjectVersion>();
+            Components = new List<Component>();
+            Resolution = new Resolution();
+            Parent = new ParentIssue();
+            Subtasks = new List<Subtask>();
+            TimeTracking = new TimeTracking();
+            Worklog = new WorklogSearchResult();
+            IssueLinks = new List<IssueLink>();
+            Labels = new List<String>();
+            CustomFields = new Dictionary<String, CustomField>();
+        }
 
-        public IssueFields(JObject fieldsObj)
+        public IssueFields(JObject fieldsObj) : this()
         {
             Dictionary<String, Object> fields = fieldsObj.ToObject<Dictionary<String, Object>>();
 
