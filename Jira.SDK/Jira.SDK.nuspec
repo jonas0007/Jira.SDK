@@ -11,9 +11,5 @@
     <projectUrl>https://github.com/jonas0007/Jira.SDK</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>Jira REST</tags>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
-      <dependency id="RestSharp" version="105.2.3" />
-    </dependencies>
   </metadata>
 </package>
