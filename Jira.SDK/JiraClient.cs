@@ -431,6 +431,28 @@ namespace Jira.SDK
             return GetItem<WorklogSearchResult>(JiraObjectEnum.Worklog,
                        keys: new Dictionary<String, String>() { { "issueKey", issueKey } });
         }
+
+        public Worklog AddWorkLogToIssue(Issue issue, Worklog worklog)
+        {
+            IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}/worklog", JiraAPIServiceURI, issue.Key), Method.POST);
+
+            request.RequestFormat = DataFormat.Json;
+            request.AddBody(new { comment = worklog.Comment, started = worklog.Started, timeSpentSeconds = worklog.TimeSpentSeconds });
+
+            IRestResponse<Worklog> response = Client.Post<Worklog>(request);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return response.Data;
+        }
+
         #endregion
 
         #region Transition
