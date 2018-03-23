@@ -4,3 +4,5 @@
 */packages/*
 *.user
 
+/packages
+/.vs
