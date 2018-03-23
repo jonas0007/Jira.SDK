@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Jira.SDK
 {
-	public interface IJiraClient
-	{
+    public interface IJiraClient
+    {
         string GetBaseUrl();
 
         GroupResult GetGroup(string groupName);
@@ -16,7 +16,7 @@ namespace Jira.SDK
         bool CreateProject(CreateProject newProject);
         bool UpdateProject(CreateProject existingProject);
         List<Project> GetProjects();
-		Project GetProject(String projectKey);
+        Project GetProject(String projectKey);
         List<ProjectCategory> GetProjectCategories();
         List<ProjectType> GetProjectTypes();
         List<ProjectRole> GetProjectRoles(String key);
@@ -25,36 +25,38 @@ namespace Jira.SDK
 
         List<Field> GetFields();
 
-		List<ProjectVersion> GetProjectVersions(String projectKey);
+        List<ProjectVersion> GetProjectVersions(String projectKey);
 
         List<ProjectComponent> GetProjectComponents(String projectKey);
 
-		User GetUser(String username);
-		List<User> GetAssignableUsers(String projectKey);
+        User GetUser(String username);
+        List<User> GetAssignableUsers(String projectKey);
 
-		List<AgileBoard> GetAgileBoards();
-		List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID);
-		List<Sprint> GetBacklogSprintsFromAgileBoard(Int32 agileBoardID);
+        List<AgileBoard> GetAgileBoards();
+        List<Sprint> GetSprintsFromAgileBoard(Int32 agileBoardID);
+        List<Sprint> GetBacklogSprintsFromAgileBoard(Int32 agileBoardID);
         ProjectCategory CreateProjectCategory(string Name, string Description);
         Sprint GetSprint(Int32 agileBoardID, Int32 sprintID);
-		List<Issue> GetIssuesFromSprint(Int32 sprintID);
+        List<Issue> GetIssuesFromSprint(Int32 sprintID);
 
-		Issue GetIssue(String key);
-		List<Issue> SearchIssues(String jql, Int32 maxResults);
+        Issue GetIssue(String key);
+        List<Issue> SearchIssues(String jql, Int32 maxResults);
 
-		Issue AddIssue(IssueFields fields);
-		Comment AddCommentToIssue(Issue issue, Comment comment);
+        Issue AddIssue(IssueFields fields);
+        void SetPriorityToIssue(Priority priority, Issue issueId);
+
+        Comment AddCommentToIssue(Issue issue, Comment comment);
         void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
-		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
-		List<Issue> GetSubtasksFromIssue(String issueKey);
-		WorklogSearchResult GetWorkLogs(String issueKey);
+        List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
+        List<Issue> GetSubtasksFromIssue(String issueKey);
+        WorklogSearchResult GetWorkLogs(String issueKey);
         List<Transition> GetTransitions(String issueKey);
 
-		List<Issue> GetEpicIssuesFromProject(String projectName);
-		Issue GetEpicIssueFromProject(String projectName, String epicName);
+        List<Issue> GetEpicIssuesFromProject(String projectName);
+        Issue GetEpicIssueFromProject(String projectName, String epicName);
 
-		List<Issue> GetIssuesWithEpicLink(String epicLink);
+        List<Issue> GetIssuesWithEpicLink(String epicLink);
 
         List<IssueFilter> GetFavoriteFilters();
 
@@ -63,6 +65,5 @@ namespace Jira.SDK
         List<PermissionScheme> GetPermissionSchemes();
 
         List<NotificationScheme> GetNotificationSchemes();
-
     }
 }

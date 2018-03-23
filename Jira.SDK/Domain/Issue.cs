@@ -123,6 +123,11 @@ namespace Jira.SDK.Domain
             Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
         }
 
+        public void SetPriority(Priority priority)
+        {
+            GetJira().Client.SetPriorityToIssue(priority, this);
+        }
+
         public Status Status
         {
             get { return Fields.Status; }
@@ -444,14 +449,14 @@ namespace Jira.SDK.Domain
             get
             {
                 if (_epic == null && !String.IsNullOrEmpty(GetCustomFieldValue("Epic Link")))
-                {                   
+                {
                     Issue issue = GetJira().Client.GetIssue(GetCustomFieldValue("Epic Link"));
-                    if ( issue != null)
+                    if (issue != null)
                     {
                         issue.SetJira(GetJira());
                         _epic = Epic.FromIssue(issue);
                     }
-                    
+
                 }
                 return _epic;
             }
@@ -536,9 +541,23 @@ namespace Jira.SDK.Domain
         public List<String> Labels { get; set; }
         public Dictionary<String, CustomField> CustomFields { get; set; }
 
-        public IssueFields() { }
+        public IssueFields()
+        {
+            Comment = new CommentSearchResult();
+            FixVersions = new List<ProjectVersion>();
+            AffectsVersions = new List<ProjectVersion>();
+            Components = new List<Component>();
+            Resolution = new Resolution();
+            Parent = new ParentIssue();
+            Subtasks = new List<Subtask>();
+            TimeTracking = new TimeTracking();
+            Worklog = new WorklogSearchResult();
+            IssueLinks = new List<IssueLink>();
+            Labels = new List<String>();
+            CustomFields = new Dictionary<String, CustomField>();
+        }
 
-        public IssueFields(JObject fieldsObj)
+        public IssueFields(JObject fieldsObj) : this()
         {
             Dictionary<String, Object> fields = fieldsObj.ToObject<Dictionary<String, Object>>();
 
