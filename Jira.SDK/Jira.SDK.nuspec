@@ -1,18 +1,15 @@
 ﻿<?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Jira.SDK</id>
-    <title>Jira.SDK</title>
-    <description>$description$</description>
+    <id>$id$</id>
     <version>$version$</version>
-    <authors>jonas0007</authors>
-    <owners>jonas0007</owners>
+    <title>$title$</title>
+    <description>$description$</description>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <copyright>Copyright 2015</copyright>
     <projectUrl>https://github.com/jonas0007/Jira.SDK</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <tags>Jira REST</tags>
-    <dependencies>
-      <dependency id="Newtonsoft.Json" version="9.0.1" />
-      <dependency id="RestSharp" version="105.2.3" />
-    </dependencies>
   </metadata>
 </package>
