@@ -1472,6 +1472,12 @@ namespace Jira.SDK.Tests
             throw new NotImplementedException();
         }
 
+        public string UpdateIssueSummary(Issue issue, string summary)
+        {
+            issue.Summary = summary;
+            return summary;
+        }
+
         public void TransitionIssue(Issue issue, Transition transition)
         {
             throw new NotImplementedException();
