@@ -123,6 +123,15 @@ namespace Jira.SDK.Domain
             Comments.Add(GetJira().Client.AddCommentToIssue(this, comment));
         }
 
+        /// <summary>
+        /// Update issue summary
+        /// </summary>
+        /// <param name="summary">New summary text</param>
+        public void UpdateSummary(string summary)
+        {
+           Summary = GetJira().Client.UpdateIssueSummary(this, summary);
+        }
+
         public Status Status
         {
             get { return Fields.Status; }

@@ -423,6 +423,41 @@ namespace Jira.SDK
 
             return response.Data;
         }
+
+        /// <summary>
+        /// Update existing issue summary
+        /// </summary>
+        /// <param name="issue">Issue to update</param>
+        /// <param name="summary">New summary text</param>
+        /// <returns></returns>
+        public String UpdateIssueSummary(Issue issue, String summary)
+        {
+            IRestRequest request = new RestRequest(String.Format("{0}/issue/{1}", JiraAPIServiceURI, issue.Key), Method.PUT);
+
+            request.RequestFormat = DataFormat.Json;
+
+            request.AddBody(new {
+                update = new {
+                    summary = new[] {
+                        new {
+                            set = summary
+                        }
+                    } 
+                }});
+
+            IRestResponse response = Client.Put(request);
+
+            if (response.ErrorException != null)
+            {
+                throw response.ErrorException;
+            }
+            if (response.ResponseStatus != ResponseStatus.Completed)
+            {
+                throw new Exception(response.ErrorMessage);
+            }
+
+            return summary;
+        }
         #endregion
 
         #region Worklog
