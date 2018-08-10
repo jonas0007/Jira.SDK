@@ -106,7 +106,13 @@ namespace Jira.SDK
 
         public List<Issue> SearchIssues(String jql, Int32 maxResults=700)
         {
-            return GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", maxResults.ToString() }, { "fields", "*all" }, { "expand", "transitions" } });
+            Int32 _maxResults;
+            List<Issue> _issues = new List<Issue>();
+            for (int startAt = 0; maxResults > startAt && _issues.Count() == startAt; startAt += 1000) {
+                _maxResults = Math.Min(maxResults - startAt, 1000);
+                _issues.AddRange(GetIssues(_methods[JiraObjectEnum.Issues], new Dictionary<String, String>() { { "jql", jql }, { "maxResults", _maxResults.ToString() }, { "startAt", startAt.ToString() }, { "fields", "*all" }, { "expand", "transitions" } }));
+            }
+            return _issues;
         }
 
         #region Groups
