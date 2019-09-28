@@ -41,7 +41,8 @@ namespace Jira.SDK
 
 		Issue AddIssue(IssueFields fields);
 		Comment AddCommentToIssue(Issue issue, Comment comment);
-		void TransitionIssue(Issue issue, Transition transition, Comment comment);
+        String UpdateIssueSummary(Issue issue, String summary);
+        void TransitionIssue(Issue issue, Transition transition, Comment comment);
 
 		List<Issue> GetIssuesFromProjectVersion(String projectKey, String projectVersionName);
 		List<Issue> GetSubtasksFromIssue(String issueKey);

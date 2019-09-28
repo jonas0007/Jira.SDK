@@ -3,7 +3,7 @@ using Xunit;
 
 namespace Jira.SDK.Tests
 {
-    public class IssueTests
+	public class IssueTests
 	{
 		[Fact]
 		public void GetWorklogTest()
@@ -34,6 +34,22 @@ namespace Jira.SDK.Tests
 
 			Assert.Equal("http://jira.example.com/browse/ITDEV-6", secondIssue.Url);
 
+		}
+
+		[Fact]
+		public void UpdateIssueSummaryTest()
+		{
+			MockJiraClient mockClient = new MockJiraClient();
+			Jira jira = new Jira();
+			jira.Connect(mockClient);
+
+			Issue issue = mockClient.GetIssue("ITDEV-7");
+			issue.SetJira(jira);
+			issue.UpdateSummary("New summary");
+
+			issue = mockClient.GetIssue("ITDEV-7");
+
+			Assert.Equal("New summary", issue.Summary);
 		}
 	}
 }
