@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jira.SDK.Domain
 {
-	public class WorkDay
+    public class WorkDay
 	{
 		public DateTime Day { get; set; }
 		public TimeSpan TimeSpent { get; set; }

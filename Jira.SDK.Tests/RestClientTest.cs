@@ -3,13 +3,11 @@ using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Jira.SDK.Tests
 {
-	public class RestClientTest
+    public class RestClientTest
 	{
 		private JiraClient FakeJiraClient
 		{
@@ -54,7 +52,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/project/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("projectKey", request.Parameters.First().Name);
 			Assert.Equal("TESTKEY", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.UrlSegment, request.Parameters.First().Type);
@@ -68,7 +66,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/project/{projectKey}/versions/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("projectKey", request.Parameters.First().Name);
 			Assert.Equal("TESTKEY", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.UrlSegment, request.Parameters.First().Type);
@@ -82,7 +80,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/user/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("username", request.Parameters.First().Name);
 			Assert.Equal("testuser", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.GetOrPost, request.Parameters.First().Type);
@@ -96,7 +94,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/user/assignable/search/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("project", request.Parameters.First().Name);
 			Assert.Equal("TESTKEY", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.GetOrPost, request.Parameters.First().Type);
@@ -118,7 +116,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/greenhopper/latest/sprintquery/{boardID}/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("boardID", request.Parameters.First().Name);
 			Assert.Equal("1", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.UrlSegment, request.Parameters.First().Type);
@@ -132,7 +130,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/issue/{issueKey}/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("issueKey", request.Parameters.First().Name);
 			Assert.Equal("1", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.UrlSegment, request.Parameters.First().Type);
@@ -164,7 +162,7 @@ namespace Jira.SDK.Tests
 			Assert.Equal("/rest/api/latest/issue/{issueKey}/worklog/", request.Resource);
 
 			Assert.NotNull(request.Parameters);
-			Assert.Equal(1, request.Parameters.Count);
+			Assert.Single(request.Parameters);
 			Assert.Equal("issueKey", request.Parameters.First().Name);
 			Assert.Equal("1", request.Parameters.First().Value);
 			Assert.Equal(ParameterType.UrlSegment, request.Parameters.First().Type);

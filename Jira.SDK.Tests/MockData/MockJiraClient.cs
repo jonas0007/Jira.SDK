@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Jira.SDK.Tests
 {
-	public class MockJiraClient : IJiraClient
+    public class MockJiraClient : IJiraClient
 	{
 		List<Project> _projects = new List<Project>()
 		{

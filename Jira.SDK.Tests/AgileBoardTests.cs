@@ -1,9 +1,6 @@
 ﻿using Jira.SDK.Domain;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Jira.SDK.Tests
@@ -51,8 +48,8 @@ namespace Jira.SDK.Tests
 			List<Sprint> sprints = agileboard.GetSprints();
 			Assert.Equal(3, sprints.Count);
 
-            //Get a sprint and try to select an issue.
-            Sprint sprint = sprints.Where(s => s.ID == 1).First();
+			//Get a sprint and try to select an issue.
+			Sprint sprint = sprints.Where(s => s.ID == 1).First();
 
 			List<Issue> issues = sprint.GetIssues();
 			Assert.NotNull(issues);
