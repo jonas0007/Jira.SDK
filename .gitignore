@@ -3,4 +3,4 @@
 */obj/*
 */packages/*
 *.user
-
+**/.vs
