@@ -1,9 +1,6 @@
 ﻿using Jira.SDK.Domain;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Jira.SDK.Tests
@@ -19,7 +16,7 @@ namespace Jira.SDK.Tests
 			Project project = environment.GetProject("ITDEV");
 
 			Assert.NotNull(project);
-			Assert.Equal(project.Key, "ITDEV");
+			Assert.Equal("ITDEV", project.Key);
 
 			List<ProjectVersion> projectVersions = project.ProjectVersions;
 
@@ -36,7 +33,7 @@ namespace Jira.SDK.Tests
 			Project project = environment.GetProject("ITDEV");
 
 			Assert.NotNull(project);
-			Assert.Equal(project.Key, "ITDEV");
+			Assert.Equal("ITDEV", project.Key);
 
 			ProjectVersion firstProjectVersion = project.ProjectVersions.FirstOrDefault();
 

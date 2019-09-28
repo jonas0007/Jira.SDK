@@ -1,16 +1,9 @@
-﻿using System.Dynamic;
-using System.Net.Cache;
-using RestSharp;
+﻿using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RestSharp.Extensions;
 using Jira.SDK.Domain;
-using System.Reflection;
 using Jira.SDK.Tools;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RestSharp.Authenticators;
 

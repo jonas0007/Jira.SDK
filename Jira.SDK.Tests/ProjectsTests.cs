@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Xunit;
-using FakeItEasy;
 using Jira.SDK.Domain;
 
 namespace Jira.SDK.Tests
 {
-	
+
     public class ProjectTests
-    {
+	{
 		[Fact]
 		public void GetProjectsTest()
 		{
@@ -33,7 +28,7 @@ namespace Jira.SDK.Tests
 			Project project = environment.GetProject("ITDEV");
 
 			Assert.NotNull(project);
-			Assert.Equal(project.Key, "ITDEV");
+			Assert.Equal("ITDEV", project.Key);
 		}
 
 		[Fact]
@@ -59,5 +54,5 @@ namespace Jira.SDK.Tests
 			Assert.NotNull(project.ProjectLead);
 			Assert.Equal("jverdick", project.ProjectLead.Username);
 		}
-    }
+	}
 }

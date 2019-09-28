@@ -1,14 +1,9 @@
 ﻿using Jira.SDK.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Jira.SDK.Tests
 {
-	public class IssueTests
+    public class IssueTests
 	{
 		[Fact]
 		public void GetWorklogTest()
@@ -33,11 +28,11 @@ namespace Jira.SDK.Tests
 			secondIssue.SetJira(jira);
 
 			Assert.NotNull(secondIssue.GetWorklogs());
-			Assert.Equal(1, secondIssue.GetWorklogs().Count);
+			Assert.Single(secondIssue.GetWorklogs());
 
 			Assert.Equal("mwillem", secondIssue.GetWorklogs()[0].Author.Username);
 
-            Assert.Equal("http://jira.example.com/browse/ITDEV-6", secondIssue.Url);
+			Assert.Equal("http://jira.example.com/browse/ITDEV-6", secondIssue.Url);
 
 		}
 	}

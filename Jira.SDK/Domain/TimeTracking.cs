@@ -1,9 +1,4 @@
-﻿using Jira.SDK.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Jira.SDK.Domain
 {

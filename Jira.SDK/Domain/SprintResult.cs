@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Jira.SDK.Domain
 {
-	public class SprintResult
+    public class SprintResult
 	{
 		public List<Sprint> Sprints { get; set; }
 		public Sprint Sprint { get; set; }
