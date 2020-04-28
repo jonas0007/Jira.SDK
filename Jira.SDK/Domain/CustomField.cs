@@ -8,7 +8,7 @@ namespace Jira.SDK.Domain
 {
 	public class CustomField
 	{
-		public Int32 ID { get; set; }
+		public string ID { get; set; }
 		public String Value { get; set; }
         
 
@@ -16,11 +16,11 @@ namespace Jira.SDK.Domain
 
         public CustomField(String value)
         {
-            this.ID = 0;
+            this.ID = "0";
             this.Value = value;
         }
 
-        public CustomField(Int32 id, String value)
+        public CustomField(string id, String value)
         {
             this.ID = id;
             this.Value = value;
