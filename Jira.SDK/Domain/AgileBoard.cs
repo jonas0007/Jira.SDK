@@ -83,7 +83,7 @@ namespace Jira.SDK.Domain
 			return _backlogsprints;
 		}
 
-		private List<Sprint> GetDetailedSprints(List<Sprint> sprints)
+        private List<Sprint> GetDetailedSprints(List<Sprint> sprints)
 		{
             ConcurrentBag<Sprint> detailedSprints = new ConcurrentBag<Sprint>();
 			Parallel.ForEach(sprints, sprint =>
@@ -137,6 +137,13 @@ namespace Jira.SDK.Domain
 			}
 
 			return userDetails;
+		}
+
+		public Sprint CreateSprint(int boardId, string sprintName, DateTime startDate, DateTime endDate)
+		{
+			var newSprint = _jira.Client.CreateSprint(boardId, sprintName, startDate, endDate);
+
+			return newSprint;
 		}
 	}
 }

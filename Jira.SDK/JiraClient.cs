@@ -45,12 +45,14 @@ namespace Jira.SDK
             ProjectRole,
             ProjectCategories,
             ProjectTypes,
+            CreateSprint,
         }
 
         private RestClient Client { get; set; }
 
         private const String JiraAPIServiceURI = "/rest/api/latest";
         private const String JiraAgileServiceURI = "/rest/greenhopper/latest";
+        private const String JiraAgileURI = "/rest/agile/1.0";
 
         private Dictionary<JiraObjectEnum, String> _methods = new Dictionary<JiraObjectEnum, String>()
         {
@@ -79,6 +81,7 @@ namespace Jira.SDK
             {JiraObjectEnum.ProjectRole, String.Format("{0}/project/{{projectKey}}/role/{{id}}", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectCategories, String.Format("{0}/projectCategory", JiraAPIServiceURI)},
             {JiraObjectEnum.ProjectTypes, String.Format("{0}/project/type", JiraAPIServiceURI)},
+            {JiraObjectEnum.CreateSprint, String.Format("{0}/sprint", JiraAgileURI)},
         };
 
         public JiraClient(RestClient client)
@@ -622,6 +625,18 @@ namespace Jira.SDK
                 return null;
             }
             return new Issue((String)jsonObject["key"], (JObject)jsonObject["fields"]);
+        }
+
+        public Sprint CreateSprint(int boardId, string sprintName, DateTime startDate, DateTime endDate)
+        {
+            var request = GetRequest(JiraObjectEnum.CreateSprint, new Dictionary<string, string>(), new Dictionary<string, string>());
+            request.Method = Method.POST;
+            request.AddJsonBody(new { name = sprintName, startDate = startDate.ToString("s"), endDate = endDate.ToString("s"), originBoardId = boardId });
+            var response = this.Client.Execute<Sprint>(request);
+            if (response.StatusCode == System.Net.HttpStatusCode.Created)
+                return response.Data;
+            else
+                return null;
         }
         #endregion
     }
