@@ -64,6 +64,6 @@ namespace Jira.SDK
         List<PermissionScheme> GetPermissionSchemes();
 
         List<NotificationScheme> GetNotificationSchemes();
-
+        Sprint CreateSprint(int boardId, string sprintName, DateTime startDate, DateTime endDate);
     }
 }
